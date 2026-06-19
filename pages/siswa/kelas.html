@@ -110,21 +110,30 @@
             <!-- Main Panel Container -->
             <div id="kelas-main-panel">
                 <!-- Toggleable Gabung Kelas Area (seperti Gabung Kelas.jpg) -->
-                <section class="gabung-kelas-box">
+                <section class="gabung-kelas-box" style="display: none; animation: fadeIn 0.3s ease;">
                     <h2 class="gabung-kelas-title">Gabung Kelas</h2>
                     <p class="gabung-kelas-desc">Masukkan kode kelas yang diberikan oleh guru Anda untuk bergabung ke dalam kelas.</p>
                     
                     <form id="join-class-form" class="gabung-kelas-form">
                         <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <label class="form-label" style="font-size: 1.05rem; font-weight: 800;">Kode kelas</label>
+                            <label class="form-label" style="font-size: 1.05rem; font-weight: 800; color: #000000;">Kode kelas</label>
                             <input type="text" id="class-code-input" class="gabung-input" placeholder="Contoh: F972MF19" required>
                         </div>
                         <button type="submit" class="btn-gabung">Gabung Kelas</button>
                     </form>
                 </section>
 
-                <!-- Daftar Kelas Saya -->
-                <h2 class="section-title">Kelas Saya</h2>
+                <!-- Daftar Kelas Saya Header/Toolbar -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h2 class="section-title" style="margin-bottom: 0;">Kelas Saya</h2>
+                    <button id="btn-toggle-join-class" style="background-color: #1552C6; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif;">
+                        <svg style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5;" viewBox="0 0 24 24">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Gabung Kelas Baru
+                    </button>
+                </div>
                 <section class="class-grid" id="class-grid-container" style="margin-bottom: 48px;">
                     <!-- Matematika -->
                     <div class="class-card">

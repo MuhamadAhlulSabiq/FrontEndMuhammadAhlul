@@ -1,105 +1,20 @@
-import { storage } from '../../../src/js/utils/storage.js';
-import { authApi } from '../../../src/js/api/auth.js';
+import { storage } from '../../utils/storage.js';
+import { authApi } from '../../api/auth.js';
 
-const MATERIALS_DATABASE = {
-    semua: [
-        {
-            title: 'Sistem Persamaan Kuadrat',
-            subject: 'Matematika - Kelas 5',
-            time: '2 hari yang lalu',
-            classCode: 'mtk',
-            docType: 'PDF'
-        },
-        {
-            title: 'Hobbies',
-            subject: 'Bahasa Inggris - Kelas 2',
-            time: '3 hari yang lalu',
-            classCode: 'ing',
-            docType: 'PPT'
-        },
-        {
-            title: 'Pecahan',
-            subject: 'Matematika - Kelas 5',
-            time: '4 hari yang lalu',
-            classCode: 'mtk',
-            docType: 'PDF'
-        },
-        {
-            title: 'My Family',
-            subject: 'Bahasa Inggris - Kelas 2',
-            time: '5 hari yang lalu',
-            classCode: 'ing',
-            docType: 'PPT'
-        }
-    ],
-    mtk: [
-        {
-            title: 'Sistem Persamaan Kuadrat',
-            subject: 'Matematika - Kelas 5',
-            time: '2 hari yang lalu',
-            classCode: 'mtk',
-            docType: 'PDF'
-        },
-        {
-            title: 'Bilangan Bulat',
-            subject: 'Matematika - Kelas 5',
-            time: '3 hari yang lalu',
-            classCode: 'mtk',
-            docType: 'PPT'
-        },
-        {
-            title: 'Pecahan',
-            subject: 'Matematika - Kelas 5',
-            time: '4 hari yang lalu',
-            classCode: 'mtk',
-            docType: 'PDF'
-        },
-        {
-            title: 'Geometri dan Pengukuran',
-            subject: 'Matematika - Kelas 5',
-            time: '5 hari yang lalu',
-            classCode: 'mtk',
-            docType: 'PPT'
-        }
-    ],
-    ing: [
-        {
-            title: 'Numbers & Colors',
-            subject: 'Bahasa Inggris - Kelas 2',
-            time: '2 hari yang lalu',
-            classCode: 'ing',
-            docType: 'PDF'
-        },
-        {
-            title: 'Hobbies',
-            subject: 'Bahasa Inggris - Kelas 2',
-            time: '3 hari yang lalu',
-            classCode: 'ing',
-            docType: 'PPT'
-        },
-        {
-            title: 'Things in the Classroom',
-            subject: 'Bahasa Inggris - Kelas 2',
-            time: '4 hari yang lalu',
-            classCode: 'ing',
-            docType: 'PDF'
-        },
-        {
-            title: 'My Family',
-            subject: 'Bahasa Inggris - Kelas 2',
-            time: '5 hari yang lalu',
-            classCode: 'ing',
-            docType: 'PPT'
-        }
-    ]
-};
+let activeSubjectFilter = 'semua';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize mock database
+    storage.initDb();
+
     // 1. Initialize user info display
     const user = storage.getUser();
     if (user) {
-        document.getElementById('user-display-name').textContent = user.name || 'Rohmat';
-        document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
+        const dispName = document.getElementById('user-display-name');
+        if (dispName) dispName.textContent = user.name || 'Rohmat';
+        
+        const avatar = document.getElementById('user-avatar');
+        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
     }
 
     // 2. Set up logout
@@ -111,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 3. Initial rendering (default is 'semua')
-    renderMaterials('semua');
+    renderMaterials();
 
     // 4. Tab filtering listener
     const tabs = document.querySelectorAll('.tab-btn');
@@ -123,18 +38,27 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add active class to clicked tab
             tab.classList.add('active');
 
-            // Render matching list
-            const subjectKey = tab.dataset.subject;
-            renderMaterials(subjectKey);
+            // Set filter key and render
+            activeSubjectFilter = tab.dataset.subject;
+            renderMaterials();
         });
     });
 });
 
-function renderMaterials(key) {
+function renderMaterials() {
     const container = document.getElementById('materials-feed');
-    const items = MATERIALS_DATABASE[key] || [];
+    if (!container) return;
 
-    if (items.length === 0) {
+    // Load from localStorage
+    const allMaterials = storage.getMaterials();
+
+    // Filter list based on selected tab subject code
+    const filtered = allMaterials.filter(m => {
+        if (activeSubjectFilter === 'semua') return true;
+        return m.classCode === activeSubjectFilter;
+    });
+
+    if (filtered.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <span class="empty-icon">📂</span>
@@ -144,8 +68,8 @@ function renderMaterials(key) {
         return;
     }
 
-    container.innerHTML = items.map(m => `
-        <div class="list-item">
+    container.innerHTML = filtered.map(m => `
+        <div class="list-item" style="animation: fadeIn 0.3s ease;">
             <div class="item-left">
                 <div class="item-icon-box ${m.classCode}">
                     ${m.classCode === 'mtk' ? '✕' : 'En'}

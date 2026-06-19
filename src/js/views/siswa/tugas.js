@@ -1,67 +1,22 @@
-import { storage } from '../../../src/js/utils/storage.js';
-import { authApi } from '../../../src/js/api/auth.js';
-
-// Assignments Database matching mockup screens
-const TUGAS_DATABASE = [
-    {
-        id: 1,
-        title: 'Tugas Matematika - Bilangan Bulat',
-        deadline: '25 Mei 2026 23.59',
-        status: 'belum', // belum or sudah
-        classCode: 'mtk',
-        teacher: 'Bu Nina',
-        subject: 'Guru Matematika',
-        desc: 'Kerjakan soal berikut dan kumpulkan dalam bentuk pdf\n1. Urutkan bilangan berikut dari data yang terkecil hingga yang terbesar: 15, -8, 0, -2, 4, -12\n2. Hasil dari -15x(-4):6!',
-        attachmentName: 'Soal_Tugas_Matematika.pdf',
-        attachmentSize: '1.2 MB'
-    },
-    {
-        id: 2,
-        title: 'Tugas Bahasa Inggris - Matching',
-        deadline: '24 Mei 2026 23.59',
-        status: 'belum',
-        classCode: 'ing',
-        teacher: 'Miss Sarah',
-        subject: 'Guru Bahasa Inggris',
-        desc: 'Match the words in column A with column B and upload the result in PDF format.',
-        attachmentName: 'Vocabulary_Matching.pdf',
-        attachmentSize: '890 KB'
-    },
-    {
-        id: 3,
-        title: 'Tugas Matematika - Pecahan',
-        deadline: '30 April 2026 23.59',
-        status: 'sudah',
-        classCode: 'mtk',
-        teacher: 'Bu Nina',
-        subject: 'Guru Matematika',
-        desc: 'Selesaikan latihan soal pecahan halaman 45 buku paket Matematika.',
-        attachmentName: 'Latihan_Pecahan.pdf',
-        attachmentSize: '2.1 MB'
-    },
-    {
-        id: 4,
-        title: 'Tugas Bahasa Inggris - Coloring',
-        deadline: '26 April 2026 23.59',
-        status: 'belum',
-        classCode: 'ing',
-        teacher: 'Miss Sarah',
-        subject: 'Guru Bahasa Inggris',
-        desc: 'Color the drawings according to the instructions and upload high-res scan/photos.',
-        attachmentName: 'Coloring_Sheet.pdf',
-        attachmentSize: '4.5 MB'
-    }
-];
+import { storage } from '../../utils/storage.js';
+import { authApi } from '../../api/auth.js';
 
 let selectedTask = null;
 let currentFilter = 'semua';
+let uploadedFileMock = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize mock database
+    storage.initDb();
+
     // 1. Initialize user info display
     const user = storage.getUser();
     if (user) {
-        document.getElementById('user-display-name').textContent = user.name || 'Rohmat';
-        document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
+        const dispName = document.getElementById('user-display-name');
+        if (dispName) dispName.textContent = user.name || 'Rohmat';
+        
+        const avatar = document.getElementById('user-avatar');
+        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
     }
 
     // 2. Set up logout
@@ -94,9 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Success panel buttons
     document.getElementById('btn-success-view-task').addEventListener('click', () => {
         if (selectedTask) {
-            // Reload details as "sudah diserahkan"
-            selectedTask.status = 'sudah';
-            loadTaskDetails(selectedTask);
+            // Re-load details as "sudah diserahkan"
+            loadTaskDetails(selectedTask.id);
             showPanel('detail');
         }
     });
@@ -106,55 +60,118 @@ document.addEventListener('DOMContentLoaded', () => {
         showPanel('list');
     });
 
-    // 7. File upload trigger
+    // 7. File upload trigger & Drag-and-Drop Dropzone
     const dropzone = document.getElementById('dropzone-area');
     const fileInput = document.getElementById('assignment-file-input');
     const dropzoneText = document.getElementById('dropzone-text');
 
-    dropzone.addEventListener('click', () => {
-        fileInput.click();
-    });
+    if (dropzone && fileInput) {
+        // Trigger file selection on click
+        dropzone.addEventListener('click', () => {
+            fileInput.click();
+        });
 
-    fileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            const file = e.target.files[0];
-            dropzoneText.textContent = `File terpilih: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
-            dropzone.style.borderColor = '#10b981'; // Green
-        }
-    });
+        // Dragover effect
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#1552C6';
+            dropzone.style.backgroundColor = 'rgba(21, 82, 198, 0.05)';
+        });
+
+        // Dragleave effect
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.style.borderColor = '#cbd5e1';
+            dropzone.style.backgroundColor = 'transparent';
+        });
+
+        // Drop file
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#10b981'; // Green on success
+            dropzone.style.backgroundColor = 'transparent';
+
+            if (e.dataTransfer.files.length > 0) {
+                const file = e.dataTransfer.files[0];
+                fileInput.files = e.dataTransfer.files; // Set input files
+                handleSelectedFile(file);
+            }
+        });
+
+        // Normal file input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                handleSelectedFile(file);
+            }
+        });
+    }
+
+    function handleSelectedFile(file) {
+        uploadedFileMock = {
+            name: file.name,
+            size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+        };
+        dropzoneText.textContent = `Berkas terpilih: ${file.name} (${uploadedFileMock.size})`;
+        dropzone.style.borderColor = '#10b981'; // Green success border
+    }
 
     // 8. Submit Form
     const uploadForm = document.getElementById('assignment-upload-form');
-    uploadForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        if (selectedTask) {
-            // Update local state
-            selectedTask.status = 'sudah';
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             
-            // Format current date/time for success screen (e.g. 25 Mei 2026 15.30)
-            const now = new Date();
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')}`;
-            
-            document.getElementById('success-assignment-name').textContent = selectedTask.title;
-            document.getElementById('success-upload-time').textContent = timeStr;
+            if (!uploadedFileMock) {
+                alert('Silakan pilih berkas jawaban Anda terlebih dahulu!');
+                return;
+            }
 
-            // Reset upload form visual states
-            uploadForm.reset();
-            dropzoneText.textContent = 'Klik atau drag file untuk upload (Maks. 10MB)';
-            dropzone.style.borderColor = '#cbd5e1';
+            if (selectedTask) {
+                // Format current date/time for success screen
+                const now = new Date();
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')}`;
+                
+                // Update assignment in localStorage
+                storage.updateAssignment(selectedTask.id, {
+                    status: 'sudah',
+                    submittedFile: uploadedFileMock.name,
+                    submittedTime: timeStr
+                });
 
-            showPanel('success');
-        }
-    });
+                // Add activity log
+                storage.addActivity({
+                    title: `Berhasil mengumpulkan ${selectedTask.title}`,
+                    time: 'Baru saja',
+                    type: 'check',
+                    classCode: selectedTask.classCode
+                });
+
+                // Render success details
+                document.getElementById('success-assignment-name').textContent = selectedTask.title;
+                document.getElementById('success-upload-time').textContent = timeStr;
+
+                // Reset upload form state
+                uploadForm.reset();
+                uploadedFileMock = null;
+                dropzoneText.textContent = 'Klik atau drag file untuk upload (Maks. 10MB)';
+                dropzone.style.borderColor = '#cbd5e1';
+
+                showPanel('success');
+            }
+        });
+    }
 });
 
 function renderTugasList() {
     const container = document.getElementById('tugas-feed');
+    if (!container) return;
     
+    // Load assignments from localStorage
+    const assignments = storage.getAssignments();
+
     // Filter database
-    const filtered = TUGAS_DATABASE.filter(t => {
+    const filtered = assignments.filter(t => {
         if (currentFilter === 'semua') return true;
         return t.status === currentFilter;
     });
@@ -174,7 +191,7 @@ function renderTugasList() {
         const badgeLabel = t.status === 'belum' ? 'Belum Diserahkan' : 'Sudah Diserahkan';
         
         return `
-            <div class="list-item" data-id="${t.id}">
+            <div class="list-item" data-id="${t.id}" style="animation: fadeIn 0.3s ease;">
                 <div class="item-left">
                     <div class="item-icon-box ${t.classCode}">
                         ${t.classCode === 'mtk' ? '✕' : 'En'}
@@ -195,17 +212,19 @@ function renderTugasList() {
     container.querySelectorAll('.list-item').forEach(item => {
         item.addEventListener('click', () => {
             const id = parseInt(item.dataset.id);
-            const task = TUGAS_DATABASE.find(t => t.id === id);
-            if (task) {
-                selectedTask = task;
-                loadTaskDetails(task);
-                showPanel('detail');
-            }
+            loadTaskDetails(id);
+            showPanel('detail');
         });
     });
 }
 
-function loadTaskDetails(t) {
+function loadTaskDetails(taskId) {
+    const assignments = storage.getAssignments();
+    const t = assignments.find(item => item.id === taskId);
+    if (!t) return;
+
+    selectedTask = t;
+
     document.getElementById('detail-tugas-title').textContent = t.title;
     document.getElementById('detail-tugas-deadline').textContent = `Deadline: ${t.deadline}`;
     document.getElementById('detail-tugas-desc').textContent = t.desc;
@@ -214,23 +233,57 @@ function loadTaskDetails(t) {
 
     // Teacher details
     const teacherImg = document.querySelector('.teacher-avatar');
-    teacherImg.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${t.teacher.replace(/\s+/g, '_')}`;
-    document.querySelector('.teacher-name').textContent = t.teacher;
-    document.querySelector('.teacher-subject').textContent = t.subject;
+    if (teacherImg) teacherImg.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${t.teacher.replace(/\s+/g, '_')}`;
+    
+    const teacherName = document.querySelector('.teacher-name');
+    if (teacherName) teacherName.textContent = t.teacher;
+    
+    const teacherSubject = document.querySelector('.teacher-subject');
+    if (teacherSubject) teacherSubject.textContent = t.subject;
 
     // Status badge
     const badge = document.getElementById('detail-tugas-badge');
-    badge.className = `badge-status ${t.status}`;
-    badge.textContent = t.status === 'belum' ? 'Belum Diserahkan' : 'Sudah Diserahkan';
+    if (badge) {
+        badge.className = `badge-status ${t.status}`;
+        badge.textContent = t.status === 'belum' ? 'Belum Diserahkan' : 'Sudah Diserahkan';
+    }
 
     // Show/hide submit form based on status
     const uploadForm = document.getElementById('assignment-upload-form');
+    const uploadTitle = document.querySelector('.upload-dropzone') ? document.querySelector('.upload-dropzone').parentElement : null;
+    
+    // Check if there is an existing submitted file details container
+    let infoContainer = document.getElementById('detail-submitted-info');
+    if (!infoContainer) {
+        infoContainer = document.createElement('div');
+        infoContainer.id = 'detail-submitted-info';
+        infoContainer.style.marginTop = '24px';
+        infoContainer.style.padding = '20px';
+        infoContainer.style.backgroundColor = '#ecfdf5';
+        infoContainer.style.border = '1px solid #a7f3d0';
+        infoContainer.style.borderRadius = '12px';
+        infoContainer.style.color = '#065f46';
+        
+        const descSection = document.getElementById('detail-tugas-desc');
+        if (descSection && descSection.parentElement) {
+            descSection.parentElement.appendChild(infoContainer);
+        }
+    }
+
     if (t.status === 'sudah') {
-        uploadForm.style.display = 'none';
-        document.querySelector('.upload-dropzone').parentElement.style.display = 'none';
+        if (uploadForm) uploadForm.style.display = 'none';
+        if (uploadTitle) uploadTitle.style.display = 'none';
+        
+        infoContainer.style.display = 'block';
+        infoContainer.innerHTML = `
+            <h4 style="margin: 0 0 8px 0; font-weight: 800; font-size: 1.05rem;">✓ Berkas Jawaban Telah Terkirim</h4>
+            <p style="margin: 0 0 4px 0; font-size: 0.95rem;"><strong>File:</strong> ${t.submittedFile || 'jawaban.pdf'}</p>
+            <p style="margin: 0; font-size: 0.9rem; color: #047857;"><strong>Dikumpulkan pada:</strong> ${t.submittedTime || 'Tepat Waktu'}</p>
+        `;
     } else {
-        uploadForm.style.display = 'flex';
-        document.querySelector('.upload-dropzone').parentElement.style.display = 'block';
+        if (uploadForm) uploadForm.style.display = 'flex';
+        if (uploadTitle) uploadTitle.style.display = 'block';
+        infoContainer.style.display = 'none';
     }
 }
 
@@ -242,21 +295,21 @@ function showPanel(panelName) {
     const pageTitle = document.getElementById('tugas-main-title');
     const pageSubtitle = document.getElementById('tugas-main-subtitle');
 
-    listPanel.style.display = 'none';
-    detailPanel.style.display = 'none';
-    successPanel.style.display = 'none';
+    if (listPanel) listPanel.style.display = 'none';
+    if (detailPanel) detailPanel.style.display = 'none';
+    if (successPanel) successPanel.style.display = 'none';
 
     if (panelName === 'list') {
-        listPanel.style.display = 'block';
-        pageTitle.textContent = 'Tugas';
-        pageSubtitle.textContent = 'Daftar penugasan dan status pengerjaan Anda.';
+        if (listPanel) listPanel.style.display = 'block';
+        if (pageTitle) pageTitle.textContent = 'Tugas';
+        if (pageSubtitle) pageSubtitle.textContent = 'Daftar penugasan dan status pengerjaan Anda.';
     } else if (panelName === 'detail') {
-        detailPanel.style.display = 'block';
-        pageTitle.textContent = 'Detail Tugas';
-        pageSubtitle.textContent = 'Informasi deskripsi dan formulir pengumpulan tugas.';
+        if (detailPanel) detailPanel.style.display = 'block';
+        if (pageTitle) pageTitle.textContent = 'Detail Tugas';
+        if (pageSubtitle) pageSubtitle.textContent = 'Informasi deskripsi dan formulir pengumpulan tugas.';
     } else if (panelName === 'success') {
-        successPanel.style.display = 'block';
-        pageTitle.textContent = 'Pengumpulan Berhasil';
-        pageSubtitle.textContent = 'Status konfirmasi pengumpulan berkas jawaban Anda.';
+        if (successPanel) successPanel.style.display = 'block';
+        if (pageTitle) pageTitle.textContent = 'Pengumpulan Berhasil';
+        if (pageSubtitle) pageSubtitle.textContent = 'Status konfirmasi pengumpulan berkas jawaban Anda.';
     }
 }

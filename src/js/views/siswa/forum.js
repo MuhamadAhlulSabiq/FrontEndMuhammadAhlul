@@ -1,143 +1,21 @@
-import { storage } from '../../../src/js/utils/storage.js';
-import { authApi } from '../../../src/js/api/auth.js';
-
-// Forums Thread Database matching mockup lists
-const DISKUSI_DATABASE = [
-    {
-        id: 1,
-        title: 'Pengertian Persamaan Kuadrat',
-        subject: 'Matematika - Kelas 5',
-        classCode: 'mtk',
-        author: 'Bu Nina',
-        role: 'Guru Matematika',
-        authorAvatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina',
-        time: '2 jam yang lalu',
-        body: 'Halo semuanya, pada pertemuan ini kita membahas tentang pengertian persamaan kuadrat. Silahkan bertanya jika ada yang belum dipahami.',
-        views: 12,
-        commentCount: 3,
-        isMine: false
-    },
-    {
-        id: 2,
-        title: 'Hobbies',
-        subject: 'Bahasa Inggris - Kelas 2',
-        classCode: 'ing',
-        author: 'Miss Sarah',
-        role: 'Guru Bahasa Inggris',
-        authorAvatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=guru_sarah',
-        time: '1 hari yang lalu',
-        body: 'Good morning class! What are your hobbies? Write them down below.',
-        views: 10,
-        commentCount: 2,
-        isMine: false
-    },
-    {
-        id: 3,
-        title: 'Tugas Matematika - Pecahan',
-        subject: 'Matematika - Kelas 5',
-        classCode: 'mtk',
-        author: 'Rohmat',
-        role: 'Siswa',
-        authorAvatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_rohmat',
-        time: '2 hari yang lalu',
-        body: 'Apakah ada yang kesulitan mengerjakan soal pecahan nomor 5?',
-        views: 8,
-        commentCount: 2,
-        isMine: true
-    },
-    {
-        id: 4,
-        title: 'Tugas Bahasa Inggris - Coloring',
-        subject: 'Bahasa Inggris - Kelas 2',
-        classCode: 'ing',
-        author: 'Azzahra',
-        role: 'Siswa',
-        authorAvatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_azzahra',
-        time: '3 hari yang lalu',
-        body: 'Apakah warna daun di halaman 12 boleh bebas?',
-        views: 5,
-        commentCount: 1,
-        isMine: true
-    }
-];
-
-// Thread Comments Database mapped by Thread ID
-const KOMENTAR_DATABASE = {
-    1: [
-        {
-            id: 101,
-            author: 'Rohmat',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_rohmat',
-            text: 'Terimakasih penjelasannya bu',
-            time: '1 jam yang lalu'
-        },
-        {
-            id: 102,
-            author: 'Azzahra',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_azzahra',
-            text: 'Penerapan persamaan sistem kuadrat apa saja bu?',
-            time: '45 menit yang lalu'
-        },
-        {
-            id: 103,
-            author: 'Bu Nina',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina',
-            text: 'Melempar bola dan menghitung keuntungan dari waktu ke waktu.',
-            time: '30 menit yang lalu'
-        }
-    ],
-    2: [
-        {
-            id: 201,
-            author: 'Azzahra',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_azzahra',
-            text: 'My hobby is reading books.',
-            time: '20 jam yang lalu'
-        },
-        {
-            id: 202,
-            author: 'Rohmat',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_rohmat',
-            text: 'I like swimming, Miss!',
-            time: '18 jam yang lalu'
-        }
-    ],
-    3: [
-        {
-            id: 301,
-            author: 'Azzahra',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_azzahra',
-            text: 'Iya, saya juga agak bingung menyederhanakan pecahannya.',
-            time: '1 hari yang lalu'
-        },
-        {
-            id: 302,
-            author: 'Bu Nina',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina',
-            text: 'Bagi pembilang dan penyebut dengan FPB mereka, ya.',
-            time: '20 jam yang lalu'
-        }
-    ],
-    4: [
-        {
-            id: 401,
-            author: 'Miss Sarah',
-            avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=guru_sarah',
-            text: 'Yes, you can color it green or yellow.',
-            time: '2 hari yang lalu'
-        }
-    ]
-};
+import { storage } from '../../utils/storage.js';
+import { authApi } from '../../api/auth.js';
 
 let activeTab = 'semua';
 let selectedThread = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize mock database
+    storage.initDb();
+
     // 1. Initialize user info display
     const user = storage.getUser();
     if (user) {
-        document.getElementById('user-display-name').textContent = user.name || 'Rohmat';
-        document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
+        const dispName = document.getElementById('user-display-name');
+        if (dispName) dispName.textContent = user.name || 'Rohmat';
+        
+        const avatar = document.getElementById('user-avatar');
+        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
     }
 
     // 2. Set up logout
@@ -163,98 +41,134 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Switch to Create Panel
-    document.getElementById('btn-create-discussion').addEventListener('click', () => {
-        showPanel('create');
-    });
+    const createDiscussionBtn = document.getElementById('btn-create-discussion');
+    if (createDiscussionBtn) {
+        createDiscussionBtn.addEventListener('click', () => {
+            showPanel('create');
+        });
+    }
 
     // 6. Cancel creation listeners
-    document.getElementById('btn-cancel-create-top').addEventListener('click', () => {
-        showPanel('list');
-    });
-    document.getElementById('btn-cancel-create').addEventListener('click', () => {
-        showPanel('list');
-    });
+    const cancelCreateTop = document.getElementById('btn-cancel-create-top');
+    if (cancelCreateTop) {
+        cancelCreateTop.addEventListener('click', () => {
+            showPanel('list');
+        });
+    }
+    const cancelCreate = document.getElementById('btn-cancel-create');
+    if (cancelCreate) {
+        cancelCreate.addEventListener('click', () => {
+            showPanel('list');
+        });
+    }
 
     // 7. Back to List from details
-    document.getElementById('btn-back-to-forum').addEventListener('click', () => {
-        renderForumList();
-        showPanel('list');
-    });
+    const backToForumBtn = document.getElementById('btn-back-to-forum');
+    if (backToForumBtn) {
+        backToForumBtn.addEventListener('click', () => {
+            renderForumList();
+            showPanel('list');
+        });
+    }
 
     // 8. Handle Create Discussion Form Submit
     const createForm = document.getElementById('create-discussion-form');
-    createForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const title = document.getElementById('discussion-title').value;
-        const subjCode = document.getElementById('discussion-subject').value;
-        const classLevel = document.getElementById('discussion-class').value;
-        const body = document.getElementById('discussion-body').value;
+    if (createForm) {
+        createForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('discussion-title').value;
+            const subjCode = document.getElementById('discussion-subject').value;
+            const classLevel = document.getElementById('discussion-class').value;
+            const body = document.getElementById('discussion-body').value;
 
-        const subjectLabel = subjCode === 'mtk' ? 'Matematika' : 'Bahasa Inggris';
-        const currentStudentName = user ? user.name : 'Rohmat';
+            const subjectLabel = subjCode === 'mtk' ? 'Matematika' : 'Bahasa Inggris';
+            const currentStudentName = user ? user.name : 'Rohmat';
+            const studentId = user ? user.id : '1';
 
-        // Add to local database
-        const newThread = {
-            id: DISKUSI_DATABASE.length + 1,
-            title: title,
-            subject: `${subjectLabel} - Kelas ${classLevel}`,
-            classCode: subjCode,
-            author: currentStudentName,
-            role: 'Siswa',
-            authorAvatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user ? user.id : '1'}`,
-            time: 'Baru saja',
-            body: body,
-            views: 0,
-            commentCount: 0,
-            isMine: true
-        };
+            // Add to localStorage
+            const threads = storage.getThreads();
+            const newThread = {
+                id: threads.length + 1,
+                title: title,
+                subject: `${subjectLabel} - Kelas ${classLevel}`,
+                classCode: subjCode,
+                author: currentStudentName,
+                role: 'Siswa',
+                authorAvatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${studentId}`,
+                time: 'Baru saja',
+                body: body,
+                views: 0,
+                commentCount: 0,
+                isMine: true
+            };
 
-        DISKUSI_DATABASE.unshift(newThread);
-        KOMENTAR_DATABASE[newThread.id] = [];
+            storage.addThread(newThread);
 
-        createForm.reset();
-        renderForumList();
-        showPanel('list');
-    });
+            // Add activity log
+            storage.addActivity({
+                title: `Membuat diskusi "${title}"`,
+                time: 'Baru saja',
+                type: 'message',
+                classCode: subjCode
+            });
+
+            createForm.reset();
+            renderForumList();
+            showPanel('list');
+        });
+    }
 
     // 9. Handle Submit Comment Form
     const commentForm = document.getElementById('comment-post-form');
     const commentText = document.getElementById('comment-input-text');
 
-    commentForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const textVal = commentText.value.trim();
-        if (textVal && selectedThread) {
-            const currentStudentName = user ? user.name : 'Rohmat';
-            const newComment = {
-                id: Math.floor(Math.random() * 1000) + 500,
-                author: currentStudentName,
-                avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user ? user.id : '1'}`,
-                text: textVal,
-                time: 'Baru saja'
-            };
+    if (commentForm) {
+        commentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const textVal = commentText.value.trim();
+            if (textVal && selectedThread) {
+                const currentStudentName = user ? user.name : 'Rohmat';
+                const studentId = user ? user.id : '1';
+                
+                const newComment = {
+                    id: Math.floor(Math.random() * 1000) + 500,
+                    author: currentStudentName,
+                    avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${studentId}`,
+                    text: textVal,
+                    time: 'Baru saja'
+                };
 
-            // Save to comments db
-            if (!KOMENTAR_DATABASE[selectedThread.id]) {
-                KOMENTAR_DATABASE[selectedThread.id] = [];
+                // Save to comments database in localStorage
+                storage.addComment(selectedThread.id, newComment);
+                
+                // Add activity log
+                storage.addActivity({
+                    title: `Membalas diskusi "${selectedThread.title}"`,
+                    time: 'Baru saja',
+                    type: 'message',
+                    classCode: selectedThread.classCode
+                });
+
+                // Update comments count on local selected object
+                selectedThread.commentCount += 1;
+
+                commentText.value = '';
+                renderCommentsFeed(selectedThread.id);
             }
-            KOMENTAR_DATABASE[selectedThread.id].push(newComment);
-            
-            // Update comments count on database
-            selectedThread.commentCount = KOMENTAR_DATABASE[selectedThread.id].length;
-
-            commentText.value = '';
-            renderCommentsFeed(selectedThread.id);
-        }
-    });
+        });
+    }
 });
 
 function renderForumList() {
     const container = document.getElementById('forum-feed');
+    if (!container) return;
     
+    // Load threads from localStorage
+    const threads = storage.getThreads();
+
     // Filter list
-    const filtered = DISKUSI_DATABASE.filter(d => {
+    const filtered = threads.filter(d => {
         if (activeTab === 'semua') return true;
         return d.isMine === true;
     });
@@ -270,7 +184,7 @@ function renderForumList() {
     }
 
     container.innerHTML = filtered.map(d => `
-        <div class="list-item" data-id="${d.id}">
+        <div class="list-item" data-id="${d.id}" style="animation: fadeIn 0.3s ease;">
             <div class="item-left">
                 <div class="item-icon-box ${d.classCode}">
                     ${d.classCode === 'mtk' ? '✕' : 'En'}
@@ -294,7 +208,7 @@ function renderForumList() {
     container.querySelectorAll('.list-item').forEach(item => {
         item.addEventListener('click', () => {
             const id = parseInt(item.dataset.id);
-            const thread = DISKUSI_DATABASE.find(d => d.id === id);
+            const thread = threads.find(d => d.id === id);
             if (thread) {
                 selectedThread = thread;
                 loadThreadDetails(thread);
@@ -318,11 +232,14 @@ function loadThreadDetails(t) {
 }
 
 function renderCommentsFeed(threadId) {
-    const commentsList = KOMENTAR_DATABASE[threadId] || [];
+    const commentsList = storage.getComments(threadId);
+    
     const countTitle = document.getElementById('comments-count-title');
-    countTitle.textContent = `${commentsList.length} Komentar`;
+    if (countTitle) countTitle.textContent = `${commentsList.length} Komentar`;
 
     const commentsContainer = document.getElementById('comments-list-feed');
+    if (!commentsContainer) return;
+
     if (commentsList.length === 0) {
         commentsContainer.innerHTML = `
             <div class="empty-state" style="padding: 20px;">
@@ -333,10 +250,10 @@ function renderCommentsFeed(threadId) {
     }
 
     commentsContainer.innerHTML = commentsList.map(c => `
-        <div class="comment-item">
+        <div class="comment-item" style="animation: fadeIn 0.3s ease;">
             <img src="${c.avatar}" alt="User Avatar" class="avatar" style="width: 36px; height: 36px;">
             <div class="comment-bubble-content">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                     <span class="comment-author">${c.author}</span>
                     <span class="comment-time">${c.time}</span>
                 </div>
@@ -354,21 +271,21 @@ function showPanel(panelName) {
     const pageTitle = document.getElementById('forum-main-title');
     const pageSubtitle = document.getElementById('forum-main-subtitle');
 
-    listPanel.style.display = 'none';
-    createPanel.style.display = 'none';
-    detailPanel.style.display = 'none';
+    if (listPanel) listPanel.style.display = 'none';
+    if (createPanel) createPanel.style.display = 'none';
+    if (detailPanel) detailPanel.style.display = 'none';
 
     if (panelName === 'list') {
-        listPanel.style.display = 'block';
-        pageTitle.textContent = 'Forum Diskusi';
-        pageSubtitle.textContent = 'Diskusikan materi kelas bersama pengajar dan teman sekelas Anda.';
+        if (listPanel) listPanel.style.display = 'block';
+        if (pageTitle) pageTitle.textContent = 'Forum Diskusi';
+        if (pageSubtitle) pageSubtitle.textContent = 'Diskusikan materi kelas bersama pengajar dan teman sekelas Anda.';
     } else if (panelName === 'create') {
-        createPanel.style.display = 'block';
-        pageTitle.textContent = 'Buat Diskusi';
-        pageSubtitle.textContent = 'Tanyakan hal yang membingungkan seputar materi Anda.';
+        if (createPanel) createPanel.style.display = 'block';
+        if (pageTitle) pageTitle.textContent = 'Buat Diskusi';
+        if (pageSubtitle) pageSubtitle.textContent = 'Tanyakan hal yang membingungkan seputar materi Anda.';
     } else if (panelName === 'detail') {
-        detailPanel.style.display = 'block';
-        pageTitle.textContent = 'Detail Diskusi';
-        pageSubtitle.textContent = 'Bahas topik pembelajaran secara mendalam.';
+        if (detailPanel) detailPanel.style.display = 'block';
+        if (pageTitle) pageTitle.textContent = 'Detail Diskusi';
+        if (pageSubtitle) pageSubtitle.textContent = 'Bahas topik pembelajaran secara mendalam.';
     }
 }

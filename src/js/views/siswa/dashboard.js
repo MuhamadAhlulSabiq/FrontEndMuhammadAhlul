@@ -1,14 +1,24 @@
-import { storage } from '../../../src/js/utils/storage.js';
-import { authApi } from '../../../src/js/api/auth.js';
+import { storage } from '../../utils/storage.js';
+import { authApi } from '../../api/auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize mock database
+    storage.initDb();
+
     // 1. Initialize user info display
     const user = storage.getUser();
     if (user) {
-        document.getElementById('welcome-title').textContent = `Halo, ${user.name || 'Rohmat'}!`;
-        document.getElementById('user-display-name').textContent = user.name || 'Rohmat';
-        document.getElementById('user-display-role').textContent = (user.role || 'Siswa').toUpperCase();
-        document.getElementById('user-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
+        const welcomeTitle = document.getElementById('welcome-title');
+        if (welcomeTitle) welcomeTitle.textContent = `Halo, ${user.name || 'Rohmat'}!`;
+        
+        const dispName = document.getElementById('user-display-name');
+        if (dispName) dispName.textContent = user.name || 'Rohmat';
+        
+        const dispRole = document.getElementById('user-display-role');
+        if (dispRole) dispRole.textContent = (user.role || 'Siswa').toUpperCase();
+        
+        const avatar = document.getElementById('user-avatar');
+        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=siswa_${user.id || 'seed'}`;
     }
 
     // 2. Set up logout
@@ -19,92 +29,77 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Render exact mockup data for Dashboard
-    renderDashboard({
-        stats: {
-            kelasCount: 2,
-            materiCount: 10,
-            tugasCount: 5,
-            pengumumanCount: 2
-        },
-        materiTerbaru: [
-            {
-                id: 1,
-                title: 'Sistem Persamaan Kuadrat',
-                subject: 'Matematika - Kelas 5',
-                time: '2 hari yang lalu',
-                classCode: 'mtk',
-                docType: 'PDF'
-            },
-            {
-                id: 2,
-                title: 'Hobbies',
-                subject: 'Bahasa Inggris - Kelas 2',
-                time: '3 hari yang lalu',
-                classCode: 'ing',
-                docType: 'PPT'
-            }
-        ],
-        tugasTerdekat: [
-            {
-                id: 10,
-                title: 'Tugas Matematika',
-                date: '25 Mei 2026',
-                classCode: 'mtk'
-            },
-            {
-                id: 11,
-                title: 'Tugas Bahasa Inggris',
-                date: '24 Mei 2026',
-                classCode: 'ing'
-            }
-        ]
-    });
+    // 3. Load dynamic dashboard data from localStorage
+    loadAndRenderDashboard();
 });
 
-function renderDashboard(data) {
-    // Stats count
-    document.getElementById('stat-kelas-count').textContent = data.stats.kelasCount;
-    document.getElementById('stat-materi-count').textContent = data.stats.materiCount;
-    document.getElementById('stat-tugas-count').textContent = data.stats.tugasCount;
-    document.getElementById('stat-pengumuman-count').textContent = data.stats.pengumumanCount;
+function loadAndRenderDashboard() {
+    const classes = storage.getClasses();
+    const materials = storage.getMaterials();
+    const assignments = storage.getAssignments();
+    const announcements = storage.getAnnouncements();
 
-    // Render Materi Terbaru
+    // Calculate dynamic stats
+    const kelasCount = classes.length;
+    const materiCount = materials.length;
+    const pendingAssignments = assignments.filter(t => t.status === 'belum');
+    const tugasCount = pendingAssignments.length;
+    const pengumumanCount = announcements.length;
+
+    // Render Stats
+    document.getElementById('stat-kelas-count').textContent = kelasCount;
+    document.getElementById('stat-materi-count').textContent = materiCount;
+    document.getElementById('stat-tugas-count').textContent = tugasCount;
+    document.getElementById('stat-pengumuman-count').textContent = pengumumanCount;
+
+    // Render 2 Recent Materials
+    const recentMaterials = materials.slice(0, 2);
     const materiContainer = document.getElementById('recent-materials');
-    materiContainer.innerHTML = data.materiTerbaru.map(m => `
-        <div class="list-item" onclick="window.location.href='materi.html'">
-            <div class="item-left">
-                <div class="item-icon-box ${m.classCode}">
-                    ${m.classCode === 'mtk' ? '✕' : 'En'}
+    
+    if (recentMaterials.length === 0) {
+        materiContainer.innerHTML = '<div class="empty-state">Tidak ada materi terbaru.</div>';
+    } else {
+        materiContainer.innerHTML = recentMaterials.map(m => `
+            <div class="list-item" onclick="window.location.href='materi.html'">
+                <div class="item-left">
+                    <div class="item-icon-box ${m.classCode}">
+                        ${m.classCode === 'mtk' ? '✕' : 'En'}
+                    </div>
+                    <div class="item-details">
+                        <h4>${m.title}</h4>
+                        <p>${m.subject}</p>
+                    </div>
                 </div>
-                <div class="item-details">
-                    <h4>${m.title}</h4>
-                    <p>${m.subject}</p>
+                <div class="item-right">
+                    <span class="badge-doc ${m.docType.toLowerCase()}">${m.docType}</span>
+                    <span class="item-date">${m.time}</span>
                 </div>
             </div>
-            <div class="item-right">
-                <span class="badge-doc ${m.docType.toLowerCase()}">${m.docType}</span>
-                <span class="item-date">${m.time}</span>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+    }
 
-    // Render Tugas Terdekat
+    // Render 2 Upcoming Assignments
+    const upcomingAssignments = pendingAssignments.slice(0, 2);
     const tugasContainer = document.getElementById('upcoming-assignments');
-    tugasContainer.innerHTML = data.tugasTerdekat.map(t => `
-        <div class="list-item" onclick="window.location.href='tugas.html'">
-            <div class="item-left">
-                <div class="item-icon-box ${t.classCode}">
-                    ${t.classCode === 'mtk' ? '✕' : 'En'}
+    
+    if (upcomingAssignments.length === 0) {
+        tugasContainer.innerHTML = '<div class="empty-state">Tidak ada tugas terdekat.</div>';
+    } else {
+        tugasContainer.innerHTML = upcomingAssignments.map(t => `
+            <div class="list-item" onclick="window.location.href='tugas.html'">
+                <div class="item-left">
+                    <div class="item-icon-box ${t.classCode}">
+                        ${t.classCode === 'mtk' ? '✕' : 'En'}
+                    </div>
+                    <div class="item-details">
+                        <h4>${t.title}</h4>
+                        <p>Deadline: ${t.deadline}</p>
+                    </div>
                 </div>
-                <div class="item-details">
-                    <h4>${t.title}</h4>
-                    <p>Deadline: ${t.date}</p>
+                <div class="item-right">
+                    <span class="item-date" style="color: #ef4444; font-weight: 700;">Segera</span>
                 </div>
             </div>
-            <div class="item-right">
-                <span class="item-date" style="color: #ef4444; font-weight: 700;">Segera</span>
-            </div>
-        </div>
-    `).join('');
+        `).join('');
+    }
 }
