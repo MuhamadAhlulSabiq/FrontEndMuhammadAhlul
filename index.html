@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Frontend Hello World</title>
 </head>
+
 <body>
     <h1>Selamat Datang di Frontend</h1>
-    <h2 id="output-dari-be">Loading...</h2> 
+    <h2 id="output-dari-be">Loading...</h2>
 
     <script>
         // Mengambil data dari Laravel dengan konfigurasi lengkap & penanganan error
@@ -17,26 +19,27 @@
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => {
-            // Memeriksa apakah status HTTP berada di fungsi 200-299
-            if (!response.ok) {
-                throw new Error('Respons server tidak ok: ' + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Mengubah teks di HTML sesuai data sukses dari Laravel
-            document.getElementById('output-dari-be').innerText = data.message;
-        })
-        .catch(error => {
-            // Menampilkan error di konsol browser
-            console.error('Detail Error:', error);
-            
-            // Menampilkan pesan error ke user di halaman web
-            const outputElement = document.getElementById('output-dari-be');
-            outputElement.innerText = 'Gagal memuat: ' + error.message;
-            outputElement.style.color = 'red'; // Opsional: memberikan warna merah saat error
-        });
+            .then(response => {
+                // Memeriksa apakah status HTTP berada di fungsi 200-299
+                if (!response.ok) {
+                    throw new Error('Respons server tidak ok: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Mengubah teks di HTML sesuai data sukses dari Laravel
+                document.getElementById('output-dari-be').innerText = data.message;
+            })
+            .catch(error => {
+                // Menampilkan error di konsol browser
+                console.error('Detail Error:', error);
+
+                // Menampilkan pesan error ke user di halaman web
+                const outputElement = document.getElementById('output-dari-be');
+                outputElement.innerText = 'Gagal memuat: ' + error.message;
+                outputElement.style.color = 'red'; // Opsional: memberikan warna merah saat error
+            });
     </script>
 </body>
+
 </html>
