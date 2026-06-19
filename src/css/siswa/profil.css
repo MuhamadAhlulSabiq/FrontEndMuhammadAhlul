@@ -1,0 +1,92 @@
+/* ==========================================
+   PROFIL PAGE SPECIFIC STYLES (profil.css)
+   ========================================== */
+
+/* Profil Table Card */
+.siswa-theme .profile-avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.siswa-theme .profile-avatar-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+.siswa-theme .profile-name-large {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+.siswa-theme .profile-info-table {
+    background-color: #e3f2fd; /* Light blue tint container */
+    border-radius: 12px;
+    padding: 12px 24px;
+    margin-bottom: 32px;
+}
+
+.siswa-theme .profile-info-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(21, 82, 198, 0.1);
+}
+
+.siswa-theme .profile-info-row:last-child {
+    border-bottom: none;
+}
+
+.siswa-theme .profile-info-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000000;
+}
+
+.siswa-theme .profile-info-val {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #374151;
+}
+
+.siswa-theme .profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+}
+
+.siswa-theme .btn-profile-edit {
+    background-color: #1552C6;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(21, 82, 198, 0.2);
+    transition: background 0.2s;
+}
+
+.siswa-theme .btn-profile-edit:hover {
+    background-color: #0b43aa;
+}
+
+.siswa-theme .btn-profile-logout {
+    background-color: #f3f4f6;
+    color: #ef4444;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.siswa-theme .btn-profile-logout:hover {
+    background-color: #fee2e2;
+}

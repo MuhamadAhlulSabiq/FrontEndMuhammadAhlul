@@ -1,0 +1,252 @@
+/* ==========================================
+   TUGAS PAGE SPECIFIC STYLES (tugas.css)
+   ========================================== */
+
+/* Tabs Filter */
+.siswa-theme .tabs-container {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.siswa-theme .tab-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: #f3f4f6;
+    color: #888888;
+    transition: all 0.2s ease;
+}
+
+.siswa-theme .tab-btn:hover {
+    background-color: #e5e7eb;
+}
+
+.siswa-theme .tab-btn.active {
+    background-color: #1552C6;
+    color: #ffffff;
+}
+
+/* Badges */
+.siswa-theme .badge-status {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.siswa-theme .badge-status.belum {
+    background-color: #fef08a;
+    color: #ca8a04;
+}
+
+.siswa-theme .badge-status.sudah {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+/* Detail view panels */
+.siswa-theme .detail-container {
+    max-width: 900px;
+    animation: fadeIn 0.4s ease;
+}
+
+.siswa-theme .back-link {
+    color: #1552C6;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+
+.siswa-theme .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.siswa-theme .teacher-info-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.siswa-theme .teacher-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+.siswa-theme .teacher-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000000;
+}
+
+.siswa-theme .teacher-subject {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.siswa-theme .detail-section {
+    margin-bottom: 32px;
+}
+
+.siswa-theme .detail-section-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 12px;
+}
+
+.siswa-theme .detail-body-text {
+    font-size: 0.95rem;
+    color: #888888;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* Attachments */
+.siswa-theme .attachment-card {
+    background-color: #f8fafc;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.siswa-theme .attachment-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.siswa-theme .attachment-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.siswa-theme .attachment-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #000000;
+}
+
+.siswa-theme .attachment-size {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.siswa-theme .download-btn-svg {
+    width: 24px;
+    height: 24px;
+    stroke: #1552C6;
+    stroke-width: 2;
+    fill: none;
+    cursor: pointer;
+}
+
+/* Upload drag and drop */
+.siswa-theme .upload-dropzone {
+    background-color: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.siswa-theme .upload-dropzone:hover {
+    border-color: #1552C6;
+}
+
+.siswa-theme .upload-icon-svg {
+    width: 40px;
+    height: 40px;
+    stroke: #888888;
+    stroke-width: 2;
+    fill: none;
+}
+
+.siswa-theme .upload-text {
+    font-size: 0.95rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.siswa-theme .btn-action-primary {
+    width: 100%;
+    padding: 16px;
+    background-color: #1552C6;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(21, 82, 198, 0.2);
+}
+
+.siswa-theme .btn-action-primary:hover {
+    background-color: #0b43aa;
+}
+
+/* Success Screen (Kumpul Tugas) */
+.siswa-theme .success-screen {
+    max-width: 500px;
+    margin: 60px auto;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+}
+
+.siswa-theme .success-circle {
+    width: 90px;
+    height: 90px;
+    background-color: #10b981;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+    color: #ffffff;
+}
+
+.siswa-theme .success-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.siswa-theme .success-subtitle {
+    font-size: 1rem;
+    color: #888888;
+    margin-bottom: 8px;
+}
+
+.siswa-theme .success-desc {
+    font-size: 1rem;
+    color: #888888;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}

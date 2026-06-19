@@ -1,0 +1,49 @@
+/* ==========================================
+   MATERI PAGE SPECIFIC STYLES (materi.css)
+   ========================================== */
+
+/* Tabs Filter */
+.siswa-theme .tabs-container {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.siswa-theme .tab-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: #f3f4f6;
+    color: #888888;
+    transition: all 0.2s ease;
+}
+
+.siswa-theme .tab-btn:hover {
+    background-color: #e5e7eb;
+}
+
+.siswa-theme .tab-btn.active {
+    background-color: #1552C6;
+    color: #ffffff;
+}
+
+/* Document type tag styles */
+.siswa-theme .badge-doc {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.siswa-theme .badge-doc.pdf {
+    background-color: #dbeafe;
+    color: #1552C6;
+}
+
+.siswa-theme .badge-doc.ppt {
+    background-color: #fef08a;
+    color: #ca8a04;
+}
