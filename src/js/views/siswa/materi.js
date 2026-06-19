@@ -1,9 +1,13 @@
 import { storage } from '../../utils/storage.js';
 import { authApi } from '../../api/auth.js';
+import { initSidebar } from '../../components/sidebar.js';
 
 let activeSubjectFilter = 'semua';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Sidebar
+    initSidebar();
+
     // Initialize mock database
     storage.initDb();
 

@@ -1,10 +1,14 @@
 import { storage } from '../../utils/storage.js';
 import { authApi } from '../../api/auth.js';
+import { initSidebar } from '../../components/sidebar.js';
 
 let activeTab = 'semua';
 let selectedThread = null;
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Sidebar
+    initSidebar();
+
     // Initialize mock database
     storage.initDb();
 
