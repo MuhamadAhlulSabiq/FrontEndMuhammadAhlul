@@ -1,0 +1,375 @@
+/* ==========================================
+   COMMON STYLES FOR GURU (guru-common.css)
+   ========================================== */
+
+.guru-theme {
+    background-color: #ffffff;
+    color: #111827;
+}
+
+/* Sidebar Styling - Emerald Green Theme */
+.guru-theme .sidebar {
+    background-color: #10b981;
+    border-right: none;
+    padding: 30px 20px;
+    height: 100vh;
+    color: #ffffff;
+}
+
+.guru-theme .logo-text {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.guru-theme .logo-icon-svg {
+    fill: #ffffff;
+    width: 38px;
+    height: 38px;
+}
+
+.guru-theme .sidebar-menu {
+    gap: 6px;
+}
+
+.guru-theme .menu-item {
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.guru-theme .menu-item:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.guru-theme .menu-item.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.guru-theme .menu-icon-svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 0;
+}
+
+.guru-theme .sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.guru-theme .btn-logout {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.guru-theme .btn-logout:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* Header & Profile styling */
+.guru-theme .top-bar {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 40px;
+}
+
+.guru-theme .welcome-text h1 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+.guru-theme .welcome-text p {
+    color: #888888;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.guru-theme .user-info span {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #000000;
+    display: block;
+}
+
+.guru-theme .user-info p {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.guru-theme .user-profile {
+    gap: 12px;
+}
+
+.guru-theme .avatar {
+    width: 42px;
+    height: 42px;
+    border: none;
+}
+
+.guru-theme .bell-icon-btn {
+    background: none;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.guru-theme .bell-icon-btn:hover {
+    background: #f3f4f6;
+}
+
+/* Sections */
+.guru-theme .section-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 24px;
+}
+
+/* General list item layout */
+.guru-theme .list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.guru-theme .list-item {
+    background-color: #f8fafc;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.guru-theme .list-item:hover {
+    background-color: #f1f5f9;
+}
+
+.guru-theme .item-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.guru-theme .item-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.guru-theme .item-icon-box.mtk {
+    background-color: #d1fae5; /* Soft emerald for teacher math */
+    color: #059669;
+}
+
+.guru-theme .item-icon-box.ing {
+    background-color: #bfdbfe; /* Soft blue */
+    color: #1d4ed8;
+}
+
+.guru-theme .item-icon-box.general {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.guru-theme .item-details h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 4px;
+}
+
+.guru-theme .item-details p {
+    font-size: 0.9rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.guru-theme .item-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.guru-theme .item-date {
+    font-size: 0.9rem;
+    color: #888888;
+    font-weight: 500;
+    text-align: right;
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: zoomIn 0.25s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888888;
+}
+
+.modal-close:hover {
+    color: #000000;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.form-input, .form-textarea, .form-select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-guru {
+    background-color: #10b981;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.btn-guru:hover {
+    background-color: #059669;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1.5px solid #e2e8f0;
+    color: #475569;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+/* Badges for doc types */
+.badge-doc {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-doc.pdf {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.badge-doc.ppt {
+    background-color: #ffedd5;
+    color: #f97316;
+}
+
+.badge-doc.doc {
+    background-color: #dbeafe;
+    color: #3b82f6;
+}
+
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

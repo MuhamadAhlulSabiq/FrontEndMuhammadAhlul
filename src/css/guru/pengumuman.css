@@ -1,0 +1,67 @@
+/* ==========================================
+   PENGUMUMAN PAGE STYLES (pengumuman.css)
+   ========================================== */
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 450px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.search-icon-svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+}
+
+/* Badges tags */
+.guru-theme .badge-tag {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.guru-theme .badge-tag.penting {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.guru-theme .badge-tag.kelas {
+    background-color: #d1fae5; /* Emerald green for teacher class announcements */
+    color: #065f46;
+}
+
+.guru-theme .badge-tag.umum {
+    background-color: #e2e8f0;
+    color: #475569;
+}

@@ -49,7 +49,7 @@ export const authApi = {
 
         // Redirect to login page
         const path = window.location.pathname;
-        if (path.includes('/pages/siswa/')) {
+        if (path.includes('/pages/siswa/') || path.includes('/pages/guru/')) {
             window.location.href = '../../login.html';
         } else {
             window.location.href = '/login.html';
