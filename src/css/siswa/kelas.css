@@ -1,0 +1,175 @@
+/* ==========================================
+   KELAS MY PAGE STYLES (kelas.css)
+   ========================================== */
+
+/* Grid Layout for Kelas Saya */
+.siswa-theme .class-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+.siswa-theme .class-card {
+    background-color: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+.siswa-theme .class-card:hover {
+    box-shadow: 0 10px 25px rgba(21, 82, 198, 0.05);
+}
+
+.siswa-theme .class-card-header {
+    background: none;
+    height: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.siswa-theme .class-card-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+.siswa-theme .class-card-illustration {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fcfcfc;
+    padding: 10px;
+}
+
+.siswa-theme .class-card-illustration svg {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+/* Gabung Kelas Section */
+.siswa-theme .gabung-kelas-box {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 40px;
+}
+
+.siswa-theme .gabung-kelas-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+.siswa-theme .gabung-kelas-desc {
+    font-size: 0.95rem;
+    color: #888888;
+    margin-bottom: 24px;
+}
+
+.siswa-theme .gabung-kelas-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+}
+
+.siswa-theme .gabung-input {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000000;
+    box-sizing: border-box;
+}
+
+.siswa-theme .gabung-input:focus {
+    outline: none;
+    border-color: #1552C6;
+    box-shadow: 0 0 0 4px rgba(21, 82, 198, 0.1);
+}
+
+.siswa-theme .btn-gabung {
+    background-color: #1552C6;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+}
+
+.siswa-theme .btn-gabung:hover {
+    background-color: #0b43aa;
+}
+
+/* Success Screen (Bergabung Kelas) */
+.siswa-theme .success-screen {
+    max-width: 500px;
+    margin: 60px auto;
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+}
+
+.siswa-theme .success-circle {
+    width: 90px;
+    height: 90px;
+    background-color: #10b981;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+    color: #ffffff;
+}
+
+.siswa-theme .success-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.siswa-theme .success-desc {
+    font-size: 1rem;
+    color: #888888;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.siswa-theme .btn-action-primary {
+    width: 100%;
+    padding: 16px;
+    background-color: #1552C6;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(21, 82, 198, 0.2);
+}
+
+.siswa-theme .btn-action-primary:hover {
+    background-color: #0b43aa;
+}
+
+@media (max-width: 960px) {
+    .siswa-theme .class-grid {
+        grid-template-columns: 1fr;
+    }
+}

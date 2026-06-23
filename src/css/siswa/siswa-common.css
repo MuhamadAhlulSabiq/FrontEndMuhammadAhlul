@@ -1,0 +1,232 @@
+/* ==========================================
+   COMMON STYLES FOR SISWA (siswa-common.css)
+   ========================================== */
+
+.siswa-theme {
+    background-color: #ffffff;
+    color: #111827;
+}
+
+/* Sidebar Styling - Royal Blue Theme */
+.siswa-theme .sidebar {
+    background-color: #1552C6;
+    border-right: none;
+    padding: 30px 20px;
+    height: 100vh;
+    color: #ffffff;
+}
+
+.siswa-theme .logo-text {
+    background: none;
+    -webkit-text-fill-color: initial;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.siswa-theme .logo-icon-svg {
+    fill: #ffffff;
+    width: 38px;
+    height: 38px;
+}
+
+.siswa-theme .sidebar-menu {
+    gap: 6px;
+}
+
+.siswa-theme .menu-item {
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.siswa-theme .menu-item:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.siswa-theme .menu-item.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.siswa-theme .menu-icon-svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 0;
+}
+
+.siswa-theme .sidebar-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.siswa-theme .btn-logout {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.siswa-theme .btn-logout:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* Header & Profile styling */
+.siswa-theme .top-bar {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 40px;
+}
+
+.siswa-theme .welcome-text h1 {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+.siswa-theme .welcome-text p {
+    color: #888888;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.siswa-theme .user-info span {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #000000;
+    display: block;
+}
+
+.siswa-theme .user-info p {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.siswa-theme .user-profile {
+    gap: 12px;
+}
+
+.siswa-theme .avatar {
+    width: 42px;
+    height: 42px;
+    border: none;
+}
+
+.siswa-theme .bell-icon-btn {
+    background: none;
+    border: none;
+    color: #888888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.siswa-theme .bell-icon-btn:hover {
+    background: #f3f4f6;
+}
+
+/* Sections */
+.siswa-theme .section-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 24px;
+}
+
+/* General list item layout (Shared among page detail sublists) */
+.siswa-theme .list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.siswa-theme .list-item {
+    background-color: #f8fafc;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.siswa-theme .list-item:hover {
+    background-color: #f1f5f9;
+}
+
+.siswa-theme .item-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.siswa-theme .item-icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.siswa-theme .item-icon-box.mtk {
+    background-color: #fecdd3; /* Soft red */
+    color: #e11d48;
+}
+
+.siswa-theme .item-icon-box.ing {
+    background-color: #bfdbfe; /* Soft blue */
+    color: #1d4ed8;
+}
+
+.siswa-theme .item-icon-box.general {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.siswa-theme .item-details h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 4px;
+}
+
+.siswa-theme .item-details p {
+    font-size: 0.9rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.siswa-theme .item-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.siswa-theme .item-date {
+    font-size: 0.9rem;
+    color: #888888;
+    font-weight: 500;
+    text-align: right;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

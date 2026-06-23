@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Siswa - E-Learning Platform</title>
+    <link rel="stylesheet" href="/src/css/global.css">
+    <link rel="stylesheet" href="/src/css/components.css">
+    <link rel="stylesheet" href="/src/css/main.css">
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #111827;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 650px;
+            padding: 40px;
+            gap: 60px;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        /* Left Branding Panel */
+        .brand-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            max-width: 500px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon-svg {
+            width: 54px;
+            height: 54px;
+            fill: #1552C6;
+        }
+
+        .logo-text-large {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #1552C6;
+            line-height: 1.2;
+        }
+
+        .welcome-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #000000;
+            margin: 0 0 12px 0;
+        }
+
+        .welcome-desc {
+            font-size: 1.05rem;
+            color: #888888;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .illustration-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+        }
+
+        .ill-svg {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+        }
+
+        /* Right Card Area */
+        .card-container {
+            background-color: #eaf2ff;
+            border-radius: 20px;
+            padding: 44px;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(21, 82, 198, 0.05);
+            min-height: 560px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #000000;
+            margin: 0 0 4px 0;
+        }
+
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: #888888;
+            margin: 0 0 28px 0;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            color: #111827;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1552C6;
+            box-shadow: 0 0 0 4px rgba(21, 82, 198, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .toggle-password:hover {
+            color: #111827;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: #0d52cd;
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0b43aa;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(13, 82, 205, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #111827;
+            font-weight: 500;
+        }
+
+        .login-link {
+            color: #1552C6;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Success State */
+        .success-panel {
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .success-icon-container {
+            width: 90px;
+            height: 90px;
+            background-color: #10b981;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px auto;
+            color: #ffffff;
+        }
+
+        .success-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0 0 16px 0;
+        }
+
+        .success-desc {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding: 24px;
+            }
+            .brand-panel {
+                align-items: center;
+                text-align: center;
+                max-width: 100%;
+            }
+            .logo-container {
+                margin-bottom: 24px;
+            }
+            .illustration-container {
+                display: none;
+            }
+            .card-container {
+                padding: 32px 24px;
+                min-height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Branding Panel -->
+        <div class="brand-panel">
+            <div class="logo-container">
+                <svg class="logo-icon-svg" viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                    <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                </svg>
+                <div class="logo-text-large">E-Learning<br>Platform</div>
+            </div>
+
+            <div>
+                <h1 class="welcome-title">Selamat Datang!</h1>
+                <p class="welcome-desc">Silahkan login untuk melanjutkan belajar di E-Learning Platform.</p>
+            </div>
+
+            <!-- Inline SVG illustration -->
+            <div class="illustration-container">
+                <svg class="ill-svg" viewBox="0 0 250 200" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Desk & Plants -->
+                    <rect x="20" y="150" width="210" height="4" fill="#cbd5e1" rx="2"/>
+                    <path d="M35 150l-5-15h10z" fill="#64748b"/>
+                    <path d="M33 135c-3-5 0-12 5-12s8 7 5 12z" fill="#22c55e"/>
+                    <path d="M28 135c-2-4-1-8 2-8s4 4 2 8z" fill="#4ade80"/>
+                    <!-- Clock on Wall -->
+                    <circle cx="65" cy="60" r="18" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+                    <circle cx="65" cy="60" r="2" fill="#475569"/>
+                    <line x1="65" y1="60" x2="65" y2="48" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/>
+                    <line x1="65" y1="60" x2="73" y2="60" stroke="#475569" stroke-width="1.5" stroke-linecap="round"/>
+                    <!-- Small Sticky notes -->
+                    <rect x="80" y="90" width="8" height="8" fill="#fef08a" rx="1"/>
+                    <rect x="92" y="90" width="8" height="8" fill="#bfdbfe" rx="1"/>
+                    <!-- Shelf and books -->
+                    <line x1="150" y1="70" x2="200" y2="70" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
+                    <rect x="158" y="50" width="6" height="20" fill="#3b82f6" rx="1"/>
+                    <rect x="165" y="46" width="7" height="24" fill="#1d4ed8" rx="1"/>
+                    <rect x="173" y="52" width="6" height="18" fill="#60a5fa" rx="1"/>
+                    <path d="M180 70l12-15 4 3-12 15z" fill="#93c5fd"/>
+                    <!-- Sitting Girl (Student) -->
+                    <path d="M110 160c5-25 15-35 30-35s25 15 25 35z" fill="#1d4ed8"/>
+                    <path d="M125 130h16v12h-16z" fill="#fee2e2"/>
+                    <circle cx="133" cy="115" r="14" fill="#fee2e2"/>
+                    <path d="M117 112c3-10 12-14 22-11s14 12 10 20c-3 1-8-2-10-5s-8-2-12-4z" fill="#1e1b4b"/>
+                    <path d="M125 150l-12-8 3-4 12 6z" fill="#fee2e2"/>
+                    <!-- Laptop -->
+                    <path d="M102 128l18 18h20l-16-18z" fill="#94a3b8"/>
+                    <path d="M88 146h35v4H88z" fill="#cbd5e1"/>
+                    <!-- Desk papers -->
+                    <rect x="52" y="148" width="14" height="8" fill="#bfdbfe" rx="1" transform="rotate(-15 52 148)"/>
+                    <rect x="70" y="149" width="12" height="8" fill="#e2e8f0" rx="1"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Right Card Container -->
+        <div class="card-container">
+            <!-- Form State -->
+            <div id="register-form-panel">
+                <h2 class="card-title">Daftar Akun Siswa</h2>
+                <p class="card-subtitle">Buat akun baru untuk mulai belajar.</p>
+                
+                <form id="student-register-form">
+                    <div class="form-group">
+                        <label class="form-label" for="fullname">Nama Lengkap</label>
+                        <input class="form-input" type="text" id="fullname" placeholder="Masukkan Nama Lengkap" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-input" type="email" id="email" placeholder="Masukkan Email" required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Kata Sandi</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="password" id="password" placeholder="Buat Kata Sandi" required autocomplete="new-password">
+                            <button type="button" id="toggle-password-btn" class="toggle-password">
+                                <svg id="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password-confirm">Konfirmasi Kata Sandi</label>
+                        <input class="form-input" type="password" id="password-confirm" placeholder="Ulangi Kata Sandi" required autocomplete="new-password">
+                    </div>
+
+                    <button type="submit" class="btn-submit">Daftar</button>
+                </form>
+
+                <div class="footer-text">
+                    Sudah punya akun? <a href="/login.html" class="login-link">Login</a>
+                </div>
+            </div>
+
+            <!-- Success State (Register Siswa Berhasil.jpg) -->
+            <div id="success-panel" class="success-panel">
+                <div class="success-icon-container">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h2 class="success-title">Pendaftaran Berhasil!</h2>
+                <p class="success-desc">Akun Anda telah berhasil dibuat.<br>Silahkan login untuk masuk ke sistem.</p>
+                <a href="/login.html" class="btn-submit" style="display: block; text-decoration: none;">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { apiClient } from './src/js/api/api-client.js';
+
+        // Toggle Password visibility
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('toggle-password-btn');
+        const eyeIcon = document.getElementById('eye-icon');
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            
+            if (isPassword) {
+                eyeIcon.innerHTML = `
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                `;
+            } else {
+                eyeIcon.innerHTML = `
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                `;
+            }
+        });
+
+        // Form Submit
+        const form = document.getElementById('student-register-form');
+        const registerFormPanel = document.getElementById('register-form-panel');
+        const successPanel = document.getElementById('success-panel');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            const password = passwordInput.value;
+            const passwordConfirm = document.getElementById('password-confirm').value;
+
+            if (password !== passwordConfirm) {
+                alert('Konfirmasi kata sandi tidak cocok!');
+                return;
+            }
+
+            try {
+                // Connect to Laravel API registration endpoint
+                await apiClient.post('/register', {
+                    name: fullname,
+                    email: email,
+                    password: password,
+                    password_confirmation: passwordConfirm,
+                    role: 'siswa'
+                });
+
+                // Show Success Panel
+                registerFormPanel.style.display = 'none';
+                successPanel.style.display = 'block';
+            } catch (err) {
+                console.error(err);
+                
+                // Fallback simulation for offline/development testing
+                alert('Menghubungkan ke API gagal. Menjalankan simulasi registrasi berhasil...');
+                registerFormPanel.style.display = 'none';
+                successPanel.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

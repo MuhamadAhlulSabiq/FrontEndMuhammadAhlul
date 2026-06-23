@@ -1,0 +1,65 @@
+/* ==========================================
+   PENGUMUMAN PAGE STYLES (pengumuman.css)
+   ========================================== */
+
+/* Search bar */
+.siswa-theme .search-container {
+    margin-bottom: 32px;
+}
+
+.siswa-theme .search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+}
+
+.siswa-theme .search-icon-svg {
+    position: absolute;
+    left: 16px;
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #888888;
+    stroke-width: 2;
+}
+
+.siswa-theme .search-input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #111827;
+    transition: all 0.2s ease;
+}
+
+.siswa-theme .search-input:focus {
+    outline: none;
+    background-color: #e5e7eb;
+}
+
+/* Badges tags */
+.siswa-theme .badge-tag {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.siswa-theme .badge-tag.penting {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+.siswa-theme .badge-tag.kelas {
+    background-color: #dbeafe;
+    color: #3b82f6;
+}
+
+.siswa-theme .badge-tag.umum {
+    background-color: #e2e8f0;
+    color: #475569;
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Diskusi - E-Learning Platform</title>
+    <!-- Role Protection Guard (Simulasi) -->
+    <script src="../../src/js/middleware/auth-guard.js"></script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/siswa/siswa-common.css">
+    <link rel="stylesheet" href="../../src/css/siswa/forum.css">
+</head>
+<body class="siswa-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1 id="forum-main-title">Forum Diskusi</h1>
+                    <p id="forum-main-subtitle">Diskusikan materi kelas bersama pengajar dan teman sekelas Anda.</p>
+                </div>
+                <div class="user-profile">
+                    <button class="bell-icon-btn">
+                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=siswa" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <span id="user-display-name">Rohmat</span>
+                        <p id="user-display-role">Siswa</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Panel 1: List Diskusi (Forum Diskusi.jpg) -->
+            <div id="forum-list-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                    <!-- Filter Tabs -->
+                    <section class="tabs-container" style="margin-bottom: 0;">
+                        <button class="tab-btn active" data-tab="semua">Semua Diskusi</button>
+                        <button class="tab-btn" data-tab="saya">Diskusi Saya</button>
+                    </section>
+                    
+                    <button id="btn-create-discussion" class="btn-comment-send" style="padding: 12px 24px; border-radius: 8px;">+ Buat Diskusi</button>
+                </div>
+
+                <section class="list-container" id="forum-feed">
+                    <div class="empty-state">Memuat diskusi kelas...</div>
+                </section>
+            </div>
+
+            <!-- Panel 2: Buat Diskusi Baru (Forum Diskusi-1.jpg) -->
+            <div id="forum-create-panel" class="detail-container" style="display: none;">
+                <div id="btn-cancel-create-top" class="back-link">
+                    <span>&larr;</span> Kembali ke Forum
+                </div>
+                
+                <h2 class="section-title" style="margin-bottom: 28px;">Buat Diskusi Baru</h2>
+
+                <form id="create-discussion-form">
+                    <div class="form-row">
+                        <label class="form-label">Topik / Judul Diskusi</label>
+                        <input type="text" id="discussion-title" class="form-input" placeholder="Masukkan judul diskusi Anda" required>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Pilih Mata Pelajaran</label>
+                        <div class="form-select-arrow">
+                            <select id="discussion-subject" class="form-select" required>
+                                <option value="">-- Pilih Pelajaran --</option>
+                                <option value="mtk">Matematika</option>
+                                <option value="ing">Bahasa Inggris</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Pilih Kelas</label>
+                        <div class="form-select-arrow">
+                            <select id="discussion-class" class="form-select" required>
+                                <option value="">-- Pilih Kelas --</option>
+                                <option value="5">Kelas 5</option>
+                                <option value="2">Kelas 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label class="form-label">Isi Diskusi</label>
+                        <textarea id="discussion-body" class="form-textarea" placeholder="Tulis pertanyaan atau topik diskusi di sini..." required></textarea>
+                    </div>
+
+                    <div class="form-actions-bottom">
+                        <button type="button" id="btn-cancel-create" class="btn-cancel">Batalkan</button>
+                        <button type="submit" class="btn-comment-send">Buat Diskusi</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Panel 3: Detail Komentar/Thread (Balasan Diskusi.jpg) -->
+            <div id="forum-detail-panel" class="detail-container" style="display: none;">
+                <div id="btn-back-to-forum" class="back-link">
+                    <span>&larr;</span> Kembali
+                </div>
+
+                <div class="detail-header" style="margin-bottom: 20px;">
+                    <div>
+                        <h2 id="detail-forum-title" class="section-title" style="margin-bottom: 4px;">Pengertian Persamaan Kuadrat</h2>
+                        <p id="detail-forum-subject" class="detail-body-text" style="color: #64748b; font-weight: 600;">Matematika - Kelas 5</p>
+                    </div>
+                </div>
+
+                <!-- Original post author & content -->
+                <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 24px; margin-bottom: 24px;">
+                    <div class="teacher-info-box">
+                        <img id="detail-forum-author-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Guru" class="teacher-avatar">
+                        <div>
+                            <span id="detail-forum-author-name" class="teacher-name">Bu Nina</span>
+                            <p id="detail-forum-author-role" class="teacher-subject">Guru Matematika</p>
+                        </div>
+                        <span id="detail-forum-time" class="comment-time" style="margin-left: 20px; font-size: 0.85rem; color: #888888;">2 jam yang lalu</span>
+                    </div>
+                    <p id="detail-forum-body" class="detail-body-text" style="color: #1f2937; margin-top: 16px;">
+                        Halo semuanya, pada pertemuan ini kita membahas tentang pengertian persamaan kuadrat. Silahkan bertanya jika ada yang belum dipahami.
+                    </p>
+                </div>
+
+                <!-- Comments Thread -->
+                <h3 id="comments-count-title" class="detail-section-title">5 Komentar</h3>
+                
+                <div class="comments-container" id="comments-list-feed">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <!-- Comment Input Area -->
+                <form id="comment-post-form" class="comment-input-area">
+                    <textarea id="comment-input-text" class="comment-textarea" placeholder="Tulis komentar..." required></textarea>
+                    <button type="submit" class="btn-comment-send">Kirim</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/siswa/forum.js"></script>
+</body>
+</html>

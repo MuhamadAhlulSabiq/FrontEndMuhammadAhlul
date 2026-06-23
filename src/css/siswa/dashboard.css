@@ -1,0 +1,80 @@
+/* ==========================================
+   DASHBOARD PAGE SPECIFIC STYLES (dashboard.css)
+   ========================================== */
+
+/* Dashboard Stats Grid (Ringkasan) */
+.siswa-theme .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+}
+
+.siswa-theme .stat-card {
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s ease;
+}
+
+.siswa-theme .stat-card:hover {
+    transform: none;
+    background-color: #e5e7eb;
+}
+
+.siswa-theme .stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.siswa-theme .stat-icon-svg {
+    width: 24px;
+    height: 24px;
+    fill: #1552C6;
+}
+
+.siswa-theme .stat-details h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+.siswa-theme .stat-details p {
+    color: #000000;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Document type tag styles */
+.siswa-theme .badge-doc {
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.siswa-theme .badge-doc.pdf {
+    background-color: #dbeafe;
+    color: #1552C6;
+}
+
+.siswa-theme .badge-doc.ppt {
+    background-color: #fef08a;
+    color: #ca8a04;
+}
+
+@media (max-width: 960px) {
+    .siswa-theme .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

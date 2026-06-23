@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman - E-Learning Platform</title>
+    <!-- Role Protection Guard (Simulasi) -->
+    <script src="../../src/js/middleware/auth-guard.js"></script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/siswa/siswa-common.css">
+    <link rel="stylesheet" href="../../src/css/siswa/pengumuman.css">
+</head>
+<body class="siswa-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1>Pengumuman</h1>
+                    <p>Informasi terbaru dari sekolah, guru, dan kelas Anda.</p>
+                </div>
+                <div class="user-profile">
+                    <button class="bell-icon-btn">
+                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=siswa" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <span id="user-display-name">Rohmat</span>
+                        <p id="user-display-role">Siswa</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Search Bar -->
+            <section class="search-container">
+                <div class="search-input-wrapper">
+                    <!-- Search Icon SVG -->
+                    <svg class="search-icon-svg" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="search-announcement" class="search-input" placeholder="Cari pengumuman...">
+                </div>
+            </section>
+
+            <!-- Announcements Log List -->
+            <section class="list-container" id="announcements-feed">
+                <!-- Loaded dynamically -->
+                <div class="empty-state">Memuat pengumuman...</div>
+            </section>
+        </main>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/siswa/pengumuman.js"></script>
+</body>
+</html>

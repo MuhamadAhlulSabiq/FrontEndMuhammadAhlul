@@ -1,45 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Frontend Hello World</title>
-</head>
-
-<body>
-    <h1>Selamat Datang di Frontend</h1>
-    <h2 id="output-dari-be">Loading...</h2>
-
+    <title>Redirecting - E-Learning Platform</title>
     <script>
-        // Mengambil data dari Laravel dengan konfigurasi lengkap & penanganan error
-        fetch('http://192.168.43.3/api/hello.php', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                // Memeriksa apakah status HTTP berada di fungsi 200-299
-                if (!response.ok) {
-                    throw new Error('Respons server tidak ok: ' + response.status);
+        (function() {
+            const token = localStorage.getItem('elearning_token');
+            const role = localStorage.getItem('elearning_role');
+
+            if (token && role) {
+                if (role === 'siswa') {
+                    window.location.href = '/pages/siswa/dashboard.html';
+                } else if (role === 'guru') {
+                    window.location.href = '/pages/guru/dashboard.html';
+                } else if (role === 'admin') {
+                    window.location.href = '/pages/admin/dashboard.html';
+                } else {
+                    window.location.href = '/login.html';
                 }
-                return response.json();
-            })
-            .then(data => {
-                // Mengubah teks di HTML sesuai data sukses dari Laravel
-                document.getElementById('output-dari-be').innerText = data.message;
-            })
-            .catch(error => {
-                // Menampilkan error di konsol browser
-                console.error('Detail Error:', error);
-
-                // Menampilkan pesan error ke user di halaman web
-                const outputElement = document.getElementById('output-dari-be');
-                outputElement.innerText = 'Gagal memuat: ' + error.message;
-                outputElement.style.color = 'red'; // Opsional: memberikan warna merah saat error
-            });
+            } else {
+                window.location.href = '/login.html';
+            }
+        })();
     </script>
+</head>
+<body>
+    <div style="font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; color: #888888;">
+        Memuat alur masuk sistem...
+    </div>
 </body>
-
 </html>
