@@ -2,121 +2,211 @@
    KELAS MY PAGE STYLES (kelas.css)
    ========================================== */
 
-/* Grid Layout for Kelas Saya */
-.guru-theme .class-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-}
-
-.guru-theme .class-card {
-    background-color: #ffffff;
-    border: 1px solid #f3f4f6;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+/* Action Bar with Right-Aligned Button */
+.guru-theme .classes-action-bar {
     display: flex;
-    flex-direction: column;
-}
-
-.guru-theme .class-card:hover {
-    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.05);
-}
-
-.guru-theme .class-card-header {
-    background: none;
-    height: auto;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.guru-theme .class-card-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: #000000;
-}
-
-.guru-theme .class-card-illustration {
-    width: 100%;
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fcfcfc;
-    padding: 10px;
-}
-
-.guru-theme .class-card-illustration svg {
-    max-height: 100%;
-    max-width: 100%;
-}
-
-/* Buat Kelas Section */
-.guru-theme .buat-kelas-box {
-    background-color: #f8fafc;
-    border-radius: 12px;
-    padding: 32px;
-    margin-bottom: 40px;
-}
-
-.guru-theme .buat-kelas-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: #000000;
-    margin-bottom: 8px;
-}
-
-.guru-theme .buat-kelas-desc {
-    font-size: 0.95rem;
-    color: #888888;
+    justify-content: flex-end;
     margin-bottom: 24px;
 }
 
-.guru-theme .buat-kelas-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-width: 600px;
-}
-
-.guru-theme .buat-input {
-    background-color: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #000000;
-    box-sizing: border-box;
-}
-
-.guru-theme .buat-input:focus {
-    outline: none;
-    border-color: #10b981;
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-}
-
-.guru-theme .btn-buat {
-    background-color: #10b981;
+.guru-theme .btn-buat-kelas {
+    background-color: #0d52cd;
     color: #ffffff;
     border: none;
     border-radius: 8px;
-    padding: 14px;
-    font-size: 1rem;
+    padding: 12px 24px;
+    font-size: 0.92rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 10px rgba(13, 82, 205, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.guru-theme .btn-buat-kelas:hover {
+    background-color: #0a43aa;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(13, 82, 205, 0.25);
+}
+
+.guru-theme .btn-buat-kelas:active {
+    transform: translateY(0);
+}
+
+/* Table Responsive Wrapper & Table Style */
+.guru-theme .table-responsive-wrapper {
+    background-color: #eaf2ff; /* Pastel blue container bg */
+    border: 1px solid #cce0ff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(13, 82, 205, 0.03);
+    margin-bottom: 40px;
+}
+
+.guru-theme .classes-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-family: inherit;
+}
+
+.guru-theme .classes-table th {
+    background-color: #dae9ff; /* Slightly darker pastel blue for header */
+    color: #000000;
+    font-weight: 800;
+    font-size: 0.92rem;
+    padding: 18px 24px;
+    text-align: center;
+    border-bottom: 1px solid #b9d5ff;
+}
+
+.guru-theme .classes-table td {
+    color: #111827;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 18px 24px;
+    text-align: center;
+    border-bottom: 1px solid #d3e5ff;
+    transition: background-color 0.15s ease;
+}
+
+.guru-theme .classes-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.guru-theme .classes-table tbody tr:hover td {
+    background-color: #dbeafe; /* Smooth hover highlight */
+}
+
+/* Loading and Empty State */
+.guru-theme .loading-state,
+.guru-theme .empty-state {
+    text-align: center;
+    padding: 32px;
+    color: #4b5563;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Modal Form Premium Styling */
+.modal-content {
+    border-radius: 20px;
+    padding: 36px;
+    box-shadow: 0 25px 50px -12px rgba(13, 82, 205, 0.15);
+}
+
+.modal-header h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #111827;
+}
+
+.form-label {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.form-input, .form-select {
+    border: none;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #111827;
+    background-color: #e8f1ff; /* soft blue fill matching image */
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input::placeholder {
+    color: #7c8ba1; /* slightly darker slate blue placeholder */
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2.5px rgba(13, 82, 205, 0.25);
+}
+
+.form-input:disabled {
+    background-color: #e8f1ff;
+    color: #7c8ba1;
+    cursor: not-allowed;
     text-align: center;
 }
 
-.guru-theme .btn-buat:hover {
-    background-color: #059669;
+/* Two column row wrapper */
+.form-row-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
-@media (max-width: 960px) {
-    .guru-theme .class-grid {
-        grid-template-columns: 1fr;
+.btn-outline {
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    font-weight: 700;
+    color: #4b5563;
+    padding: 12px 24px;
+    transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.btn-guru {
+    background-color: #0d52cd;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    padding: 12px 24px;
+    box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-guru:hover {
+    background-color: #0a43aa;
+    box-shadow: 0 6px 18px rgba(13, 82, 205, 0.3);
+}
+
+/* User Profile Silhouette Icon */
+.guru-theme .user-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dbeafe; /* Soft blue circle background */
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guru-theme .user-avatar-circle svg {
+    width: 22px;
+    height: 22px;
+}
+
+.guru-theme .bell-icon-svg {
+    width: 24px;
+    height: 24px;
+    color: #8e92bc;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* Responsive Table Breakdown */
+@media (max-width: 768px) {
+    .guru-theme .classes-table th, 
+    .guru-theme .classes-table td {
+        padding: 14px 16px;
+        font-size: 0.85rem;
     }
 }

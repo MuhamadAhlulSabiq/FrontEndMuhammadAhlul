@@ -2,7 +2,6 @@ import { storage } from '../../utils/storage.js';
 import { initSidebar } from '../../components/sidebar.js';
 
 let activeSubject = 'semua';
-let searchQuery = '';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Sidebar
@@ -11,11 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize teacher profile
     const user = storage.getUser();
     if (user) {
+        let displayName = user.name || 'Bu Nina';
+        let cleanName = displayName.replace(/^Bu\s+/, '');
+
         const dispName = document.getElementById('user-display-name');
-        if (dispName) dispName.textContent = user.name || 'Bu Nina';
-        
-        const avatar = document.getElementById('user-avatar');
-        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=guru_${user.id || 'nina'}`;
+        if (dispName) dispName.textContent = cleanName;
     }
 
     // Modal elements
@@ -24,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModalBtn = document.getElementById('modal-materi-close');
     const cancelModalBtn = document.getElementById('btn-cancel-materi');
     const form = document.getElementById('form-tambah-materi');
+    const fileInput = document.getElementById('materi-file');
+    const fileUploadText = document.getElementById('file-upload-text');
 
     // Open Modal
     if (openModalBtn) {
@@ -36,30 +37,68 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = () => {
         modal.style.display = 'none';
         form.reset();
+        if (fileUploadText) {
+            fileUploadText.textContent = 'Klik disini untuk mengupload materi';
+        }
     };
 
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
+
+    // Bind file input change to display selected filename
+    if (fileInput && fileUploadText) {
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                fileUploadText.textContent = `File terpilih: ${file.name}`;
+            } else {
+                fileUploadText.textContent = 'Klik disini untuk mengupload materi';
+            }
+        });
+    }
+
+    // Populate filter dropdown and form select dropdown dynamically
+    populateClassDropdowns();
+
+    // Helper to get formatted Indonesian date (e.g. 23 Juni 2026)
+    function getFormattedIndonesianDate() {
+        const months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+        const today = new Date();
+        return `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+    }
 
     // Form Submit
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const title = document.getElementById('materi-title').value;
             const classCode = document.getElementById('materi-class').value;
-            const docType = document.getElementById('materi-type').value;
+            const title = document.getElementById('materi-title').value.trim();
+            const desc = document.getElementById('materi-desc').value.trim();
             
-            const classNameMap = {
-                'mtk': 'Matematika - Kelas 5',
-                'ing': 'Bahasa Inggris - Kelas 2'
-            };
+            // Extract document format from filename extension, default to PDF
+            let docType = 'PDF';
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const filename = fileInput.files[0].name;
+                const ext = filename.split('.').pop().toUpperCase();
+                if (['PDF', 'PPT', 'PPTX', 'DOC', 'DOCX'].includes(ext)) {
+                    docType = ext.startsWith('PPT') ? 'PPT' : (ext.startsWith('DOC') ? 'DOC' : 'PDF');
+                }
+            }
+
+            const classes = storage.getClasses();
+            const selectedClass = classes.find(c => c.code === classCode);
+            const subjectLabel = selectedClass ? `${selectedClass.title} - ${selectedClass.grade}` : 'Materi Umum';
 
             const newMaterial = {
                 id: Date.now(),
                 title: title,
-                subject: classNameMap[classCode] || 'Materi Umum',
-                time: 'Baru saja',
+                description: desc,
+                subject: subjectLabel,
+                time: getFormattedIndonesianDate(),
                 classCode: classCode,
                 docType: docType
             };
@@ -80,22 +119,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Tab buttons filtering
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            activeSubject = tab.dataset.subject;
-            loadAndRenderMaterials();
-        });
-    });
-
-    // Search input
-    const searchInput = document.getElementById('search-materi');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value.toLowerCase().trim();
+    // Filter selection handler
+    const filterSelect = document.getElementById('filter-class-select');
+    if (filterSelect) {
+        filterSelect.addEventListener('change', (e) => {
+            activeSubject = e.target.value;
             loadAndRenderMaterials();
         });
     }
@@ -104,46 +132,61 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAndRenderMaterials();
 });
 
+function populateClassDropdowns() {
+    const classes = storage.getClasses();
+    const filterSelect = document.getElementById('filter-class-select');
+    const formSelect = document.getElementById('materi-class');
+
+    if (!classes || classes.length === 0) return;
+
+    // 1. Populate Filter select dropdown
+    const filterOptions = classes.map(c => `
+        <option value="${c.code}">${c.title} (${c.grade})</option>
+    `).join('');
+    if (filterSelect) {
+        filterSelect.innerHTML = `<option value="semua">Pilih Kelas</option>` + filterOptions;
+    }
+
+    // 2. Populate Modal Form select dropdown
+    const formOptions = classes.map(c => `
+        <option value="${c.code}">${c.title} - ${c.grade}</option>
+    `).join('');
+    if (formSelect) {
+        formSelect.innerHTML = `<option value="" disabled selected>Pilih Kelas</option>` + formOptions;
+    }
+}
+
 function loadAndRenderMaterials() {
     const materials = storage.getMaterials();
-    const container = document.getElementById('materials-feed');
+    const classes = storage.getClasses();
+    const container = document.getElementById('materi-table-body');
 
     if (!container) return;
 
-    // Filter materials by tab
+    // Filter materials by selected dropdown class
     let filtered = materials;
     if (activeSubject !== 'semua') {
         filtered = filtered.filter(m => m.classCode === activeSubject);
     }
 
-    // Filter materials by search query
-    if (searchQuery) {
-        filtered = filtered.filter(m => 
-            m.title.toLowerCase().includes(searchQuery) ||
-            m.subject.toLowerCase().includes(searchQuery)
-        );
-    }
-
-    if (filtered.length === 0) {
-        container.innerHTML = '<div class="empty-state">Tidak ada materi yang ditemukan.</div>';
+    if (!filtered || filtered.length === 0) {
+        container.innerHTML = '<tr><td colspan="4" class="empty-state">Tidak ada materi yang ditemukan.</td></tr>';
         return;
     }
 
-    container.innerHTML = filtered.map(m => `
-        <div class="list-item">
-            <div class="item-left">
-                <div class="item-icon-box ${m.classCode}">
-                    ${m.classCode === 'mtk' ? '✕' : 'En'}
-                </div>
-                <div class="item-details">
-                    <h4>${m.title}</h4>
-                    <p>${m.subject}</p>
-                </div>
-            </div>
-            <div class="item-right">
-                <span class="badge-doc ${m.docType.toLowerCase()}">${m.docType}</span>
-                <span class="item-date">${m.time}</span>
-            </div>
-        </div>
-    `).join('');
+    container.innerHTML = filtered.map(m => {
+        // Find subject name and grade dynamically from class database
+        const classObj = classes.find(c => c.code === m.classCode);
+        const subjectTitle = classObj ? classObj.title : (m.subject ? m.subject.split(' - ')[0] : 'Materi Umum');
+        const gradeNumber = classObj ? classObj.grade.replace(/\D/g, '') : (m.subject ? m.subject.replace(/\D/g, '') : '5');
+
+        return `
+            <tr>
+                <td style="font-weight: 700;">${subjectTitle}</td>
+                <td style="text-align: center;">${m.title}</td>
+                <td>${gradeNumber}</td>
+                <td style="color: #4b5563; font-weight: 600;">${m.time}</td>
+            </tr>
+        `;
+    }).join('');
 }

@@ -24,18 +24,23 @@
             <header class="top-bar">
                 <div class="welcome-text">
                     <h1>Pengumuman</h1>
-                    <p>Bagikan info penting, jadwal, atau pengumuman kelas ke siswa.</p>
+                    <p>Informasi terbaru dari sekolah, guru, dan kelas Anda.</p>
                 </div>
                 <div class="user-profile">
-                    <button class="bell-icon-btn">
-                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                    <button class="bell-icon-btn" title="Notifikasi">
+                        <svg class="bell-icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #8e92bc; fill: none; stroke: currentColor; stroke-width: 2;">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                     </button>
-                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar" class="avatar">
+                    <div class="user-avatar-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
                     <div class="user-info">
-                        <span id="user-display-name">Bu Nina</span>
-                        <p id="user-display-role">GURU</p>
+                        <span id="user-display-name">Nina</span>
+                        <p id="user-display-role">Guru</p>
                     </div>
                 </div>
             </header>
@@ -67,14 +72,16 @@
         </main>
     </div>
 
-    <!-- Modal Form Tambah Pengumuman -->
+    <!-- Modal Form Tambah/Edit Pengumuman -->
     <div id="modal-announcement" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Buat Pengumuman Baru</h3>
+                <h3 id="modal-title">Buat Pengumuman Baru</h3>
                 <button id="modal-announcement-close" class="modal-close">&times;</button>
             </div>
             <form id="form-tambah-announcement">
+                <input type="hidden" id="announcement-id">
+                
                 <div class="form-group">
                     <label class="form-label" for="announcement-title">Judul Pengumuman</label>
                     <input class="form-input" type="text" id="announcement-title" placeholder="Masukkan judul pengumuman" required>
@@ -83,9 +90,9 @@
                 <div class="form-group">
                     <label class="form-label" for="announcement-category">Kategori</label>
                     <select class="form-select" id="announcement-category" required>
-                        <option value="Penting">Penting (Merah)</option>
-                        <option value="Kelas">Kelas (Hijau)</option>
-                        <option value="Umum">Umum (Abu-abu)</option>
+                        <option value="Penting">Penting</option>
+                        <option value="Kelas">Kelas</option>
+                        <option value="Umum">Umum</option>
                     </select>
                 </div>
 
@@ -96,7 +103,7 @@
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
                     <button type="button" id="btn-cancel-announcement" class="btn-outline">Batal</button>
-                    <button type="submit" class="btn-guru">Publikasikan</button>
+                    <button type="submit" id="btn-submit-announcement" class="btn-guru">Publikasikan</button>
                 </div>
             </form>
         </div>

@@ -23,54 +23,60 @@
         <main class="main-content">
             <header class="top-bar">
                 <div class="welcome-text">
-                    <h1>Materi Pembelajaran</h1>
-                    <p>Unggah dan kelola modul belajar siswa.</p>
+                    <h1 id="page-main-title" style="font-size: 1.65rem; font-weight: 800; color: #111827; margin: 0;">Daftar Materi</h1>
+                    <p id="page-main-subtitle" style="font-size: 0.95rem; color: #6b7280; font-weight: 500; margin: 4px 0 0 0;">Semua materi pada kelas yang Anda pilih</p>
                 </div>
                 <div class="user-profile">
-                    <button class="bell-icon-btn">
-                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                    <button class="bell-icon-btn" title="Notifikasi">
+                        <svg class="bell-icon-svg" viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                     </button>
-                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar" class="avatar">
+                    <!-- Silhouette user circle matching mockup -->
+                    <div class="user-avatar-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
                     <div class="user-info">
-                        <span id="user-display-name">Bu Nina</span>
-                        <p id="user-display-role">GURU</p>
+                        <span id="user-display-name">Nina</span>
+                        <p id="user-display-role">Guru</p>
                     </div>
                 </div>
             </header>
 
-            <!-- Controls (Search + Add) -->
-            <section class="controls-row">
-                <div class="search-wrapper">
-                    <!-- Search Icon SVG -->
-                    <svg class="search-icon-svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <input type="text" id="search-materi" class="search-input" placeholder="Cari materi...">
+            <!-- Controls (Filter Dropdown + Add Button) -->
+            <section class="materi-action-bar" style="margin-bottom: 28px;">
+                <div class="filter-group">
+                    <label class="filter-label" for="filter-class-select">Kelas</label>
+                    <select id="filter-class-select" class="filter-select">
+                        <option value="semua">Pilih Kelas</option>
+                    </select>
                 </div>
-                <button id="btn-tambah-materi" class="btn-guru" style="display: flex; align-items: center; gap: 8px;">
-                    <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5;" viewBox="0 0 24 24">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    Unggah Materi
+                <button id="btn-tambah-materi" class="btn-buat-materi">
+                    + Buat Materi
                 </button>
             </section>
 
-            <!-- Filter Tabs -->
-            <section class="tabs-container" style="margin-bottom: 24px;">
-                <button class="tab-btn active" data-subject="semua">Semua Kelas</button>
-                <button class="tab-btn" data-subject="mtk">Matematika</button>
-                <button class="tab-btn" data-subject="ing">Bahasa Inggris</button>
-            </section>
-
-            <!-- List of Materials -->
-            <section class="list-container" id="materials-feed">
-                <!-- Loaded dynamically -->
-                <div class="empty-state">Memuat daftar materi...</div>
-            </section>
+            <!-- Table responsive container -->
+            <div class="table-responsive-wrapper">
+                <table class="materi-table">
+                    <thead>
+                        <tr>
+                            <th>Mata Pelajaran</th>
+                            <th>Judul Materi</th>
+                            <th>Kelas</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materi-table-body">
+                        <tr>
+                            <td colspan="4" class="loading-state">Memuat daftar materi...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 
@@ -78,35 +84,44 @@
     <div id="modal-materi" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Unggah Materi Pembelajaran</h3>
+                <h3>Buat Materi Baru</h3>
                 <button id="modal-materi-close" class="modal-close">&times;</button>
             </div>
             <form id="form-tambah-materi">
                 <div class="form-group">
-                    <label class="form-label" for="materi-title">Judul Materi</label>
-                    <input class="form-input" type="text" id="materi-title" placeholder="Masukkan judul materi" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="materi-class">Kelas / Mata Pelajaran</label>
+                    <label class="form-label" for="materi-class">Kelas</label>
                     <select class="form-select" id="materi-class" required>
-                        <option value="mtk">Matematika - Kelas 5</option>
-                        <option value="ing">Bahasa Inggris - Kelas 2</option>
+                        <option value="" disabled selected>Pilih Kelas</option>
+                        <!-- Loaded dynamically via JS -->
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="materi-type">Format Dokumen</label>
-                    <select class="form-select" id="materi-type" required>
-                        <option value="PDF">PDF Document</option>
-                        <option value="PPT">PowerPoint Presentation</option>
-                        <option value="DOC">Word Document</option>
-                    </select>
+                    <label class="form-label" for="materi-title">Judul Materi</label>
+                    <input class="form-input" type="text" id="materi-title" placeholder="Contoh: Sistem Persamaan Kuadrat" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="materi-desc">Deskripsi</label>
+                    <textarea class="form-textarea" id="materi-desc" placeholder="Jelaskan materi secara singkat" style="height: 100px; resize: none;"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Unggah File</label>
+                    <label for="materi-file" class="file-upload-area">
+                        <svg class="upload-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#0d52cd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                        </svg>
+                        <span id="file-upload-text">Klik disini untuk mengupload materi</span>
+                        <input type="file" id="materi-file" style="display: none;">
+                    </label>
                 </div>
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                    <button type="button" id="btn-cancel-materi" class="btn-outline">Batal</button>
-                    <button type="submit" class="btn-guru">Unggah</button>
+                    <button type="button" id="btn-cancel-materi" class="btn-batal">Batal</button>
+                    <button type="submit" class="btn-simpan">Simpan Materi</button>
                 </div>
             </form>
         </div>

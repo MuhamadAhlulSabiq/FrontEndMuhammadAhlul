@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumpulan Tugas - E-Learning Platform</title>
+    <!-- Role Protection Guard -->
+    <script src="../../src/js/middleware/auth-guard.js"></script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/guru/guru-common.css">
+    <link rel="stylesheet" href="../../src/css/guru/pengumpulan.css">
+</head>
+<body class="guru-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1 id="page-main-title" style="font-size: 1.65rem; font-weight: 800; color: #111827; margin: 0;">Pengumpulan Tugas</h1>
+                    <p id="page-main-subtitle" style="font-size: 0.95rem; color: #6b7280; font-weight: 500; margin: 4px 0 0 0;">Lihat semua pengumpulan tugas dari siswa</p>
+                </div>
+                <div class="user-profile">
+                    <button class="bell-icon-btn" title="Notifikasi">
+                        <svg class="bell-icon-svg" viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
+                        </svg>
+                    </button>
+                    <!-- Silhouette user circle matching mockup -->
+                    <div class="user-avatar-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    <div class="user-info">
+                        <span id="user-display-name">Nina</span>
+                        <p id="user-display-role">Guru</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Panel 1: Daftar Pengumpulan -->
+            <div id="pengumpulan-list-panel">
+                <!-- Ringkasan Section -->
+                <section class="summary-section" style="margin-top: 8px;">
+                    <h2 class="section-title">Ringkasan</h2>
+                    <div class="stats-grid">
+                        <!-- Card 1: Total Siswa -->
+                        <div class="stat-card centered-stat">
+                            <h3 id="stat-total-siswa" class="stat-value">28</h3>
+                            <span class="stat-label">Total Siswa</span>
+                        </div>
+
+                        <!-- Card 2: Sudah Diserahkan -->
+                        <div class="stat-card horizontal-stat">
+                            <div class="stat-top-row">
+                                <div class="stat-icon-square green-theme">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="9" y1="15" x2="15" y2="15"/>
+                                        <line x1="12" y1="18" x2="12" y2="12"/>
+                                    </svg>
+                                </div>
+                                <h3 id="stat-sudah-diserahkan" class="stat-value">12</h3>
+                            </div>
+                            <span class="stat-label">Sudah Diserahkan</span>
+                        </div>
+
+                        <!-- Card 3: Belum Diserahkan -->
+                        <div class="stat-card horizontal-stat">
+                            <div class="stat-top-row">
+                                <div class="stat-icon-square red-theme">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="9" y1="15" x2="15" y2="15"/>
+                                        <line x1="12" y1="18" x2="12" y2="12"/>
+                                    </svg>
+                                </div>
+                                <h3 id="stat-belum-diserahkan" class="stat-value">16</h3>
+                            </div>
+                            <span class="stat-label">Belum Diserahkan</span>
+                        </div>
+
+                        <!-- Card 4: Persentase -->
+                        <div class="stat-card centered-stat">
+                            <h3 id="stat-persentase" class="stat-value">42%</h3>
+                            <span class="stat-label">Persentase</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Table responsive container -->
+                <div class="table-responsive-wrapper" style="margin-top: 32px;">
+                    <table class="submissions-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Siswa</th>
+                                <th>Status</th>
+                                <th>Waktu Pengumpulan</th>
+                                <th>Nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissions-table-body">
+                            <tr>
+                                <td colspan="5" class="loading-state">Memuat data pengumpulan...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel 2: Detail Pengumpulan -->
+            <div id="pengumpulan-detail-panel" style="display: none; margin-top: 16px;">
+                <!-- Student Header info -->
+                <div class="detail-student-header-row">
+                    <div class="student-profile-group">
+                        <div class="student-avatar-big" id="detail-student-avatar-container">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </div>
+                        <div class="student-text-group">
+                            <h2 id="detail-student-name" class="detail-student-name">Rohmat</h2>
+                            <p id="detail-submission-time" class="detail-submission-time">Dikumpulkan pada 17 Mei 2026, 10.30</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Jawaban -->
+                <div class="detail-section-group">
+                    <h3 class="detail-section-title">File Jawaban</h3>
+                    <div class="file-attachment-card" id="detail-file-card">
+                        <div class="file-icon-box">
+                            <svg class="file-svg-icon" viewBox="0 0 24 24">
+                                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+                            </svg>
+                        </div>
+                        <div class="file-info-group">
+                            <span id="detail-file-name" class="file-name">Jawaban_Rohmat.pdf</span>
+                            <span id="detail-file-size" class="file-size">2.4 MB</span>
+                        </div>
+                    </div>
+                    <div id="no-file-submission-notice" style="display: none; padding: 16px; background-color: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; border-radius: 12px; font-weight: 600;">
+                        Belum ada file jawaban yang diunggah.
+                    </div>
+                </div>
+
+                <!-- Catatan Siswa -->
+                <div class="detail-section-group">
+                    <h3 class="detail-section-title">Catatan Siswa</h3>
+                    <div id="detail-student-note" class="detail-text-box">
+                        Mohon maaf terlambat mengumpulkan, sebelumnya saya mengalami kendala jaringan
+                    </div>
+                    <div id="no-note-submission-notice" style="display: none; padding: 16px; background-color: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; border-radius: 12px; font-style: italic; font-weight: 500;">
+                        Tidak ada catatan dari siswa.
+                    </div>
+                </div>
+
+                <!-- Nilai -->
+                <div class="detail-section-group">
+                    <h3 class="detail-section-title">Nilai</h3>
+                    <div class="score-input-wrapper">
+                        <input type="number" id="detail-grade-input" class="score-input" min="0" max="100" placeholder="-">
+                        <div class="max-score-box">/100</div>
+                    </div>
+                </div>
+
+                <!-- Feedback (opsional) -->
+                <div class="detail-section-group">
+                    <h3 class="detail-section-title">Feedback (opsional)</h3>
+                    <textarea id="detail-feedback-input" class="feedback-textarea" placeholder="Tulis feedback untuk siswa....."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="detail-action-row">
+                    <button id="btn-save-grade" class="btn-simpan-nilai">Simpan Nilai</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/guru/pengumpulan.js"></script>
+</body>
+</html>

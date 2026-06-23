@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +14,6 @@
     <link rel="stylesheet" href="../../src/css/guru/guru-common.css">
     <link rel="stylesheet" href="../../src/css/guru/dashboard.css">
 </head>
-
 <body class="guru-theme">
     <div class="app-layout">
         <!-- Sidebar Navigation -->
@@ -23,94 +21,137 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
+            <!-- Top Bar -->
             <header class="top-bar">
-                <div class="welcome-text">
-                    <h1 id="welcome-title">Halo, Bu Nina!</h1>
-                    <p id="welcome-subtitle">Kelola pembelajaran kelas Anda hari ini.</p>
-                </div>
+                <h1 class="page-title-text" style="font-size: 1.5rem; font-weight: 800; color: #111827; margin: 0;">Dashboard</h1>
                 <div class="user-profile">
-                    <button class="bell-icon-btn">
-                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
+                    <button class="bell-icon-btn" title="Notifikasi">
+                        <svg class="bell-icon-svg" viewBox="0 0 24 24">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                     </button>
-                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar"
-                        class="avatar">
+                    <!-- Silhouette user circle matching mockup -->
+                    <div class="user-avatar-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
                     <div class="user-info">
-                        <span id="user-display-name">Bu Nina</span>
-                        <p id="user-display-role">GURU</p>
+                        <span id="user-display-name">Nina</span>
+                        <p id="user-display-role">Guru</p>
                     </div>
                 </div>
             </header>
 
-            <!-- Stats Ringkasan Grid -->
-            <h2 class="section-title">Ringkasan Aktivitas</h2>
-            <section class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <!-- Book/Class icon -->
-                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                        </svg>
+            <!-- Welcome Header Section -->
+            <div class="welcome-header">
+                <h1 id="welcome-title">Halo, Nina! 👋</h1>
+                <p id="welcome-subtitle">Selamat mengajar hari ini</p>
+            </div>
+
+            <!-- Ringkasan Section -->
+            <section class="summary-section">
+                <h2 class="section-title">Ringkasan</h2>
+                <div class="stats-grid">
+                    <!-- Card 1: Kelas Saya -->
+                    <div class="stat-card" onclick="window.location.href='kelas.html'" style="cursor: pointer;">
+                        <div class="stat-card-left">
+                            <div class="stat-icon-circle classes-blue-tint">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                                </svg>
+                            </div>
+                            <div class="stat-info-details">
+                                <span class="stat-label">Kelas Saya</span>
+                                <h3 class="stat-value" id="stat-kelas-count">0</h3>
+                            </div>
+                        </div>
+                        <span class="link-view-all">Lihat semua</span>
                     </div>
-                    <div class="stat-details">
-                        <p>Kelas Diampu</p>
-                        <h3 id="stat-kelas-count">1</h3>
+
+                    <!-- Card 2: Materi -->
+                    <div class="stat-card" onclick="window.location.href='materi.html'" style="cursor: pointer;">
+                        <div class="stat-card-left">
+                            <div class="stat-icon-circle materials-blue-tint">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path d="M8 16V8l4 4 4-4v8" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                            <div class="stat-info-details">
+                                <span class="stat-label">Materi</span>
+                                <h3 class="stat-value" id="stat-materi-count">0</h3>
+                            </div>
+                        </div>
+                        <span class="link-view-all">Lihat semua</span>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <!-- Students/Users icon -->
-                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                            <circle cx="9" cy="7" r="4" />
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
+
+                    <!-- Card 3: Tugas -->
+                    <div class="stat-card" onclick="window.location.href='tugas.html'" style="cursor: pointer;">
+                        <div class="stat-card-left">
+                            <div class="stat-icon-circle tasks-blue-tint">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <path d="M16 2v4M8 2v4M12 11h4M8 11h2M12 15h4M8 15h2" />
+                                </svg>
+                            </div>
+                            <div class="stat-info-details">
+                                <span class="stat-label">Tugas</span>
+                                <h3 class="stat-value" id="stat-tugas-count">0</h3>
+                            </div>
+                        </div>
+                        <span class="link-view-all">Lihat semua</span>
                     </div>
-                    <div class="stat-details">
-                        <p>Total Siswa</p>
-                        <h3 id="stat-siswa-count">15</h3>
-                    </div>
-                </div>
-                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='materi.html'">
-                    <div class="stat-icon">
-                        <!-- Materials/Files icon -->
-                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
-                            <path d="M8 16V8l4 4 4-4v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" fill="none" />
-                        </svg>
-                    </div>
-                    <div class="stat-details">
-                        <p>Materi Diunggah</p>
-                        <h3 id="stat-materi-count">0</h3>
-                    </div>
-                </div>
-                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='tugas.html'">
-                    <div class="stat-icon">
-                        <!-- Tasks/Assignments icon -->
-                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"
-                                fill="none" />
-                            <path d="M16 2v4M8 2v4M12 11h4M8 11h2M12 15h4M8 15h2" />
-                        </svg>
-                    </div>
-                    <div class="stat-details">
-                        <p>Tugas Dibuat</p>
-                        <h3 id="stat-tugas-count">0</h3>
+
+                    <!-- Card 4: Pengumuman -->
+                    <div class="stat-card" onclick="window.location.href='pengumuman.html'" style="cursor: pointer;">
+                        <div class="stat-card-left">
+                            <div class="stat-icon-circle announcements-blue-tint">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                                </svg>
+                            </div>
+                            <div class="stat-info-details">
+                                <span class="stat-label">Pengumuman</span>
+                                <h3 class="stat-value" id="stat-announcement-count">0</h3>
+                            </div>
+                        </div>
+                        <span class="link-view-all">Lihat semua</span>
                     </div>
                 </div>
             </section>
 
-            <!-- Activity Logs Section -->
-            <div style="max-width: 900px;">
-                <h2 class="section-title">Aktivitas Kelas Terbaru</h2>
-                <div id="class-activities" class="activity-list">
-                    <div class="empty-state">Memuat aktivitas kelas...</div>
+            <!-- Kelas Saya Section -->
+            <section class="my-classes-section">
+                <h2 class="section-title">Kelas Saya</h2>
+                <div class="classes-grid" id="classes-grid-container">
+                    <!-- Loaded dynamically via JS -->
+                    <div class="loading-state">Memuat daftar kelas...</div>
                 </div>
+            </section>
+
+            <!-- Bottom Two Column Section -->
+            <div class="bottom-columns-wrapper">
+                <!-- Column 1: Tugas Terbaru -->
+                <section class="bottom-column">
+                    <h2 class="section-title">Tugas Terbaru</h2>
+                    <div class="recent-list-container" id="recent-tasks-container">
+                        <!-- Loaded dynamically via JS -->
+                        <div class="loading-state">Memuat tugas terbaru...</div>
+                    </div>
+                </section>
+
+                <!-- Column 2: Pengumpulan Terbaru -->
+                <section class="bottom-column">
+                    <h2 class="section-title">Pengumpulan Terbaru</h2>
+                    <div class="recent-list-container" id="recent-submissions-container">
+                        <!-- Loaded dynamically via JS -->
+                        <div class="loading-state">Memuat pengumpulan terbaru...</div>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
@@ -118,5 +159,4 @@
     <!-- JS Separated Controller -->
     <script type="module" src="../../src/js/views/guru/dashboard.js"></script>
 </body>
-
 </html>
