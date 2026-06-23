@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - E-Learning Platform</title>
+    <!-- Role Protection Guard -->
+    <script src="../../src/js/middleware/auth-guard.js"></script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/admin/admin-common.css">
+    <link rel="stylesheet" href="../../src/css/admin/dashboard.css">
+</head>
+<body class="admin-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1 id="welcome-title">Halo, Administrator!</h1>
+                    <p id="welcome-subtitle">Kelola platform E-Learning terpusat hari ini.</p>
+                </div>
+                <div class="user-profile">
+                    <button class="bell-icon-btn">
+                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=admin" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <span id="user-display-name">Admin</span>
+                        <p id="user-display-role">ADMINISTRATOR</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Ringkasan Grid -->
+            <h2 class="section-title">Ringkasan Platform</h2>
+            <section class="stats-grid">
+                <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='guru.html'">
+                    <div class="stat-icon">
+                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            <path d="M21 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <p>Total Pengajar</p>
+                        <h3 id="stat-teachers-count">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <!-- Students icon -->
+                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <p>Total Siswa</p>
+                        <h3 id="stat-students-count">15</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <!-- Classes icon -->
+                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <p>Total Kelas</p>
+                        <h3 id="stat-classes-count">0</h3>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <!-- Materials icon -->
+                        <svg class="stat-icon-svg" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <path d="M8 16V8l4 4 4-4v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="stat-details">
+                        <p>Total Materi</p>
+                        <h3 id="stat-materials-count">0</h3>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Logs -->
+            <div style="max-width: 900px;">
+                <h2 class="section-title">Log Aktivitas Sistem</h2>
+                <div id="system-logs" class="log-list">
+                    <div class="empty-state">Memuat aktivitas log platform...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/admin/dashboard.js"></script>
+</body>
+</html>

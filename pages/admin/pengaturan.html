@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Sistem - E-Learning Platform</title>
+    <!-- Role Protection Guard -->
+    <script src="../../src/js/middleware/auth-guard.js"></script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/admin/admin-common.css">
+    <link rel="stylesheet" href="../../src/css/admin/pengaturan.css">
+</head>
+<body class="admin-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1>Pengaturan Sistem</h1>
+                    <p>Konfigurasi parameter global platform E-Learning.</p>
+                </div>
+                <div class="user-profile">
+                    <button class="bell-icon-btn">
+                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=admin" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <span id="user-display-name">Admin</span>
+                        <p id="user-display-role">ADMINISTRATOR</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Settings Form Box -->
+            <div class="settings-container">
+                <h3 class="settings-section-title">Konfigurasi Platform & Akademik</h3>
+                
+                <form id="form-settings" class="settings-form">
+                    <div class="settings-row">
+                        <label class="form-label" for="settings-app-name">Nama Platform</label>
+                        <input class="form-input" type="text" id="settings-app-name" required>
+                    </div>
+
+                    <div class="settings-row">
+                        <label class="form-label" for="settings-school-name">Nama Sekolah</label>
+                        <input class="form-input" type="text" id="settings-school-name" required>
+                    </div>
+
+                    <div class="settings-row">
+                        <label class="form-label" for="settings-academic-year">Tahun Ajaran</label>
+                        <input class="form-input" type="text" id="settings-academic-year" placeholder="Contoh: 2026/2027" required>
+                    </div>
+
+                    <div class="settings-row">
+                        <label class="form-label" for="settings-semester">Semester</label>
+                        <select class="form-select" id="settings-semester" required>
+                            <option value="Ganjil">Ganjil</option>
+                            <option value="Genap">Genap</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-row">
+                        <label class="form-label" for="settings-status">Status Sistem</label>
+                        <select class="form-select" id="settings-status" required>
+                            <option value="active">Aktif (Online)</option>
+                            <option value="maintenance">Pemeliharaan (Maintenance)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                        <button type="submit" class="btn-admin">Simpan Pengaturan</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/admin/pengaturan.js"></script>
+</body>
+</html>

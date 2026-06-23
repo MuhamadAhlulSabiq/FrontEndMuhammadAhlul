@@ -12,7 +12,9 @@ const STORAGE_KEYS = {
     FORUM_THREADS: 'elearning_forum_threads',
     FORUM_COMMENTS: 'elearning_forum_comments',
     ANNOUNCEMENTS: 'elearning_announcements',
-    CLASS_ACTIVITIES: 'elearning_class_activities'
+    CLASS_ACTIVITIES: 'elearning_class_activities',
+    TEACHERS: 'elearning_teachers',
+    SETTINGS: 'elearning_settings'
 };
 
 export const storage = {
@@ -398,6 +400,41 @@ export const storage = {
             ];
             localStorage.setItem(STORAGE_KEYS.CLASS_ACTIVITIES, JSON.stringify(defaultActivities));
         }
+
+        // Seed Teachers
+        if (!localStorage.getItem(STORAGE_KEYS.TEACHERS)) {
+            const defaultTeachers = [
+                {
+                    id: 1,
+                    name: 'Bu Nina',
+                    username: 'nina',
+                    email: 'nina@guru.com',
+                    phone: '081234567890',
+                    subject: 'Matematika'
+                },
+                {
+                    id: 2,
+                    name: 'Miss Sarah',
+                    username: 'sarah',
+                    email: 'sarah@guru.com',
+                    phone: '081298765432',
+                    subject: 'Bahasa Inggris'
+                }
+            ];
+            localStorage.setItem(STORAGE_KEYS.TEACHERS, JSON.stringify(defaultTeachers));
+        }
+
+        // Seed Settings
+        if (!localStorage.getItem(STORAGE_KEYS.SETTINGS)) {
+            const defaultSettings = {
+                appName: 'E-Learning Platform',
+                schoolName: 'SD N 1 Cerdas Mulia',
+                academicYear: '2026/2027',
+                semester: 'Ganjil',
+                status: 'active'
+            };
+            localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(defaultSettings));
+        }
     },
 
     // Classes Actions
@@ -500,5 +537,30 @@ export const storage = {
         const activities = this.getActivities();
         activities.unshift(activityObj);
         localStorage.setItem(STORAGE_KEYS.CLASS_ACTIVITIES, JSON.stringify(activities));
+    },
+
+    // Teachers Actions
+    getTeachers() {
+        this.initDb();
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.TEACHERS)) || [];
+    },
+    addTeacher(teacherObj) {
+        const teachers = this.getTeachers();
+        teachers.unshift(teacherObj);
+        localStorage.setItem(STORAGE_KEYS.TEACHERS, JSON.stringify(teachers));
+    },
+    deleteTeacher(id) {
+        const teachers = this.getTeachers();
+        const filtered = teachers.filter(t => t.id !== id);
+        localStorage.setItem(STORAGE_KEYS.TEACHERS, JSON.stringify(filtered));
+    },
+
+    // Settings Actions
+    getSettings() {
+        this.initDb();
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS)) || {};
+    },
+    updateSettings(settingsObj) {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settingsObj));
     }
 };

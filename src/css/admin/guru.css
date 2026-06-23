@@ -1,0 +1,129 @@
+/* ==========================================
+   GURU PAGE SPECIFIC STYLES (guru.css)
+   ========================================== */
+
+/* Header controls: Search and add button */
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.search-icon-svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    color: #94a3b8;
+}
+
+/* Teachers Table/List Layout */
+.teachers-table-container {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 32px;
+}
+
+.teachers-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.teachers-table th {
+    background-color: #f8fafc;
+    padding: 16px 24px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.teachers-table td {
+    padding: 16px 24px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.teachers-table tr:last-child td {
+    border-bottom: none;
+}
+
+.teachers-table tr:hover td {
+    background-color: #f8fafc;
+}
+
+.teacher-meta-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.teacher-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.teacher-name-txt {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.subject-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background-color: #f5f3ff;
+    color: #7c3aed;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    background-color: #f1f5f9;
+}
+
+.btn-icon.delete:hover {
+    color: #ef4444;
+    background-color: #fee2e2;
+}
