@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Guru - E-Learning Platform</title>
     <!-- Role Protection Guard -->
-    <script src="../../src/js/middleware/auth-guard.js"></script>
-    
+    <!-- <script src="../../src/js/middleware/auth-guard.js"></script> -->
+
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="../../src/css/global.css">
     <link rel="stylesheet" href="../../src/css/components.css">
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="../../src/css/guru/guru-common.css">
     <link rel="stylesheet" href="../../src/css/guru/dashboard.css">
 </head>
+
 <body class="guru-theme">
     <div class="app-layout">
         <!-- Sidebar Navigation -->
@@ -28,11 +30,13 @@
                 </div>
                 <div class="user-profile">
                     <button class="bell-icon-btn">
-                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                     </button>
-                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar" class="avatar">
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar"
+                        class="avatar">
                     <div class="user-info">
                         <span id="user-display-name">Bu Nina</span>
                         <p id="user-display-role">GURU</p>
@@ -47,8 +51,8 @@
                     <div class="stat-icon">
                         <!-- Book/Class icon -->
                         <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                         </svg>
                     </div>
                     <div class="stat-details">
@@ -60,10 +64,10 @@
                     <div class="stat-icon">
                         <!-- Students/Users icon -->
                         <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                         </svg>
                     </div>
                     <div class="stat-details">
@@ -75,8 +79,9 @@
                     <div class="stat-icon">
                         <!-- Materials/Files icon -->
                         <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-                            <path d="M8 16V8l4 4 4-4v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
+                            <path d="M8 16V8l4 4 4-4v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" fill="none" />
                         </svg>
                     </div>
                     <div class="stat-details">
@@ -88,8 +93,9 @@
                     <div class="stat-icon">
                         <!-- Tasks/Assignments icon -->
                         <svg class="stat-icon-svg" viewBox="0 0 24 24">
-                            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
-                            <path d="M16 2v4M8 2v4M12 11h4M8 11h2M12 15h4M8 15h2"/>
+                            <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"
+                                fill="none" />
+                            <path d="M16 2v4M8 2v4M12 11h4M8 11h2M12 15h4M8 15h2" />
                         </svg>
                     </div>
                     <div class="stat-details">
@@ -112,4 +118,5 @@
     <!-- JS Separated Controller -->
     <script type="module" src="../../src/js/views/guru/dashboard.js"></script>
 </body>
+
 </html>

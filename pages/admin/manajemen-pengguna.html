@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Guru Baru - E-Learning Platform</title>
+    <!-- Role Protection Guard -->
+    <!-- <script src="../../src/js/middleware/auth-guard.js"></script> -->
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/admin/admin-common.css">
+    <link rel="stylesheet" href="../../src/css/admin/manajemen-pengguna.css">
+</head>
+<body class="admin-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="icon-btn" id="btn-toggle-menu" title="Menu">
+                        <svg class="icon-btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="10" y1="6" x2="21" y2="6"></line>
+                            <line x1="10" y1="12" x2="21" y2="12"></line>
+                            <line x1="10" y1="18" x2="21" y2="18"></line>
+                            <path d="M6 8l-4 4 4 4" />
+                        </svg>
+                    </button>
+                    <h1 class="page-title-text" style="font-size: 1.5rem; font-weight: 800; color: #111827; margin: 0;">Tambah Guru Baru</h1>
+                </div>
+                <div class="top-bar-actions">
+                    <div class="search-wrapper" style="margin-bottom: 0;">
+                        <svg class="search-icon-svg" viewBox="0 0 24 24">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" class="search-input" placeholder="Cari di dashboard...">
+                    </div>
+                    <button class="icon-btn" title="Notifikasi">
+                        <svg class="icon-btn-svg" viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
+                        </svg>
+                    </button>
+                    <button class="icon-btn" title="Bantuan">
+                        <svg class="icon-btn-svg" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </button>
+                    <div class="divider-vertical"></div>
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=admin_avatar" alt="Avatar" class="user-avatar-img">
+                </div>
+            </header>
+
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs">
+                <a href="dashboard.html">Dashboard</a>
+                <span class="separator">&gt;</span>
+                <span class="current">Manajemen Pengguna</span>
+                <span class="separator">&gt;</span>
+                <span class="current font-blue">Tambah Guru Baru</span>
+            </nav>
+
+            <form id="form-add-guru" class="form-scroll-container">
+                <!-- Top Row: Personal Info & Profile Picture -->
+                <div class="form-grid-top">
+                    <!-- Personal Info Card -->
+                    <div class="form-card card-personal-info">
+                        <div class="card-title-row">
+                            <svg class="card-title-icon" viewBox="0 0 24 24">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            <h3>Informasi Pribadi</h3>
+                        </div>
+
+                        <div class="form-fields-grid">
+                            <div class="form-field-group">
+                                <label class="input-label" for="nama-lengkap">Nama Lengkap</label>
+                                <input type="text" id="nama-lengkap" class="form-text-input" placeholder="Masukkan nama lengkap dengan gelar" required>
+                            </div>
+
+                            <div class="form-field-group">
+                                <label class="input-label" for="nip-number">NIP (Nomor Induk Pegawai)</label>
+                                <input type="text" id="nip-number" class="form-text-input" placeholder="Contoh: 198501012010121001" required>
+                            </div>
+
+                            <div class="form-field-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label class="input-label" style="margin-bottom: 0;" for="email-institusi">Email Institusi</label>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="toggle-text">Buat email institusi secara otomatis</span>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="toggle-auto-email" checked>
+                                            <span class="slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="email" id="email-institusi" class="form-text-input" placeholder="nama.guru@sekolahkita.sch.id" required>
+                                <p class="email-hint-text">Email akan dibuat berdasarkan nama: <span id="email-preview-hint" class="font-blue-hint">nama.guru@sekolahkita.sch.id</span></p>
+                            </div>
+
+                            <div class="form-field-group">
+                                <label class="input-label" for="nomor-telepon">Nomor Telepon</label>
+                                <input type="text" id="nomor-telepon" class="form-text-input" placeholder="+62 812 XXXX XXXX" required>
+                            </div>
+                        </div>
+
+                        <!-- Gender Selector -->
+                        <div class="gender-selector-container">
+                            <span class="input-label">Jenis Kelamin</span>
+                            <div class="gender-radio-row">
+                                <label class="radio-option">
+                                    <input type="radio" name="jenis-kelamin" value="Laki-laki" checked>
+                                    <span class="radio-label">Laki-laki</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="jenis-kelamin" value="Perempuan">
+                                    <span class="radio-label">Perempuan</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Photo Card -->
+                    <div class="form-card card-profile-photo">
+                        <div class="card-title-row">
+                            <svg class="card-title-icon" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <h3>Foto Profil</h3>
+                        </div>
+
+                        <div class="avatar-upload-area">
+                            <div class="avatar-circle-placeholder">
+                                <svg class="avatar-placeholder-svg" viewBox="0 0 24 24">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                </svg>
+                            </div>
+                            <p class="upload-hint">Unggah foto formal dalam format JPG atau PNG. Maksimal 2MB.</p>
+                            
+                            <input type="file" id="file-photo-profile" accept="image/jpeg, image/png" style="display: none;">
+                            <button type="button" class="btn-select-file" id="btn-browse-file">Pilih Berkas</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Academic Details -->
+                <div class="form-card card-academic-details">
+                    <div class="card-title-row">
+                        <svg class="card-title-icon" viewBox="0 0 24 24">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                        </svg>
+                        <h3>Detail Akademik</h3>
+                    </div>
+
+                    <div class="academic-fields-grid">
+                        <div class="form-field-group">
+                            <label class="input-label" for="select-subject">Subjek Pelajaran Utama</label>
+                            <select id="select-subject" class="form-select-input" required>
+                                <option value="" disabled selected>Pilih Mata Pelajaran</option>
+                                <option value="Matematika">Matematika</option>
+                                <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                <option value="Ilmu Pengetahuan Alam">Ilmu Pengetahuan Alam</option>
+                                <option value="Ilmu Pengetahuan Sosial">Ilmu Pengetahuan Sosial</option>
+                                <option value="Pendidikan Jasmani">Pendidikan Jasmani</option>
+                                <option value="Seni Budaya">Seni Budaya</option>
+                            </select>
+                        </div>
+
+                        <!-- Class Checklist -->
+                        <div class="form-field-group">
+                            <span class="input-label">Kelas yang Diampu</span>
+                            <div class="class-checkbox-row">
+                                <label class="class-checkbox-pill">
+                                    <input type="checkbox" name="kelas-diampu" value="Kelas X">
+                                    <span class="pill-label">Kelas X</span>
+                                </label>
+                                <label class="class-checkbox-pill">
+                                    <input type="checkbox" name="kelas-diampu" value="Kelas XI">
+                                    <span class="pill-label">Kelas XI</span>
+                                </label>
+                                <label class="class-checkbox-pill">
+                                    <input type="checkbox" name="kelas-diampu" value="Kelas XII">
+                                    <span class="pill-label">Kelas XII</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field-group" style="margin-top: 24px;">
+                        <label class="input-label" for="textarea-notes">Catatan Tambahan (Opsional)</label>
+                        <textarea id="textarea-notes" class="form-textarea-input" placeholder="Sertifikasi guru, spesialisasi, atau pengalaman lainnya..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Form Action Buttons -->
+                <div class="form-actions-row">
+                    <button type="button" class="btn-cancel" id="btn-cancel-form">Batal</button>
+                    <button type="submit" class="btn-submit-data">
+                        <svg class="btn-submit-icon" viewBox="0 0 24 24">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Simpan Data Guru
+                    </button>
+                </div>
+            </form>
+
+            <!-- Sticky Footer Footer copyright -->
+            <footer class="admin-sticky-footer">
+                <span class="footer-copyright-text">© 2024 Sekolah Kita - Sistem Administrasi E-Learning. Versi 2.4.0</span>
+            </footer>
+        </main>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/admin/manajemen-pengguna.js"></script>
+</body>
+</html>
