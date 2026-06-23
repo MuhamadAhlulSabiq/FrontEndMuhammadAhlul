@@ -25,8 +25,8 @@ export const apiClient = {
             console.warn(`Fetch to ${endpoint} failed. Simulating local fallback...`, error);
             
             // Local simulation fallback
-            if (endpoint === '/register' || endpoint === '/login') {
-                return { success: true, message: 'Simulated registration/login success.' };
+            if (endpoint === '/register' || endpoint === '/login' || endpoint === '/forgot-password') {
+                return { success: true, message: 'Simulated registration/login/forgot-password success.' };
             }
             
             throw error;
