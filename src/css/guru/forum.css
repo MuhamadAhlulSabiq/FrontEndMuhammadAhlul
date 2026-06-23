@@ -1,0 +1,243 @@
+/* ==========================================
+   FORUM PAGE SPECIFIC STYLES (forum.css)
+   ========================================== */
+
+/* Tabs Filter */
+.guru-theme .tabs-container {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.guru-theme .tab-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: #f3f4f6;
+    color: #888888;
+    transition: all 0.2s ease;
+}
+
+.guru-theme .tab-btn:hover {
+    background-color: #e5e7eb;
+}
+
+.guru-theme .tab-btn.active {
+    background-color: #10b981;
+    color: #ffffff;
+}
+
+/* Detail view containers */
+.guru-theme .detail-container {
+    max-width: 900px;
+    animation: fadeIn 0.4s ease;
+}
+
+.guru-theme .back-link {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+
+.guru-theme .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.guru-theme .teacher-info-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.guru-theme .teacher-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+}
+
+.guru-theme .teacher-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #000000;
+}
+
+.guru-theme .teacher-subject {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.guru-theme .detail-body-text {
+    font-size: 0.95rem;
+    color: #374151;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* Comments thread (Forum Balasan) */
+.guru-theme .comments-container {
+    background-color: #e6fcf5; /* Soft light green */
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.guru-theme .comment-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.guru-theme .comment-bubble-content {
+    flex-grow: 1;
+}
+
+.guru-theme .comment-author {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #000000;
+    margin-bottom: 2px;
+}
+
+.guru-theme .comment-text {
+    font-size: 0.95rem;
+    color: #374151;
+    font-weight: 500;
+}
+
+.guru-theme .comment-time {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 500;
+    margin-left: auto;
+}
+
+.guru-theme .comment-input-area {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.guru-theme .comment-textarea {
+    flex-grow: 1;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 0.95rem;
+    resize: none;
+    height: 48px;
+    box-sizing: border-box;
+}
+
+.guru-theme .comment-textarea:focus {
+    outline: none;
+}
+
+.guru-theme .btn-comment-send {
+    background-color: #10b981;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.guru-theme .btn-comment-send:hover {
+    background-color: #059669;
+}
+
+/* Forms layout for Buat Diskusi */
+.guru-theme .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.guru-theme .form-select-arrow {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.guru-theme .form-select-arrow::after {
+    content: "▼";
+    font-size: 0.8rem;
+    color: #888888;
+    position: absolute;
+    right: 16px;
+    pointer-events: none;
+}
+
+.guru-theme .form-select {
+    width: 100%;
+    padding: 14px 16px;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #111827;
+    appearance: none;
+    cursor: pointer;
+}
+
+.guru-theme .form-select:focus {
+    outline: none;
+}
+
+.guru-theme .form-textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #111827;
+    resize: none;
+    height: 140px;
+}
+
+.guru-theme .form-textarea:focus {
+    outline: none;
+}
+
+.guru-theme .form-actions-bottom {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.guru-theme .btn-cancel {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.guru-theme .btn-cancel:hover {
+    background-color: #e5e7eb;
+}
