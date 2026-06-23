@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengumuman Guru - E-Learning Platform</title>
+    <!-- Role Protection Guard -->
+    <script src="../../src/js/middleware/auth-guard.js"></script>
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="../../src/css/global.css">
+    <link rel="stylesheet" href="../../src/css/components.css">
+    <link rel="stylesheet" href="../../src/css/main.css">
+    <link rel="stylesheet" href="../../src/css/guru/guru-common.css">
+    <link rel="stylesheet" href="../../src/css/guru/pengumuman.css">
+</head>
+<body class="guru-theme">
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar-container"></aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="welcome-text">
+                    <h1>Pengumuman</h1>
+                    <p>Bagikan info penting, jadwal, atau pengumuman kelas ke siswa.</p>
+                </div>
+                <div class="user-profile">
+                    <button class="bell-icon-btn">
+                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                    </button>
+                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <span id="user-display-name">Bu Nina</span>
+                        <p id="user-display-role">GURU</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Controls (Search + Add) -->
+            <section class="controls-row">
+                <div class="search-wrapper">
+                    <!-- Search Icon SVG -->
+                    <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="search-announcement" class="search-input" placeholder="Cari pengumuman...">
+                </div>
+                <button id="btn-tambah-announcement" class="btn-guru" style="display: flex; align-items: center; gap: 8px;">
+                    <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5;" viewBox="0 0 24 24">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Tulis Pengumuman
+                </button>
+            </section>
+
+            <!-- Announcements Feed List -->
+            <section class="list-container" id="announcements-feed">
+                <!-- Loaded dynamically -->
+                <div class="empty-state">Memuat pengumuman...</div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Form Tambah Pengumuman -->
+    <div id="modal-announcement" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Buat Pengumuman Baru</h3>
+                <button id="modal-announcement-close" class="modal-close">&times;</button>
+            </div>
+            <form id="form-tambah-announcement">
+                <div class="form-group">
+                    <label class="form-label" for="announcement-title">Judul Pengumuman</label>
+                    <input class="form-input" type="text" id="announcement-title" placeholder="Masukkan judul pengumuman" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="announcement-category">Kategori</label>
+                    <select class="form-select" id="announcement-category" required>
+                        <option value="Penting">Penting (Merah)</option>
+                        <option value="Kelas">Kelas (Hijau)</option>
+                        <option value="Umum">Umum (Abu-abu)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="announcement-body">Isi Pengumuman</label>
+                    <textarea class="form-textarea" id="announcement-body" placeholder="Tuliskan detail pengumuman disini..." required></textarea>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
+                    <button type="button" id="btn-cancel-announcement" class="btn-outline">Batal</button>
+                    <button type="submit" class="btn-guru">Publikasikan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS Separated Controller -->
+    <script type="module" src="../../src/js/views/guru/pengumuman.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+/* ==========================================
+   TUGAS PAGE SPECIFIC STYLES (tugas.css)
+   ========================================== */
+
+/* Layout Controls */
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+/* Tabs Filter */
+.guru-theme .tabs-container {
+    display: flex;
+    gap: 12px;
+}
+
+.guru-theme .tab-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: #f1f5f9;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.guru-theme .tab-btn:hover {
+    background-color: #e2e8f0;
+}
+
+.guru-theme .tab-btn.active {
+    background-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+
+/* Detail view panels */
+.guru-theme .detail-container {
+    max-width: 900px;
+    animation: fadeIn 0.4s ease;
+}
+
+.guru-theme .back-link {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    cursor: pointer;
+}
+
+.guru-theme .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.guru-theme .detail-title-section h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+.guru-theme .detail-title-section p {
+    font-size: 0.95rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.guru-theme .detail-section {
+    margin-bottom: 32px;
+}
+
+.guru-theme .detail-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 16px;
+}
+
+.guru-theme .detail-body-text {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* Submission lists */
+.submissions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.submission-card {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.submission-card:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.submission-card.selected {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.student-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.student-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.student-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #000000;
+}
+
+.submit-time {
+    font-size: 0.85rem;
+    color: #888888;
+    margin-top: 2px;
+}
+
+.grading-badge {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.grading-badge.graded {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.grading-badge.pending {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+/* Grading Panel Form */
+.grading-panel {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.grading-header {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 12px;
+}
+
+.grading-header h4 {
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.grading-file-link {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: underline;
+}
+
+.grading-file-link:hover {
+    color: #059669;
+}

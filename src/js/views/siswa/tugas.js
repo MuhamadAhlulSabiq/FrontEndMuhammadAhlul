@@ -282,7 +282,17 @@ function loadTaskDetails(taskId) {
         infoContainer.innerHTML = `
             <h4 style="margin: 0 0 8px 0; font-weight: 800; font-size: 1.05rem;">✓ Berkas Jawaban Telah Terkirim</h4>
             <p style="margin: 0 0 4px 0; font-size: 0.95rem;"><strong>File:</strong> ${t.submittedFile || 'jawaban.pdf'}</p>
-            <p style="margin: 0; font-size: 0.9rem; color: #047857;"><strong>Dikumpulkan pada:</strong> ${t.submittedTime || 'Tepat Waktu'}</p>
+            <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: #047857;"><strong>Dikumpulkan pada:</strong> ${t.submittedTime || 'Tepat Waktu'}</p>
+            ${t.nilai !== undefined ? `
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #a7f3d0;">
+                    <p style="margin: 0 0 4px 0; font-size: 1.1rem; color: #065f46;"><strong>Nilai Anda: <span style="font-size: 1.3rem; font-weight: 800; color: #059669;">${t.nilai}</span> / 100</strong></p>
+                    <p style="margin: 0; font-size: 0.9rem; font-style: italic; color: #047857;"><strong>Catatan Guru:</strong> ${t.feedback || '-'}</p>
+                </div>
+            ` : `
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #a7f3d0; color: #047857; font-size: 0.9rem; font-style: italic;">
+                    Menunggu penilaian dari guru.
+                </div>
+            `}
         `;
     } else {
         if (uploadForm) uploadForm.style.display = 'flex';

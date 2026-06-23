@@ -416,11 +416,21 @@ export const storage = {
         this.initDb();
         return JSON.parse(localStorage.getItem(STORAGE_KEYS.MATERIALS));
     },
+    addMaterial(materialObj) {
+        const materials = this.getMaterials();
+        materials.unshift(materialObj);
+        localStorage.setItem(STORAGE_KEYS.MATERIALS, JSON.stringify(materials));
+    },
 
     // Assignments Actions
     getAssignments() {
         this.initDb();
         return JSON.parse(localStorage.getItem(STORAGE_KEYS.ASSIGNMENTS));
+    },
+    addAssignment(assignmentObj) {
+        const assignments = this.getAssignments();
+        assignments.unshift(assignmentObj);
+        localStorage.setItem(STORAGE_KEYS.ASSIGNMENTS, JSON.stringify(assignments));
     },
     updateAssignment(id, updateData) {
         const assignments = this.getAssignments();
@@ -474,6 +484,11 @@ export const storage = {
     getAnnouncements() {
         this.initDb();
         return JSON.parse(localStorage.getItem(STORAGE_KEYS.ANNOUNCEMENTS));
+    },
+    addAnnouncement(announcementObj) {
+        const announcements = this.getAnnouncements();
+        announcements.unshift(announcementObj);
+        localStorage.setItem(STORAGE_KEYS.ANNOUNCEMENTS, JSON.stringify(announcements));
     },
 
     // Classroom Activities Actions
