@@ -9,7 +9,7 @@
 
 /* Sidebar Styling - Purple Theme */
 .admin-theme .sidebar {
-    background-color: #8b5cf6;
+    background-color: #1A1B1E;
     border-right: none;
     padding: 30px 20px;
     height: 100vh;
@@ -52,7 +52,7 @@
 
 .admin-theme .menu-item.active {
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #8b5cf6;
 }
 
 .admin-theme .menu-icon-svg {
