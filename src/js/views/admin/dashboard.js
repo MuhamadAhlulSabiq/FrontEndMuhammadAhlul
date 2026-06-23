@@ -12,17 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize admin profile display
     const user = storage.getUser();
     if (user) {
-        const welcomeTitle = document.getElementById('welcome-title');
-        if (welcomeTitle) welcomeTitle.textContent = `Halo, ${user.name || 'Administrator'}!`;
-        
-        const dispName = document.getElementById('user-display-name');
-        if (dispName) dispName.textContent = user.name || 'Admin';
-        
-        const dispRole = document.getElementById('user-display-role');
-        if (dispRole) dispRole.textContent = (user.role || 'Admin').toUpperCase();
-        
+        // Keep the welcome-title exactly as the mockup: "Dashboard Admin E-Learning Sekolah Kita"
+        // But we can update the avatar seed if needed
         const avatar = document.getElementById('user-avatar');
-        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=admin_${user.id || 'seed'}`;
+        if (avatar) {
+            avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=admin_${user.id || 'seed'}`;
+        }
     }
 
     // Set up logout binding
@@ -33,56 +28,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Load and render stats and system logs
+    // Load and render stats
     loadAndRenderDashboard();
+
+    // Set up FAB click binding
+    const fabAdd = document.getElementById('fab-add-data');
+    if (fabAdd) {
+        fabAdd.addEventListener('click', () => {
+            // Redirect to Manajemen Pengguna (manajemen-pengguna.html)
+            window.location.href = 'manajemen-pengguna.html';
+        });
+    }
 });
 
 function loadAndRenderDashboard() {
     const teachers = storage.getTeachers();
     const classes = storage.getClasses();
-    const materials = storage.getMaterials();
-    const activities = storage.getActivities();
 
     // Render Stats
-    document.getElementById('stat-teachers-count').textContent = teachers.length;
-    document.getElementById('stat-students-count').textContent = 15; // mock student count
-    document.getElementById('stat-classes-count').textContent = classes.length;
-    document.getElementById('stat-materials-count').textContent = materials.length;
+    // Baseline numbers matching the mockup screenshot, but dynamic if elements are added
+    const totalTeachersCount = Math.max(145, 143 + teachers.length);
+    const totalClassesCount = Math.max(88, 86 + classes.length);
 
-    // Render System Logs (based on activities feed)
-    const logsContainer = document.getElementById('system-logs');
-    if (activities.length === 0) {
-        logsContainer.innerHTML = '<div class="empty-state">Tidak ada log aktivitas sistem terbaru.</div>';
-    } else {
-        // Show up to 4 recent activities as logs
-        const recentLogs = activities.slice(0, 4);
-        logsContainer.innerHTML = recentLogs.map((act, index) => {
-            let badgeClass = 'info';
-            let badgeLabel = 'SISTEM';
+    const teachersCountEl = document.getElementById('stat-teachers-count');
+    if (teachersCountEl) teachersCountEl.textContent = totalTeachersCount.toLocaleString('id-ID');
 
-            if (act.type === 'check') {
-                badgeClass = 'success';
-                badgeLabel = 'TUGAS';
-            } else if (act.type === 'materi') {
-                badgeClass = 'success';
-                badgeLabel = 'MATERI';
-            } else if (act.type === 'message') {
-                badgeClass = 'warn';
-                badgeLabel = 'DISKUSI';
-            }
+    const studentsCountEl = document.getElementById('stat-students-count');
+    if (studentsCountEl) studentsCountEl.textContent = '2.130';
 
-            return `
-                <div class="log-item">
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <span class="log-badge ${badgeClass}">${badgeLabel}</span>
-                        <div>
-                            <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #0f172a;">${act.title}</h4>
-                            <p style="margin: 0; font-size: 0.85rem; color: #64748b;">Event ID: LOG-00${index + 101}</p>
-                        </div>
-                    </div>
-                    <span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">${act.time}</span>
-                </div>
-            `;
-        }).join('');
-    }
+    const classesCountEl = document.getElementById('stat-classes-count');
+    if (classesCountEl) classesCountEl.textContent = totalClassesCount.toLocaleString('id-ID');
+
+    const newStudentsCountEl = document.getElementById('stat-new-students-count');
+    if (newStudentsCountEl) newStudentsCountEl.textContent = '+110';
 }

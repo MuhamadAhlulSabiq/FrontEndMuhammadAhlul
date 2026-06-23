@@ -87,8 +87,8 @@ export function initSidebar() {
                 </svg>`
             },
             {
-                name: 'Guru',
-                href: 'guru.html',
+                name: 'Manajemen Pengguna',
+                href: 'manajemen-pengguna.html',
                 icon: `<svg class="menu-icon-svg" viewBox="0 0 24 24">
                     <path d="M17 21v-2a4 4 0 0 0-3-3.87"/>
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
@@ -176,26 +176,53 @@ export function initSidebar() {
         `;
     }).join('');
 
-    container.innerHTML = `
-        <div class="sidebar-header">
-            <svg class="logo-icon-svg" viewBox="0 0 24 24">
-                <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
-                <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-            </svg>
-            <span class="logo-text">E-Learning<br>Platform</span>
-        </div>
-        <nav class="sidebar-menu">
-            ${menuHtml}
-        </nav>
-        <div class="sidebar-footer">
-            <button id="btn-logout" class="btn-logout">
-                <svg style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; margin-right: 8px;" viewBox="0 0 24 24">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+    if (role === 'admin') {
+        container.innerHTML = `
+            <div class="sidebar-header admin-header">
+                <div class="logo-badge-container">
+                    <svg class="logo-badge-svg" viewBox="0 0 24 24">
+                        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                        <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                    </svg>
+                </div>
+                <div class="logo-text-container">
+                    <span class="logo-title">Sekolah Kita</span>
+                    <span class="logo-subtitle">E-Learning Admin</span>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                ${menuHtml}
+            </nav>
+            <div class="sidebar-footer admin-footer" id="admin-profile-footer" style="cursor: pointer;">
+                <div class="admin-avatar-initials">JD</div>
+                <div class="admin-profile-details">
+                    <span class="admin-profile-name">Admin Utama</span>
+                    <span class="admin-profile-email">admin@sekolahkita.id</span>
+                </div>
+            </div>
+        `;
+    } else {
+        container.innerHTML = `
+            <div class="sidebar-header">
+                <svg class="logo-icon-svg" viewBox="0 0 24 24">
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                    <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
                 </svg>
-                <span>Keluar</span>
-            </button>
-        </div>
-    `;
+                <span class="logo-text">E-Learning<br>Platform</span>
+            </div>
+            <nav class="sidebar-menu">
+                ${menuHtml}
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btn-logout" class="btn-logout">
+                    <svg style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; margin-right: 8px;" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
+                    <span>Keluar</span>
+                </button>
+            </div>
+        `;
+    }
 
     // Bind logout button click
     const logoutBtn = container.querySelector('#btn-logout');
@@ -203,6 +230,16 @@ export function initSidebar() {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             await authApi.logout();
+        });
+    }
+
+    // Bind admin profile footer click for logout
+    const adminFooter = container.querySelector('#admin-profile-footer');
+    if (adminFooter) {
+        adminFooter.addEventListener('click', async (e) => {
+            if (confirm('Apakah Anda yakin ingin keluar dari sistem?')) {
+                await authApi.logout();
+            }
         });
     }
 }

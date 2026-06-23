@@ -1,0 +1,429 @@
+/* ==================================================
+   MANAJEMEN PENGGUNA STYLES (manajemen-pengguna.css)
+   ================================================== */
+/* Breadcrumbs Styling */
+.breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 28px;
+}
+
+.breadcrumbs .separator {
+    color: #cbd5e1;
+    font-weight: 400;
+}
+
+.breadcrumbs .current {
+    color: #4b5563;
+}
+
+.breadcrumbs .font-blue {
+    color: #2563eb;
+}
+
+/* Form Container */
+.form-scroll-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+/* Two-column layout for the top part */
+.form-grid-top {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Card Styling */
+.form-card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+}
+
+.card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    border-bottom: 1.5px solid #f1f5f9;
+    padding-bottom: 14px;
+}
+
+.card-title-icon {
+    width: 22px;
+    height: 22px;
+    color: #2563eb;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.card-title-row h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+
+/* Fields Grid */
+.form-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.form-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+/* Custom Text and Select Inputs */
+.form-text-input,
+.form-select-input,
+.form-textarea-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    color: #1f2937;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+.form-text-input:focus,
+.form-select-input:focus,
+.form-textarea-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.form-text-input::placeholder,
+.form-textarea-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Custom Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .25s;
+    border-radius: 22px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .25s;
+    border-radius: 50%;
+}
+
+.toggle-switch input:checked+.slider {
+    background-color: #0d52cd;
+}
+
+.toggle-switch input:checked+.slider:before {
+    transform: translateX(22px);
+}
+
+.toggle-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.email-hint-text {
+    font-size: 0.76rem;
+    color: #9ca3af;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.font-blue-hint {
+    color: #2563eb;
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* Gender Radio Buttons */
+.gender-selector-container {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.gender-radio-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 4px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.radio-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #0d52cd;
+    cursor: pointer;
+}
+
+/* Avatar Upload styling */
+.avatar-upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px 0;
+}
+
+.avatar-circle-placeholder {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.avatar-circle-placeholder img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder-svg {
+    width: 56px;
+    height: 56px;
+    color: #94a3b8;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+}
+
+.upload-hint {
+    font-size: 0.8rem;
+    color: #6b7280;
+    line-height: 1.4;
+    margin-bottom: 24px;
+    max-width: 220px;
+    font-weight: 500;
+}
+
+.btn-select-file {
+    background-color: transparent;
+    border: 1.5px solid #2563eb;
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 10px 24px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.btn-select-file:hover {
+    background-color: rgba(37, 99, 235, 0.05);
+}
+
+/* Academic Details (Bottom card) */
+.academic-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* Checkbox Pills */
+.class-checkbox-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.class-checkbox-pill {
+    position: relative;
+    cursor: pointer;
+}
+
+.class-checkbox-pill input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.pill-label {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background-color: #f1f5f9;
+    color: #475569;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.class-checkbox-pill input[type="checkbox"]:checked+.pill-label {
+    background-color: #e3f2fd;
+    color: #0d52cd;
+    border-color: #90caf9;
+}
+
+.class-checkbox-pill:hover .pill-label {
+    background-color: #e2e8f0;
+}
+
+.class-checkbox-pill input[type="checkbox"]:checked:hover+.pill-label {
+    background-color: #d0e8ff;
+}
+
+/* Textarea input */
+.form-textarea-input {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Form Action Buttons Row */
+.form-actions-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+
+.btn-cancel {
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #475569;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel:hover {
+    background-color: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.btn-submit-data {
+    background-color: #0d52cd;
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
+    transition: all 0.2s ease;
+}
+
+.btn-submit-data:hover {
+    background-color: #0c48b5;
+    box-shadow: 0 6px 16px rgba(13, 82, 205, 0.3);
+}
+
+.btn-submit-icon {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+}
+
+/* Sticky copyright footer */
+.admin-sticky-footer {
+    border-top: 1px solid #f1f5f9;
+    padding: 24px 0;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.footer-copyright-text {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Responsive breakdowns */
+@media (max-width: 900px) {
+    .form-grid-top {
+        grid-template-columns: 1fr;
+    }
+
+    .form-fields-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .academic-fields-grid {
+        grid-template-columns: 1fr;
+    }
+}

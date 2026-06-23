@@ -2,101 +2,177 @@
    DASHBOARD PAGE SPECIFIC STYLES (dashboard.css)
    ========================================== */
 
+
+
+/* Main Dashboard Title */
+.admin-theme .welcome-header {
+    margin-bottom: 32px;
+}
+
+.admin-theme .welcome-header h1 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+}
+
+.admin-theme .welcome-header p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
 /* Dashboard Stats Grid (Ringkasan) */
 .admin-theme .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 24px;
     margin-bottom: 48px;
 }
 
 .admin-theme .stat-card {
-    background-color: #f5f3ff; /* Light purple background */
-    border: 1px solid #eedeff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: none;
+    background-color: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 16px;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-sizing: border-box;
 }
 
 .admin-theme .stat-card:hover {
-    transform: none;
-    background-color: #ede9fe;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.04), 0 3px 6px -3px rgba(0, 0, 0, 0.02);
+}
+
+.admin-theme .card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .admin-theme .stat-icon {
     width: 44px;
     height: 44px;
-    border-radius: 8px;
-    background-color: #ffffff;
+    border-radius: 10px;
+    background-color: rgba(59, 130, 246, 0.08); /* light blue tint */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.05);
+    color: #2563eb;
+    font-size: 1.5rem;
 }
 
 .admin-theme .stat-icon-svg {
-    width: 24px;
-    height: 24px;
-    fill: #8b5cf6; /* Purple fill */
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
 }
 
-.admin-theme .stat-details h3 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #000000;
-}
-
-.admin-theme .stat-details p {
-    color: #000000;
+.admin-theme .stat-badge {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.78rem;
     font-weight: 700;
-    font-size: 0.95rem;
+    letter-spacing: normal;
+    text-transform: none;
 }
 
-/* System logs table/list layout */
-.log-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+.admin-theme .badge-green {
+    background-color: #e8f7ee;
+    color: #10b981;
 }
 
-.log-item {
-    background-color: #f8fafc;
-    border: 1px solid rgba(0, 0, 0, 0.02);
-    border-radius: 12px;
-    padding: 16px 20px;
+/* Card 4 Custom - Blue Solid Card */
+.admin-theme .stat-card.blue-card {
+    background-color: #0d52cd;
+    border: none;
+    box-shadow: 0 8px 16px rgba(13, 82, 205, 0.16);
+}
+
+.admin-theme .stat-card.blue-card:hover {
+    box-shadow: 0 12px 24px rgba(13, 82, 205, 0.26);
+}
+
+.admin-theme .stat-card.blue-card .stat-icon {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.admin-theme .stat-card.blue-card .stat-badge {
+    background-color: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.admin-theme .stat-card .stat-label {
+    color: #6b7280;
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+.admin-theme .stat-card.blue-card .stat-label {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.admin-theme .stat-card .stat-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+}
+
+.admin-theme .stat-card.blue-card .stat-value {
+    color: #ffffff;
+}
+
+/* Floating Action Button (FAB) */
+.admin-theme .fab-btn {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #0d52cd;
+    color: #ffffff;
+    border: none;
+    font-size: 1.75rem;
+    font-weight: 400;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(13, 82, 205, 0.35);
+    transition: all 0.2s ease;
+    z-index: 999;
 }
 
-.log-badge {
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
+.admin-theme .fab-btn:hover {
+    transform: scale(1.05);
+    background-color: #0c48b5;
+    box-shadow: 0 6px 20px rgba(13, 82, 205, 0.45);
 }
 
-.log-badge.info {
-    background-color: #e0f2fe;
-    color: #0369a1;
+.admin-theme .fab-btn:active {
+    transform: scale(0.95);
 }
 
-.log-badge.success {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.log-badge.warn {
-    background-color: #fef3c7;
-    color: #b45309;
-}
-
-@media (max-width: 960px) {
+@media (max-width: 1024px) {
     .admin-theme .stats-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-theme .stats-grid {
+        grid-template-columns: 1fr;
     }
 }

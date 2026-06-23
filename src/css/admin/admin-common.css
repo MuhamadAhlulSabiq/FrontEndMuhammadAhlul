@@ -7,13 +7,61 @@
     color: #111827;
 }
 
-/* Sidebar Styling - Purple Theme */
+/* Sidebar Styling - Dark Theme */
 .admin-theme .sidebar {
     background-color: #1A1B1E;
     border-right: none;
     padding: 30px 20px;
     height: 100vh;
     color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Admin Custom Sidebar Header */
+.admin-theme .admin-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.admin-theme .logo-badge-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #0d52cd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.admin-theme .logo-badge-svg {
+    width: 24px;
+    height: 24px;
+    fill: #ffffff;
+}
+
+.admin-theme .logo-text-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-theme .logo-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.admin-theme .logo-subtitle {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
 }
 
 .admin-theme .logo-text {
@@ -31,6 +79,7 @@
 
 .admin-theme .sidebar-menu {
     gap: 6px;
+    flex-grow: 1;
 }
 
 .admin-theme .menu-item {
@@ -51,8 +100,9 @@
 }
 
 .admin-theme .menu-item.active {
-    color: #ffffff;
-    background-color: #8b5cf6;
+    color: #3b82f6;
+    /* Beautiful mockup blue */
+    background-color: rgba(59, 130, 246, 0.1);
 }
 
 .admin-theme .menu-icon-svg {
@@ -65,6 +115,60 @@
 
 .admin-theme .sidebar-footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+/* Admin Sidebar Footer Profile Card */
+.admin-theme .admin-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+    transition: all 0.2s ease;
+}
+
+.admin-theme .admin-footer:hover {
+    opacity: 0.85;
+}
+
+.admin-theme .admin-avatar-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0d52cd;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.admin-theme .admin-profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.admin-theme .admin-profile-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.admin-theme .admin-profile-email {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .admin-theme .btn-logout {
@@ -79,11 +183,101 @@
     color: #ffffff;
 }
 
-/* Header & Profile styling */
+/* Header & Profile styling - Mockup white full-width top bar */
 .admin-theme .top-bar {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid #f1f5f9;
+    background-color: #ffffff;
+    margin-left: -40px;
+    margin-right: -40px;
+    margin-top: -40px;
+    box-sizing: border-box;
+}
+
+.admin-theme .top-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-theme .divider-vertical {
+    width: 1px;
+    height: 24px;
+    background-color: #cbd5e1;
+    margin: 0 4px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.admin-theme .top-bar .icon-btn {
+    background: none;
+    border: none;
+    color: #4b5563;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.admin-theme .top-bar .icon-btn:hover {
+    background-color: #f3f4f6;
+}
+
+.admin-theme .top-bar .icon-btn-svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.admin-theme .top-bar .user-avatar-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+}
+
+.admin-theme .top-bar .search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f1f3f7;
+    border-radius: 9999px;
+    padding: 10px 18px;
+    width: 280px;
+}
+
+.admin-theme .top-bar .search-icon-svg {
+    width: 18px;
+    height: 18px;
+    color: #8e92bc;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    flex-shrink: 0;
+}
+
+.admin-theme .top-bar .search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 0.92rem;
+    color: #333333;
+    font-family: inherit;
+}
+
+.admin-theme .top-bar .search-input::placeholder {
+    color: #9ba3af;
 }
 
 .admin-theme .welcome-text h1 {
@@ -230,7 +424,9 @@
     color: #111827;
 }
 
-.form-input, .form-textarea, .form-select {
+.form-input,
+.form-textarea,
+.form-select {
     width: 100%;
     padding: 12px 16px;
     border: 1px solid #e2e8f0;
@@ -241,10 +437,12 @@
     font-family: inherit;
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
     outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .form-textarea {
@@ -253,7 +451,7 @@
 }
 
 .btn-admin {
-    background-color: #8b5cf6;
+    background-color: #0d52cd;
     color: white;
     padding: 12px 24px;
     border: none;
@@ -261,12 +459,12 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
 }
 
 .btn-admin:hover {
-    background-color: #7c3aed;
-    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.3);
+    background-color: #0c48b5;
+    box-shadow: 0 6px 18px rgba(13, 82, 205, 0.3);
 }
 
 .btn-outline {
@@ -286,11 +484,25 @@
 }
 
 @keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
