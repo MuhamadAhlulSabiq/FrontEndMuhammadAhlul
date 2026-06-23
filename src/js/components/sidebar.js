@@ -28,6 +28,14 @@ export function initSidebar() {
                 </svg>`
             },
             {
+                name: 'Kelas',
+                href: 'kelas.html',
+                icon: `<svg class="menu-icon-svg" viewBox="0 0 24 24">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>`
+            },
+            {
                 name: 'Materi',
                 href: 'materi.html',
                 icon: `<svg class="menu-icon-svg" viewBox="0 0 24 24">
@@ -44,10 +52,25 @@ export function initSidebar() {
                 </svg>`
             },
             {
+                name: 'Forum Diskusi',
+                href: 'forum.html',
+                icon: `<svg class="menu-icon-svg" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>`
+            },
+            {
                 name: 'Pengumuman',
                 href: 'pengumuman.html',
                 icon: `<svg class="menu-icon-svg" viewBox="0 0 24 24">
                     <path d="M12 7V3H2v18h20V7H12zm0 12H4V9h8v10zm8 0h-6v-6h6v6zm0-8h-6V9h6v2z"/>
+                </svg>`
+            },
+            {
+                name: 'Profil',
+                href: 'profil.html',
+                icon: `<svg class="menu-icon-svg" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
                 </svg>`
             }
         ];

@@ -1,0 +1,122 @@
+/* ==========================================
+   KELAS MY PAGE STYLES (kelas.css)
+   ========================================== */
+
+/* Grid Layout for Kelas Saya */
+.guru-theme .class-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+.guru-theme .class-card {
+    background-color: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+.guru-theme .class-card:hover {
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.05);
+}
+
+.guru-theme .class-card-header {
+    background: none;
+    height: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.guru-theme .class-card-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #000000;
+}
+
+.guru-theme .class-card-illustration {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fcfcfc;
+    padding: 10px;
+}
+
+.guru-theme .class-card-illustration svg {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+/* Buat Kelas Section */
+.guru-theme .buat-kelas-box {
+    background-color: #f8fafc;
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 40px;
+}
+
+.guru-theme .buat-kelas-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+.guru-theme .buat-kelas-desc {
+    font-size: 0.95rem;
+    color: #888888;
+    margin-bottom: 24px;
+}
+
+.guru-theme .buat-kelas-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+}
+
+.guru-theme .buat-input {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000000;
+    box-sizing: border-box;
+}
+
+.guru-theme .buat-input:focus {
+    outline: none;
+    border-color: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.guru-theme .btn-buat {
+    background-color: #10b981;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+}
+
+.guru-theme .btn-buat:hover {
+    background-color: #059669;
+}
+
+@media (max-width: 960px) {
+    .guru-theme .class-grid {
+        grid-template-columns: 1fr;
+    }
+}
