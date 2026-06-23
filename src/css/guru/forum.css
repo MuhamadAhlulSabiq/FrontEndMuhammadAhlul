@@ -5,29 +5,31 @@
 /* Tabs Filter */
 .guru-theme .tabs-container {
     display: flex;
-    gap: 16px;
-    margin-bottom: 32px;
+    gap: 32px;
+    margin-bottom: 0;
 }
 
 .guru-theme .tab-btn {
-    padding: 12px 28px;
+    padding: 16px 0;
     border: none;
-    border-radius: 8px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    background-color: #f3f4f6;
+    background-color: transparent;
     color: #888888;
     transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
 }
 
 .guru-theme .tab-btn:hover {
-    background-color: #e5e7eb;
+    color: #111827;
+    background-color: transparent;
 }
 
 .guru-theme .tab-btn.active {
-    background-color: #10b981;
-    color: #ffffff;
+    background-color: transparent;
+    color: #0d52cd;
+    border-bottom: 3px solid #0d52cd;
 }
 
 /* Detail view containers */
@@ -37,7 +39,7 @@
 }
 
 .guru-theme .back-link {
-    color: #10b981;
+    color: #0F52BA;
     font-weight: 700;
     font-size: 0.95rem;
     display: inline-flex;
@@ -88,7 +90,8 @@
 
 /* Comments thread (Forum Balasan) */
 .guru-theme .comments-container {
-    background-color: #e6fcf5; /* Soft light green */
+    background-color: #e6fcf5;
+    /* Soft light green */
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 24px;
@@ -240,4 +243,398 @@
 
 .guru-theme .btn-cancel:hover {
     background-color: #e5e7eb;
+}
+
+/* Redesigned Forum Feed List Card Styles */
+.guru-theme .list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.guru-theme .list-item {
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.guru-theme .list-item:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+.guru-theme .list-item .item-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.guru-theme .item-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+/* Custom Icon Box Color Themes */
+.guru-theme .item-icon-box.math-icon-theme {
+    background-color: #f43f5e;
+    color: white;
+}
+
+.guru-theme .item-icon-box.english-icon-theme {
+    background-color: #1e3a8a;
+    color: white;
+}
+
+.guru-theme .item-icon-box.notebook-icon-theme {
+    background-color: #2563eb;
+    color: white;
+}
+
+.guru-theme .item-icon-box.default-icon-theme {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.guru-theme .list-item .item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.guru-theme .list-item h4 {
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 6px 0;
+}
+
+.guru-theme .list-item p {
+    font-size: 0.88rem;
+    color: #888888;
+    font-weight: 600;
+    margin: 0;
+}
+
+.guru-theme .list-item .item-right {
+    display: flex;
+    align-items: center;
+}
+
+.guru-theme .list-item .item-date {
+    font-size: 0.88rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+/* Custom Buat Diskusi Button */
+.guru-theme .btn-buat-diskusi {
+    background-color: #0d52cd;
+    color: white;
+    font-weight: 800;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(13, 82, 205, 0.1), 0 2px 4px -1px rgba(13, 82, 205, 0.05);
+}
+
+.guru-theme .btn-buat-diskusi:hover {
+    background-color: #0b43a8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
+}
+
+.guru-theme .btn-buat-diskusi:active {
+    transform: translateY(0);
+}
+
+/* Silhouette User Avatar Circle styling */
+.guru-theme .user-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dbeafe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guru-theme .bell-icon-svg {
+    width: 24px;
+    height: 24px;
+    color: #8e92bc;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* Redesigned Thread Detail Styles */
+.guru-theme .back-link-forum {
+    color: #0d52cd;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin-bottom: 24px;
+}
+
+.guru-theme .back-link-forum:hover {
+    color: #0b43a8;
+}
+
+.guru-theme .detail-post-main-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 6px 0;
+}
+
+.guru-theme .detail-post-subtitle {
+    font-size: 0.95rem;
+    color: #888888;
+    font-weight: 600;
+    margin: 0;
+}
+
+.guru-theme .detail-post-content-text {
+    font-size: 1rem;
+    color: #111827;
+    line-height: 1.6;
+    font-weight: 500;
+    margin: 0;
+}
+
+.guru-theme .comments-section-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 24px 0 16px 0;
+}
+
+/* Comments List Layout */
+.guru-theme .comments-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 32px;
+}
+
+.guru-theme .comment-item-custom {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1.5px solid #e5e7eb;
+}
+
+.guru-theme .comment-item-custom:first-child {
+    border-top: 1.5px solid #e5e7eb;
+}
+
+.guru-theme .comment-avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: #dbeafe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.guru-theme .comment-avatar-img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.guru-theme .comment-details-box {
+    flex-grow: 1;
+}
+
+.guru-theme .comment-author-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.guru-theme .comment-author-name {
+    font-weight: 800;
+    font-size: 0.98rem;
+    color: #111827;
+}
+
+.guru-theme .comment-post-time {
+    font-size: 0.88rem;
+    color: #888888;
+    font-weight: 500;
+}
+
+.guru-theme .comment-text-content {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+}
+
+.guru-theme .comment-action-reply {
+    color: #0d52cd;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.guru-theme .comment-action-reply:hover {
+    color: #0b43a8;
+}
+
+/* Comment Form Layout */
+.guru-theme .comment-form-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.guru-theme .comment-input-field {
+    flex-grow: 1;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-weight: 500;
+    color: #111827;
+}
+
+.guru-theme .comment-input-field:focus {
+    outline: none;
+    background-color: #eaf2ff;
+    box-shadow: 0 0 0 2px rgba(13, 82, 205, 0.15);
+}
+
+.guru-theme .btn-kirim-komentar {
+    background-color: #0d52cd;
+    color: white;
+    font-weight: 800;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 32px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.guru-theme .btn-kirim-komentar:hover {
+    background-color: #0b43a8;
+    box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
+}
+
+/* Reply Indicator & Nested Comments */
+.guru-theme .reply-indicator-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #eff6ff;
+    border-left: 4px solid #0d52cd;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e40af;
+    animation: fadeIn 0.2s ease;
+}
+
+.guru-theme .btn-cancel-reply-x {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.guru-theme .btn-cancel-reply-x:hover {
+    color: #b91c1c;
+}
+
+.guru-theme .comment-reply-nested {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 0;
+    padding-left: 20px;
+    margin-left: 48px;
+    border-left: 2px solid #e5e7eb;
+    border-bottom: 1.5px solid #f1f5f9;
+}
+
+.guru-theme .comment-reply-nested .comment-avatar-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.guru-theme .comment-reply-nested .comment-avatar-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.guru-theme .comment-action-delete {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.guru-theme .comment-action-delete:hover {
+    color: #b91c1c;
 }

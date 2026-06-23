@@ -2,101 +2,344 @@
    DASHBOARD PAGE SPECIFIC STYLES (dashboard.css)
    ========================================== */
 
+/* User Profile Silhouette Icon */
+.guru-theme .user-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dbeafe; /* Soft blue circle background */
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guru-theme .user-avatar-circle svg {
+    width: 22px;
+    height: 22px;
+}
+
+.guru-theme .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guru-theme .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.guru-theme .user-info span {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #111827;
+}
+
+.guru-theme .user-info p {
+    font-size: 0.78rem;
+    color: #6b7280;
+    font-weight: 600;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.guru-theme .bell-icon-svg {
+    width: 24px;
+    height: 24px;
+    color: #8e92bc;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+/* Welcome Header */
+.guru-theme .welcome-header {
+    margin-bottom: 32px;
+}
+
+.guru-theme .welcome-header h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #111827;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+}
+
+.guru-theme .welcome-header p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
 /* Dashboard Stats Grid (Ringkasan) */
 .guru-theme .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-bottom: 48px;
+    margin-bottom: 44px;
 }
 
 .guru-theme .stat-card {
-    background-color: #f0fdf4; /* Light green background */
-    border: 1px solid #d1fae5;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: none;
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 20px 24px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: space-between;
     transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
+    box-sizing: border-box;
 }
 
 .guru-theme .stat-card:hover {
-    transform: none;
-    background-color: #d1fae5;
+    background-color: #f1f5f9;
+    border-color: #e2e8f0;
 }
 
-.guru-theme .stat-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    background-color: #ffffff;
+.guru-theme .stat-card-left {
     display: flex;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.05);
-}
-
-.guru-theme .stat-icon-svg {
-    width: 24px;
-    height: 24px;
-    fill: #10b981; /* Emerald green fill */
-}
-
-.guru-theme .stat-details h3 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #000000;
-}
-
-.guru-theme .stat-details p {
-    color: #000000;
-    font-weight: 700;
-    font-size: 0.95rem;
-}
-
-/* Activity logs table/list layout */
-.activity-list {
-    display: flex;
-    flex-direction: column;
     gap: 16px;
 }
 
-.activity-item {
+.guru-theme .stat-icon-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Soft blue icon circles matching mockup */
+.classes-blue-tint { background-color: #eff6ff; color: #0d52cd; }
+.materials-blue-tint { background-color: #eff6ff; color: #0d52cd; }
+.tasks-blue-tint { background-color: #eff6ff; color: #0d52cd; }
+.announcements-blue-tint { background-color: #eff6ff; color: #0d52cd; }
+
+.stat-icon-circle svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+.stat-icon-circle svg[stroke] {
+    fill: none;
+    stroke: currentColor;
+}
+
+.stat-info-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #4b5563;
+    font-weight: 700;
+}
+
+.stat-value {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+
+.link-view-all {
+    font-size: 0.72rem;
+    color: #6b7280;
+    font-weight: 700;
+    position: absolute;
+    bottom: 12px;
+    right: 20px;
+}
+
+/* Kelas Saya Section Grid */
+.guru-theme .classes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 44px;
+}
+
+.class-card {
     background-color: #f8fafc;
-    border: 1px solid rgba(0, 0, 0, 0.02);
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.class-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.05);
+    background-color: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+.class-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.class-subject-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1f2937;
+}
+
+.class-grade-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.class-student-count {
+    font-size: 0.76rem;
+    color: #9ca3af;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.class-illustration-icon {
+    width: 36px;
+    height: 36px;
+    color: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.class-illustration-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Bottom Columns Section */
+.bottom-columns-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+}
+
+.recent-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recent-list-item {
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
     border-radius: 12px;
     padding: 16px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
-.activity-badge {
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.8rem;
+.recent-list-item:hover {
+    background-color: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+.recent-item-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.recent-icon-square {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Colors matching mockup for Tugas list */
+.math-icon-bg { background-color: #fef08a; color: #ca8a04; } /* Yellow */
+.english-icon-bg { background-color: #dbeafe; color: #1e40af; } /* Blue */
+.science-icon-bg { background-color: #ccfbf1; color: #0f766e; } /* Teal */
+.pkn-icon-bg { background-color: #ffedd5; color: #c2410c; } /* Orange */
+
+.recent-icon-square svg {
+    width: 22px;
+    height: 22px;
+}
+
+.recent-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.recent-item-title {
     font-weight: 700;
+    font-size: 0.95rem;
+    color: #1f2937;
 }
 
-.activity-badge.materi {
-    background-color: #d1fae5;
-    color: #065f46;
+.recent-item-subtitle {
+    font-size: 0.84rem;
+    color: #6b7280;
+    font-weight: 500;
 }
 
-.activity-badge.tugas {
-    background-color: #ffedd5;
-    color: #9a3412;
+.recent-student-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #e2e8f0;
+    object-fit: cover;
 }
 
-.activity-badge.pengumuman {
-    background-color: #f3e8ff;
-    color: #6b21a8;
+.loading-state {
+    font-size: 0.9rem;
+    color: #888888;
+    font-weight: 500;
+    padding: 12px;
 }
 
-@media (max-width: 960px) {
+/* Responsive breakdowns */
+@media (max-width: 1024px) {
     .guru-theme .stats-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .guru-theme .classes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .bottom-columns-wrapper {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .guru-theme .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .guru-theme .classes-grid {
+        grid-template-columns: 1fr;
     }
 }

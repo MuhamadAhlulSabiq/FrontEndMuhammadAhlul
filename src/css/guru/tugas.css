@@ -47,7 +47,7 @@
 }
 
 .guru-theme .back-link {
-    color: #10b981;
+    color: #0F52BA;
     font-weight: 700;
     font-size: 0.95rem;
     display: inline-flex;
@@ -197,4 +197,133 @@
 
 .grading-file-link:hover {
     color: #059669;
+}
+
+/* Redesigned List Table Styles */
+.guru-theme .table-responsive-wrapper {
+    background-color: #eaf2ff;
+    border: 1px solid #cce0ff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(13, 82, 205, 0.03);
+    margin-bottom: 40px;
+}
+
+.guru-theme .assignments-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-family: inherit;
+}
+
+.guru-theme .assignments-table th {
+    background-color: #dae9ff;
+    color: #000000;
+    font-weight: 800;
+    font-size: 0.92rem;
+    padding: 18px 24px;
+    text-align: center;
+    border-bottom: 1px solid #b9d5ff;
+}
+
+.guru-theme .assignments-table td {
+    color: #111827;
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 18px 24px;
+    text-align: center;
+    border-bottom: 1px solid #d3e5ff;
+    transition: background-color 0.15s ease;
+}
+
+.guru-theme .assignments-table tbody tr {
+    cursor: pointer;
+}
+
+.guru-theme .assignments-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.guru-theme .assignments-table tbody tr:hover td {
+    background-color: #dbeafe;
+}
+
+.guru-theme .loading-state {
+    text-align: center;
+    padding: 32px;
+    color: #4b5563;
+    font-weight: 600;
+}
+
+/* Custom Dropdown Filter */
+.guru-theme .select-kelas-tugas {
+    background-color: #eaf2ff;
+    color: #1c3d75;
+    font-weight: 700;
+    border: 1px solid #cce0ff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 0.95rem;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231c3d75' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 14px;
+    padding-right: 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.guru-theme .select-kelas-tugas:focus {
+    outline: none;
+    border-color: #0d52cd;
+    box-shadow: 0 0 0 2px rgba(13, 82, 205, 0.15);
+}
+
+/* Custom Buat Tugas Button */
+.guru-theme .btn-buat-tugas {
+    background-color: #0d52cd;
+    color: white;
+    font-weight: 800;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(13, 82, 205, 0.1), 0 2px 4px -1px rgba(13, 82, 205, 0.05);
+}
+
+.guru-theme .btn-buat-tugas:hover {
+    background-color: #0b43a8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 82, 205, 0.2);
+}
+
+.guru-theme .btn-buat-tugas:active {
+    transform: translateY(0);
+}
+
+/* Silhouette User Avatar Circle styling */
+.guru-theme .user-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dbeafe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guru-theme .bell-icon-svg {
+    width: 24px;
+    height: 24px;
+    color: #8e92bc;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
 }

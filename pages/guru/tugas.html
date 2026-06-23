@@ -24,18 +24,24 @@
             <header class="top-bar">
                 <div class="welcome-text">
                     <h1 id="tugas-main-title">Daftar Tugas</h1>
-                    <p id="tugas-main-subtitle">Kelola dan nilai penyerahan tugas siswa.</p>
+                    <p id="tugas-main-subtitle">Semua Tugas yang telah Anda buat.</p>
                 </div>
                 <div class="user-profile">
-                    <button class="bell-icon-btn">
-                        <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                    <button class="bell-icon-btn" title="Notifikasi">
+                        <svg class="bell-icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #8e92bc; fill: none; stroke: currentColor; stroke-width: 2;">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                     </button>
-                    <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Avatar" class="avatar">
+                    <!-- Silhouette user circle matching mockup -->
+                    <div class="user-avatar-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
                     <div class="user-info">
-                        <span id="user-display-name">Bu Nina</span>
-                        <p id="user-display-role">GURU</p>
+                        <span id="user-display-name">Nina</span>
+                        <p id="user-display-role">Guru</p>
                     </div>
                 </div>
             </header>
@@ -44,24 +50,39 @@
                  PANEL 1: DAFTAR TUGAS
                  ========================================== -->
             <div id="tugas-list-panel">
-                <section class="controls-row">
-                    <div class="tabs-container">
-                        <button class="tab-btn active" data-subject="semua">Semua Kelas</button>
-                        <button class="tab-btn" data-subject="mtk">Matematika</button>
-                        <button class="tab-btn" data-subject="ing">Bahasa Inggris</button>
+                <div class="controls-row-tugas" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; margin-top: 8px;">
+                    <div class="filter-group-kelas" style="display: flex; flex-direction: column; gap: 8px;">
+                        <span style="font-weight: 800; font-size: 1.1rem; color: #111827;">Kelas</span>
+                        <div class="form-select-arrow" style="width: 250px;">
+                            <select id="filter-kelas" class="form-select select-kelas-tugas">
+                                <option value="semua">Pilih Kelas</option>
+                                <option value="5">Kelas 5</option>
+                                <option value="2">Kelas 2</option>
+                                <option value="4">Kelas 4</option>
+                                <option value="1">Kelas 1</option>
+                            </select>
+                        </div>
                     </div>
-                    <button id="btn-tambah-tugas" class="btn-guru" style="display: flex; align-items: center; gap: 8px;">
-                        <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5;" viewBox="0 0 24 24">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        Buat Tugas Baru
-                    </button>
-                </section>
+                    <button id="btn-tambah-tugas" class="btn-buat-tugas">+ Buat Tugas</button>
+                </div>
 
-                <section class="list-container" id="assignments-feed">
-                    <div class="empty-state">Memuat daftar tugas...</div>
-                </section>
+                <div class="table-responsive-wrapper">
+                    <table class="assignments-table">
+                        <thead>
+                            <tr>
+                                <th>Mata Pelajaran</th>
+                                <th>Judul Tugas</th>
+                                <th>Kelas</th>
+                                <th>Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignments-table-body">
+                            <tr>
+                                <td colspan="4" class="loading-state">Memuat daftar tugas...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- ==========================================
@@ -131,6 +152,8 @@
                     <select class="form-select" id="tugas-class" required>
                         <option value="mtk">Matematika - Kelas 5</option>
                         <option value="ing">Bahasa Inggris - Kelas 2</option>
+                        <option value="ipa">Ilmu Pengetahuan Alam - Kelas 4</option>
+                        <option value="pkn">Kewarganegaraan - Kelas 1</option>
                     </select>
                 </div>
 

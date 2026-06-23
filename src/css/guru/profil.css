@@ -23,7 +23,7 @@
 }
 
 .guru-theme .profile-info-table {
-    background-color: #e8fcf5; /* Light green tint container */
+    background-color: #DEEEFF;
     border-radius: 12px;
     padding: 12px 24px;
     margin-bottom: 32px;
@@ -59,7 +59,7 @@
 }
 
 .guru-theme .btn-profile-edit {
-    background-color: #10b981;
+    background-color: #0F52BA;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -68,11 +68,11 @@
     font-weight: 700;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-    transition: background 0.2s;
+    transition: background-color 0.2s;
 }
 
 .guru-theme .btn-profile-edit:hover {
-    background-color: #059669;
+    background-color: #043682;
 }
 
 .guru-theme .btn-profile-logout {

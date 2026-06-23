@@ -1,7 +1,7 @@
 import { storage } from '../../utils/storage.js';
 import { initSidebar } from '../../components/sidebar.js';
 
-let activeSubject = 'semua';
+let activeClassLevel = 'semua';
 let selectedTask = null;
 let selectedStudent = null;
 
@@ -12,11 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize teacher profile
     const user = storage.getUser();
     if (user) {
+        let displayName = user.name || 'Bu Nina';
+        let cleanName = displayName.replace(/^Bu\s+/, '');
+
         const dispName = document.getElementById('user-display-name');
-        if (dispName) dispName.textContent = user.name || 'Bu Nina';
-        
-        const avatar = document.getElementById('user-avatar');
-        if (avatar) avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=guru_${user.id || 'nina'}`;
+        if (dispName) dispName.textContent = cleanName;
     }
 
     // Modal elements for adding assignments
@@ -51,8 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const attachment = document.getElementById('tugas-attachment').value || 'Soal_Tugas.pdf';
 
             const classNameMap = {
-                'mtk': 'Guru Matematika',
-                'ing': 'Guru Bahasa Inggris'
+                'mtk': 'Matematika',
+                'ing': 'Bahasa Inggris',
+                'ipa': 'Ilmu Pengetahuan Alam',
+                'pkn': 'Kewarganegaraan'
+            };
+
+            const classLevelMap = {
+                'mtk': '5',
+                'ing': '2',
+                'ipa': '4',
+                'pkn': '1'
             };
 
             const newAssignment = {
@@ -61,8 +70,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 deadline: deadline,
                 status: 'belum',
                 classCode: classCode,
+                classLevel: classLevelMap[classCode] || '5',
                 teacher: user ? user.name : 'Bu Nina',
-                subject: classNameMap[classCode] || 'Guru',
+                subject: classNameMap[classCode] || 'Mata Pelajaran',
                 desc: desc,
                 attachmentName: attachment,
                 attachmentSize: '1.2 MB'
@@ -83,16 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Tab buttons filtering
-    const tabs = document.querySelectorAll('.tab-btn');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            activeSubject = tab.dataset.subject;
+    // Dropdown change filtering
+    const filterKelas = document.getElementById('filter-kelas');
+    if (filterKelas) {
+        filterKelas.addEventListener('change', (e) => {
+            activeClassLevel = e.target.value;
             loadAndRenderAssignments();
         });
-    });
+    }
 
     // Back to list link
     const backBtn = document.getElementById('btn-back-to-list');
@@ -109,52 +117,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function loadAndRenderAssignments() {
     const assignments = storage.getAssignments();
-    const container = document.getElementById('assignments-feed');
+    const container = document.getElementById('assignments-table-body');
 
     if (!container) return;
 
-    // Filter assignments by subject
+    // Filter assignments by class level
     let filtered = assignments;
-    if (activeSubject !== 'semua') {
-        filtered = filtered.filter(a => a.classCode === activeSubject);
+    if (activeClassLevel !== 'semua') {
+        filtered = filtered.filter(a => String(a.classLevel) === activeClassLevel);
     }
 
     if (filtered.length === 0) {
-        container.innerHTML = '<div class="empty-state">Tidak ada tugas kelas saat ini.</div>';
+        container.innerHTML = `
+            <tr>
+                <td colspan="4" class="loading-state">Tidak ada tugas kelas saat ini.</td>
+            </tr>
+        `;
         return;
     }
 
     container.innerHTML = filtered.map(t => {
-        // Count student submission status (mocking based on status property)
-        // Since it's a mock, we consider 'sudah' as submitted by Rohmat
-        const submissionCount = t.status === 'sudah' ? 1 : 0;
-        const totalStudents = 15;
-
         return `
-            <div class="list-item" data-id="${t.id}">
-                <div class="item-left">
-                    <div class="item-icon-box ${t.classCode}">
-                        ${t.classCode === 'mtk' ? '✕' : 'En'}
-                    </div>
-                    <div class="item-details">
-                        <h4>${t.title}</h4>
-                        <p>Deadline: ${t.deadline} | Pengumpul: ${submissionCount}/${totalStudents} Siswa</p>
-                    </div>
-                </div>
-                <div class="item-right">
-                    <span class="grading-badge ${t.nilai !== undefined ? 'graded' : 'pending'}">
-                        ${t.nilai !== undefined ? `Dinilai: ${t.nilai}` : 'Belum Dinilai'}
-                    </span>
-                    <span class="item-date" style="color: #10b981; font-weight: 700;">Kelola &rarr;</span>
-                </div>
-            </div>
+            <tr data-id="${t.id}">
+                <td style="font-weight: 700;">${t.subject || 'Mata Pelajaran'}</td>
+                <td style="font-weight: 800; color: #111827;">${t.title}</td>
+                <td style="font-weight: 700;">${t.classLevel || '-'}</td>
+                <td style="color: #4b5563; font-weight: 600;">${t.deadline}</td>
+            </tr>
         `;
     }).join('');
 
     // Click assignment detail
-    container.querySelectorAll('.list-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const id = parseInt(item.dataset.id);
+    container.querySelectorAll('tr').forEach(row => {
+        row.addEventListener('click', () => {
+            const id = parseInt(row.dataset.id);
             loadAssignmentDetails(id);
         });
     });
@@ -183,15 +179,14 @@ function loadAssignmentDetails(taskId) {
         </div>
     `;
 
-    // Mock submissions logic: If task status is 'sudah' (or has submitted file), show Rohmat as submitted.
-    // Also let's show another mock student Azzahra as 'belum mengumpulkan' to look realistic.
+    // Mock submissions logic
     const submissions = [];
-    if (t.status === 'sudah' || t.submittedFile) {
+    if (t.status === 'sudah' || t.submittedFile || t.id === 1) { // Seed Rohmat for math assignment
         submissions.push({
             studentName: 'Rohmat',
             studentId: 1,
-            submittedFile: t.submittedFile || 'Jawaban_Pecahan_Rohmat.pdf',
-            submittedTime: t.submittedTime || '28 April 2026 14.15',
+            submittedFile: t.submittedFile || 'Jawaban_BilanganBulat_Rohmat.pdf',
+            submittedTime: t.submittedTime || '17 Mei 2026 10.30',
             nilai: t.nilai,
             feedback: t.feedback,
             status: 'sudah'
@@ -353,7 +348,7 @@ function showPanel(panelName) {
         listPanel.style.display = 'block';
         detailPanel.style.display = 'none';
         document.getElementById('tugas-main-title').textContent = 'Daftar Tugas';
-        document.getElementById('tugas-main-subtitle').textContent = 'Kelola dan nilai penyerahan tugas siswa.';
+        document.getElementById('tugas-main-subtitle').textContent = 'Semua Tugas yang telah Anda buat.';
     } else {
         listPanel.style.display = 'none';
         detailPanel.style.display = 'block';

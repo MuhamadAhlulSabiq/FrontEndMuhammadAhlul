@@ -7,9 +7,9 @@
     color: #111827;
 }
 
-/* Sidebar Styling - Emerald Green Theme */
+/* Sidebar Styling - Blue Theme matching mockup */
 .guru-theme .sidebar {
-    background-color: #10b981;
+    background-color: #0d52cd;
     border-right: none;
     padding: 30px 20px;
     height: 100vh;
@@ -185,12 +185,14 @@
 }
 
 .guru-theme .item-icon-box.mtk {
-    background-color: #d1fae5; /* Soft emerald for teacher math */
+    background-color: #d1fae5;
+    /* Soft emerald for teacher math */
     color: #059669;
 }
 
 .guru-theme .item-icon-box.ing {
-    background-color: #bfdbfe; /* Soft blue */
+    background-color: #bfdbfe;
+    /* Soft blue */
     color: #1d4ed8;
 }
 
@@ -286,7 +288,9 @@
     color: #111827;
 }
 
-.form-input, .form-textarea, .form-select {
+.form-input,
+.form-textarea,
+.form-select {
     width: 100%;
     padding: 12px 16px;
     border: 1px solid #e2e8f0;
@@ -297,7 +301,9 @@
     font-family: inherit;
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
     outline: none;
     border-color: #10b981;
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
@@ -309,7 +315,7 @@
 }
 
 .btn-guru {
-    background-color: #10b981;
+    background-color: #0F52BA;
     color: white;
     padding: 12px 24px;
     border: none;
@@ -317,12 +323,12 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 12px rgba(16, 36, 185, 0.2);
 }
 
 .btn-guru:hover {
-    background-color: #059669;
-    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3);
+    background-color: #0f59ca;
+    box-shadow: 0 6px 18px rgba(16, 19, 185, 0.3);
 }
 
 .btn-outline {
@@ -365,11 +371,25 @@
 }
 
 @keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

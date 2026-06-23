@@ -2,7 +2,7 @@
    PENGUMUMAN PAGE STYLES (pengumuman.css)
    ========================================== */
 
-.controls-row {
+.guru-theme .controls-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -11,30 +11,33 @@
     flex-wrap: wrap;
 }
 
-.search-wrapper {
+.guru-theme .search-wrapper {
     position: relative;
     flex: 1;
     max-width: 450px;
 }
 
-.search-input {
+.guru-theme .search-input {
     width: 100%;
-    padding: 12px 16px 12px 40px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 12px;
+    padding: 14px 16px 14px 44px;
+    background-color: #f3f4f6;
+    border: none;
+    border-radius: 10px;
     font-size: 0.95rem;
+    color: #111827;
+    font-weight: 500;
     transition: all 0.2s ease;
 }
 
-.search-input:focus {
+.guru-theme .search-input:focus {
     outline: none;
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    background-color: #eaf2ff;
+    box-shadow: 0 0 0 2px rgba(13, 82, 205, 0.15);
 }
 
-.search-icon-svg {
+.guru-theme .search-icon-svg {
     position: absolute;
-    left: 14px;
+    left: 16px;
     top: 50%;
     transform: translateY(-50%);
     width: 18px;
@@ -42,26 +45,158 @@
     color: #94a3b8;
 }
 
-/* Badges tags */
-.guru-theme .badge-tag {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.75rem;
-    text-transform: uppercase;
+/* Announcement Cards Feed */
+.guru-theme .list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
 }
 
-.guru-theme .badge-tag.penting {
+.guru-theme .announcement-card {
+    background-color: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: all 0.2s ease;
+}
+
+.guru-theme .announcement-card:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Left Icon Box */
+.guru-theme .announcement-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guru-theme .announcement-icon-box.penting {
     background-color: #fee2e2;
     color: #ef4444;
 }
 
-.guru-theme .badge-tag.kelas {
-    background-color: #d1fae5; /* Emerald green for teacher class announcements */
-    color: #065f46;
+.guru-theme .announcement-icon-box.kelas {
+    background-color: #dbeafe;
+    color: #2563eb;
 }
 
-.guru-theme .badge-tag.umum {
-    background-color: #e2e8f0;
+.guru-theme .announcement-icon-box.umum {
+    background-color: #f1f5f9;
     color: #475569;
+}
+
+/* Center Details */
+.guru-theme .announcement-details {
+    flex-grow: 1;
+}
+
+.guru-theme .announcement-category {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.guru-theme .announcement-category.penting {
+    color: #ef4444;
+}
+
+.guru-theme .announcement-category.kelas {
+    color: #2563eb;
+}
+
+.guru-theme .announcement-category.umum {
+    color: #475569;
+}
+
+.guru-theme .announcement-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 4px 0 6px 0;
+}
+
+.guru-theme .announcement-body-text {
+    font-size: 0.95rem;
+    color: #4b5563;
+    font-weight: 500;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* CRUD Action buttons link style */
+.guru-theme .announcement-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    align-items: center;
+}
+
+.guru-theme .action-btn-link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.guru-theme .action-btn-link.edit {
+    color: #0d52cd;
+}
+
+.guru-theme .action-btn-link.edit:hover {
+    color: #0b43a8;
+}
+
+.guru-theme .action-btn-link.delete {
+    color: #ef4444;
+}
+
+.guru-theme .action-btn-link.delete:hover {
+    color: #b91c1c;
+}
+
+.guru-theme .action-btn-divider {
+    color: #cbd5e1;
+    font-size: 0.85rem;
+}
+
+/* Right Date-Time block */
+.guru-theme .announcement-date-box {
+    text-align: right;
+    flex-shrink: 0;
+    font-size: 0.88rem;
+    color: #888888;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: pre-line;
+}
+
+/* User Avatar Circle */
+.guru-theme .user-avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #dbeafe;
+    color: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.guru-theme .user-avatar-circle svg {
+    color: #2563eb;
 }
