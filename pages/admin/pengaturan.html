@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengaturan Sistem - E-Learning Platform</title>
     <!-- Role Protection Guard -->
     <!-- <script src="../../src/js/middleware/auth-guard.js"></script> -->
-    
+
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="../../src/css/global.css">
     <link rel="stylesheet" href="../../src/css/components.css">
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="../../src/css/admin/admin-common.css">
     <link rel="stylesheet" href="../../src/css/admin/pengaturan.css">
 </head>
+
 <body class="admin-theme">
     <div class="app-layout">
         <!-- Sidebar Navigation -->
@@ -44,40 +46,38 @@
                         </svg>
                     </button>
                     <div class="divider-vertical"></div>
-                    <span class="page-title-text" style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-left: 4px;">Pengaturan Sistem</span>
+                    <span class="page-title-text"
+                        style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-left: 4px;">Pengaturan
+                        Sistem</span>
                 </div>
             </header>
 
             <!-- Settings Double Column Layout -->
             <div class="settings-layout-wrapper">
-                
+
                 <!-- Left Tab Navigation -->
                 <aside class="settings-tab-nav">
-                    <button type="button" class="tab-nav-item active" data-target="section-profil">
-                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m4 6 8-4 8 4M18 10v11M6 10v11M9 21v-8h6v8M10 6h4v4h-4z"/>
-                        </svg>
-                        <span>Profil Sekolah</span>
-                    </button>
-                    
-                    <button type="button" class="tab-nav-item" data-target="section-preferensi">
-                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
+                    <button type="button" class="tab-nav-item active" data-target="section-preferensi">
+                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
                         </svg>
                         <span>Preferensi Akun</span>
                     </button>
-                    
+
                     <button type="button" class="tab-nav-item" data-target="section-notifikasi">
-                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                         <span>Notifikasi</span>
                     </button>
-                    
+
                     <button type="button" class="tab-nav-item" data-target="section-keamanan">
-                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <svg class="tab-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                         <span>Keamanan & Backup</span>
                     </button>
@@ -86,56 +86,6 @@
                 <!-- Right Form Content -->
                 <div class="settings-tab-content">
                     <form id="form-settings-full">
-                        
-                        <!-- Section 1: Profil Sekolah -->
-                        <section id="section-profil" class="settings-section-card">
-                            <div class="settings-card-header">
-                                <h3>Profil Sekolah</h3>
-                                <button type="button" class="btn-icon-edit" id="btn-edit-profil" title="Edit Profil">
-                                    <svg class="edit-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                        <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                            
-                            <div class="settings-card-body profile-grid">
-                                <!-- Logo School Uploader Box -->
-                                <div class="logo-uploader-area">
-                                    <div class="logo-uploader-box" id="logo-upload-trigger">
-                                        <div class="logo-preview-wrapper" id="logo-preview-wrapper">
-                                            <!-- Fallback logo if empty -->
-                                            <div class="logo-fallback-badge">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                                                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
-                                                    <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <input type="file" id="settings-school-logo" accept="image/*" style="display: none;">
-                                    </div>
-                                    <span class="logo-uploader-label">Logo Sekolah (512×512px)</span>
-                                </div>
-                                
-                                <!-- Fields Group -->
-                                <div class="profile-fields-container">
-                                    <div class="form-field-group">
-                                        <label class="input-label" for="settings-school-name">Nama Institusi</label>
-                                        <input type="text" id="settings-school-name" class="form-text-input" placeholder="Nama sekolah/institusi" required>
-                                    </div>
-                                    
-                                    <div class="form-field-group">
-                                        <label class="input-label" for="settings-school-address">Alamat Lengkap</label>
-                                        <textarea id="settings-school-address" class="form-textarea-input" placeholder="Alamat lengkap institusi" required></textarea>
-                                    </div>
-                                    
-                                    <div class="form-field-group">
-                                        <label class="input-label" for="settings-school-email">Email Kontak Resmi</label>
-                                        <input type="email" id="settings-school-email" class="form-text-input" placeholder="info@nama-sekolah.sch.id" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
 
                         <!-- Section 2: Preferensi Akun -->
                         <section id="section-preferensi" class="settings-section-card">
@@ -146,7 +96,8 @@
                                 <div class="form-fields-row">
                                     <div class="form-field-group">
                                         <label class="input-label" for="settings-username">Username</label>
-                                        <input type="text" id="settings-username" class="form-text-input input-readonly" readonly>
+                                        <input type="text" id="settings-username" class="form-text-input input-readonly"
+                                            readonly>
                                     </div>
                                     <div class="form-field-group">
                                         <label class="input-label" for="settings-language">Bahasa Sistem</label>
@@ -156,22 +107,27 @@
                                         </select>
                                     </div>
                                 </div>
-                                
+
                                 <!-- Sub Card: Kata Sandi -->
                                 <div class="sub-setting-card password-card">
                                     <div class="password-card-left">
                                         <div class="password-icon-wrapper">
-                                            <svg class="password-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
-                                                <path d="M12 8v4l3 3M12 6a6 6 0 1 1 0 12c-3.314 0-6-2.686-6-6s2.686-6 6-6z"/>
+                                            <svg class="password-icon-svg" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                                                <path
+                                                    d="M12 8v4l3 3M12 6a6 6 0 1 1 0 12c-3.314 0-6-2.686-6-6s2.686-6 6-6z" />
                                             </svg>
                                         </div>
                                         <div class="password-details">
                                             <span class="sub-card-title">Kata Sandi</span>
-                                            <span class="sub-card-subtitle" id="password-last-changed">Terakhir diubah 3 bulan yang lalu</span>
+                                            <span class="sub-card-subtitle" id="password-last-changed">Terakhir diubah 3
+                                                bulan yang lalu</span>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn-change-password" id="btn-change-password">Ganti Password</button>
+                                    <button type="button" class="btn-change-password" id="btn-change-password">Ganti
+                                        Password</button>
                                 </div>
                             </div>
                         </section>
@@ -186,14 +142,15 @@
                                 <div class="notification-option-row">
                                     <div class="notification-text-details">
                                         <span class="option-title">Notifikasi Email</span>
-                                        <span class="option-desc">Terima laporan harian dan update sistem via email</span>
+                                        <span class="option-desc">Terima laporan harian dan update sistem via
+                                            email</span>
                                     </div>
                                     <label class="toggle-switch">
                                         <input type="checkbox" id="settings-email-notif" checked>
                                         <span class="slider"></span>
                                     </label>
                                 </div>
-                                
+
                                 <!-- Option 2: Push Notifications -->
                                 <div class="notification-option-row">
                                     <div class="notification-text-details">
@@ -218,34 +175,41 @@
                                 <div class="security-card backup-green-card">
                                     <div class="security-card-header-row">
                                         <div class="security-icon-circle">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M21.2 15c.7-1.2 1-2.5.7-3.9-.5-2.7-2.7-4.9-5.4-5.1-3.2-.3-6 1.7-6.7 4.5C9 10.2 8.2 10 7.3 10c-2.9 0-5.3 2.4-5.3 5.3 0 2.2 1.3 4 3.2 4.8h11.6c2.4-.7 4.1-2.9 4.4-5.1Z"/>
-                                                <path d="M12 12v6M9 15l3-3 3 3"/>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path
+                                                    d="M21.2 15c.7-1.2 1-2.5.7-3.9-.5-2.7-2.7-4.9-5.4-5.1-3.2-.3-6 1.7-6.7 4.5C9 10.2 8.2 10 7.3 10c-2.9 0-5.3 2.4-5.3 5.3 0 2.2 1.3 4 3.2 4.8h11.6c2.4-.7 4.1-2.9 4.4-5.1Z" />
+                                                <path d="M12 12v6M9 15l3-3 3 3" />
                                             </svg>
                                         </div>
                                         <h4>Backup Otomatis</h4>
                                     </div>
-                                    <p class="security-card-text">Backup data dilakukan setiap hari pada jam 02:00 WIB ke server cloud aman.</p>
-                                    <button type="button" class="btn-security btn-backup-now" id="btn-backup-now">Backup Sekarang</button>
+                                    <p class="security-card-text">Backup data dilakukan setiap hari pada jam 02:00 WIB
+                                        ke server cloud aman.</p>
+                                    <button type="button" class="btn-security btn-backup-now" id="btn-backup-now">Backup
+                                        Sekarang</button>
                                 </div>
 
                                 <!-- Card 2: 2-Factor Auth (Gray themed) -->
                                 <div class="security-card auth-gray-card">
                                     <div class="security-card-header-row">
                                         <div class="security-icon-circle">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                             </svg>
                                         </div>
                                         <h4>2-Factor Auth</h4>
                                     </div>
-                                    <p class="security-card-text">Tambah lapisan keamanan ekstra pada akun admin Anda.</p>
-                                    <button type="button" class="btn-security btn-2fa-toggle" id="btn-2fa-toggle">Aktifkan 2FA</button>
+                                    <p class="security-card-text">Tambah lapisan keamanan ekstra pada akun admin Anda.
+                                    </p>
+                                    <button type="button" class="btn-security btn-2fa-toggle"
+                                        id="btn-2fa-toggle">Aktifkan 2FA</button>
                                 </div>
                             </div>
                         </section>
-                        
+
                         <!-- Extra Spacing for Sticky Footer -->
                         <div class="footer-spacer"></div>
 
@@ -254,12 +218,14 @@
                             <div class="sticky-footer-inner">
                                 <span class="footer-hint-text">Pastikan semua data sudah benar sebelum menyimpan.</span>
                                 <div class="footer-actions">
-                                    <button type="button" class="btn-settings-cancel" id="btn-cancel-settings">Batalkan</button>
+                                    <button type="button" class="btn-settings-cancel"
+                                        id="btn-cancel-settings">Batalkan</button>
                                     <button type="submit" class="btn-settings-submit">
-                                        <svg class="save-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-                                            <polyline points="17 21 17 13 7 13 7 21"/>
-                                            <polyline points="7 3 7 8 15 8"/>
+                                        <svg class="save-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5">
+                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                                            <polyline points="17 21 17 13 7 13 7 21" />
+                                            <polyline points="7 3 7 8 15 8" />
                                         </svg>
                                         Simpan Perubahan
                                     </button>
@@ -284,15 +250,18 @@
             <form id="form-change-password">
                 <div class="form-group">
                     <label class="form-label" for="password-old">Password Lama</label>
-                    <input type="password" id="password-old" class="form-input" placeholder="Masukkan password saat ini" required>
+                    <input type="password" id="password-old" class="form-input" placeholder="Masukkan password saat ini"
+                        required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password-new">Password Baru</label>
-                    <input type="password" id="password-new" class="form-input" placeholder="Masukkan password baru" required>
+                    <input type="password" id="password-new" class="form-input" placeholder="Masukkan password baru"
+                        required>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password-confirm">Konfirmasi Password Baru</label>
-                    <input type="password" id="password-confirm" class="form-input" placeholder="Ulangi password baru" required>
+                    <input type="password" id="password-confirm" class="form-input" placeholder="Ulangi password baru"
+                        required>
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
                     <button type="button" class="btn-outline" id="btn-cancel-modal">Batal</button>
@@ -305,4 +274,5 @@
     <!-- JS Separated Controller -->
     <script type="module" src="../../src/js/views/admin/pengaturan.js"></script>
 </body>
+
 </html>

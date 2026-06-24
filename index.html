@@ -10,16 +10,16 @@
 
             if (token && role) {
                 if (role === 'siswa') {
-                    window.location.href = '/pages/siswa/dashboard.html';
+                    window.location.href = 'pages/siswa/dashboard.html';
                 } else if (role === 'guru') {
-                    window.location.href = '/pages/guru/dashboard.html';
+                    window.location.href = 'pages/guru/dashboard.html';
                 } else if (role === 'admin') {
-                    window.location.href = '/pages/admin/dashboard.html';
+                    window.location.href = 'pages/admin/dashboard.html';
                 } else {
-                    window.location.href = '/login.html';
+                    window.location.href = 'login.html';
                 }
             } else {
-                window.location.href = '/login.html';
+                window.location.href = 'login.html';
             }
         })();
     </script>

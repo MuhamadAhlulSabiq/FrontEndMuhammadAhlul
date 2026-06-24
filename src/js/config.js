@@ -12,8 +12,8 @@ export const CONFIG = {
         ADMIN: 'admin'
     },
     DEFAULT_REDIRECTS: {
-        siswa: '/pages/siswa/dashboard.html',
-        guru: '/pages/guru/dashboard.html',
-        admin: '/pages/admin/dashboard.html'
+        siswa: 'pages/siswa/dashboard.html',
+        guru: 'pages/guru/dashboard.html',
+        admin: 'pages/admin/dashboard.html'
     }
 };

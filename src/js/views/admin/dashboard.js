@@ -1,6 +1,7 @@
 import { storage } from '../../utils/storage.js';
 import { authApi } from '../../api/auth.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Sidebar
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const user = storage.getUser();
     if (user) {
         // Keep the welcome-title exactly as the mockup: "Dashboard Admin E-Learning Sekolah Kita"
-        // But we can update the avatar seed if needed
         const avatar = document.getElementById('user-avatar');
         if (avatar) {
             avatar.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=admin_${user.id || 'seed'}`;
@@ -41,24 +41,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-function loadAndRenderDashboard() {
-    const teachers = storage.getTeachers();
-    const classes = storage.getClasses();
+async function loadAndRenderDashboard() {
+    try {
+        // 1. Ambil data Guru secara riil
+        const responseGuru = await apiClient.get('/admin?role=guru');
+        const totalGuru = responseGuru.meta?.total || responseGuru.data?.length || 0;
 
-    // Render Stats
-    // Baseline numbers matching the mockup screenshot, but dynamic if elements are added
-    const totalTeachersCount = Math.max(145, 143 + teachers.length);
-    const totalClassesCount = Math.max(88, 86 + classes.length);
+        // 2. Ambil data Siswa secara riil
+        const responseSiswa = await apiClient.get('/admin?role=siswa');
+        const totalSiswa = responseSiswa.meta?.total || responseSiswa.data?.length || 0;
 
-    const teachersCountEl = document.getElementById('stat-teachers-count');
-    if (teachersCountEl) teachersCountEl.textContent = totalTeachersCount.toLocaleString('id-ID');
+        // 3. Ambil data Kelas (Kursus) secara riil
+        const responseKelas = await apiClient.get('/kelas');
+        const totalKelas = responseKelas.data?.length || 0;
 
-    const studentsCountEl = document.getElementById('stat-students-count');
-    if (studentsCountEl) studentsCountEl.textContent = '2.130';
+        // Render Stats ke DOM
+        const teachersCountEl = document.getElementById('stat-teachers-count');
+        if (teachersCountEl) teachersCountEl.textContent = totalGuru.toLocaleString('id-ID');
 
-    const classesCountEl = document.getElementById('stat-classes-count');
-    if (classesCountEl) classesCountEl.textContent = totalClassesCount.toLocaleString('id-ID');
+        const studentsCountEl = document.getElementById('stat-students-count');
+        if (studentsCountEl) studentsCountEl.textContent = totalSiswa.toLocaleString('id-ID');
 
-    const newStudentsCountEl = document.getElementById('stat-new-students-count');
-    if (newStudentsCountEl) newStudentsCountEl.textContent = '+110';
+        const classesCountEl = document.getElementById('stat-classes-count');
+        if (classesCountEl) classesCountEl.textContent = totalKelas.toLocaleString('id-ID');
+
+        const newStudentsCountEl = document.getElementById('stat-new-students-count');
+        if (newStudentsCountEl) newStudentsCountEl.textContent = '+0'; // Bisa disesuaikan nanti
+
+    } catch (err) {
+        console.error('Gagal mengambil data dashboard:', err);
+    }
 }
