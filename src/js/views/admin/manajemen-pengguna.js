@@ -1,5 +1,6 @@
 import { storage } from '../../utils/storage.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Sidebar
@@ -98,55 +99,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle Form Submit
     if (form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const name = nameInput.value.trim();
-            const nip = document.getElementById('nip-number').value.trim();
             const email = emailInput.value.trim();
-            const phone = document.getElementById('nomor-telepon').value.trim();
-            const subject = document.getElementById('select-subject').value;
-            
-            // Get Gender
-            const genderInput = document.querySelector('input[name="jenis-kelamin"]:checked');
-            const gender = genderInput ? genderInput.value : 'Laki-laki';
+            const passwordDefault = 'Password123'; // Password default untuk guru baru
+            const username = email.split('@')[0];
 
-            // Get checked classes
-            const checkedClasses = [];
-            document.querySelectorAll('input[name="kelas-diampu"]:checked').forEach((cb) => {
-                checkedClasses.push(cb.value);
-            });
+            try {
+                // Panggil API backend untuk menyimpan user baru
+                await apiClient.post('/admin', {
+                    nama: name,
+                    username: username,
+                    email: email,
+                    password: passwordDefault,
+                    role: 'guru'
+                });
 
-            const notes = document.getElementById('textarea-notes').value.trim();
+                alert(`Data pengajar ${name} berhasil disimpan di database! Password default: ${passwordDefault}`);
+                window.location.href = 'dashboard.html';
 
-            // Construct new teacher object
-            const newTeacher = {
-                id: Date.now(),
-                name: name,
-                username: email.split('@')[0],
-                email: email,
-                phone: phone,
-                subject: subject,
-                nip: nip,
-                gender: gender,
-                classes: checkedClasses,
-                notes: notes,
-                avatarUrl: selectedAvatarDataUrl // null if no custom photo uploaded
-            };
-
-            // Save to mock database
-            storage.addTeacher(newTeacher);
-
-            // Log activity in system logs
-            storage.addActivity({
-                title: `Menambahkan pengajar baru: ${name} (${subject})`,
-                time: 'Baru saja',
-                type: 'materi',
-                classCode: 'general'
-            });
-
-            alert(`Data pengajar ${name} berhasil disimpan!`);
-            window.location.href = 'dashboard.html';
+            } catch (err) {
+                console.error(err);
+                if (err.status === 422 && err.errors) {
+                    const errorMessages = Object.values(err.errors).flat().join('\n');
+                    alert(`Gagal menyimpan pengajar:\n${errorMessages}`);
+                } else {
+                    alert(`Terjadi kesalahan: ${err.message}`);
+                }
+            }
         });
     }
 });

@@ -1,9 +1,11 @@
 import { storage } from '../../utils/storage.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 let searchQuery = '';
+let globalClasses = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Sidebar
     initSidebar();
 
@@ -16,6 +18,19 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dispName) dispName.textContent = cleanName;
     }
 
+    // Load classes to populate dropdown list in modal
+    try {
+        const resKelas = await apiClient.get('/kelas');
+        globalClasses = resKelas.data || [];
+        const classSelect = document.getElementById('announcement-class');
+        if (classSelect) {
+            classSelect.innerHTML = '<option value="">Pilih Kelas</option>' + 
+                globalClasses.map(c => `<option value="${c.id}">${c.nama_kelas}</option>`).join('');
+        }
+    } catch (e) {
+        console.error('Gagal mengambil daftar kelas untuk pengumuman:', e);
+    }
+
     // Modal elements
     const modal = document.getElementById('modal-announcement');
     const openModalBtn = document.getElementById('btn-tambah-announcement');
@@ -25,23 +40,67 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalTitle = document.getElementById('modal-title');
     const submitBtn = document.getElementById('btn-submit-announcement');
 
-    const openModal = (mode = 'create', id = null) => {
-        if (mode === 'edit' && id) {
-            const announcements = storage.getAnnouncements();
-            const a = announcements.find(item => item.id === Number(id));
-            if (a) {
-                document.getElementById('announcement-id').value = a.id;
-                document.getElementById('announcement-title').value = a.title;
-                document.getElementById('announcement-category').value = a.category;
-                document.getElementById('announcement-body').value = a.body;
+    const categorySelect = document.getElementById('announcement-category');
+    const groupClassSelect = document.getElementById('group-announcement-class');
+    const classSelect = document.getElementById('announcement-class');
 
-                if (modalTitle) modalTitle.textContent = 'Edit Pengumuman';
-                if (submitBtn) submitBtn.textContent = 'Simpan Perubahan';
-                modal.style.display = 'flex';
+    // Show/hide class select based on category selection
+    if (categorySelect && groupClassSelect) {
+        categorySelect.addEventListener('change', () => {
+            if (categorySelect.value === 'Kelas') {
+                groupClassSelect.style.display = 'block';
+                classSelect.setAttribute('required', 'true');
+            } else {
+                groupClassSelect.style.display = 'none';
+                classSelect.removeAttribute('required');
+                classSelect.value = '';
+            }
+        });
+    }
+
+    const openModal = async (mode = 'create', id = null) => {
+        if (mode === 'edit' && id) {
+            try {
+                const res = await apiClient.get('/pengumuman');
+                const list = res.data || [];
+                const a = list.find(item => item.id === Number(id));
+                if (a) {
+                    document.getElementById('announcement-id').value = a.id;
+                    document.getElementById('announcement-title').value = a.judul;
+                    document.getElementById('announcement-body').value = a.isi;
+
+                    if (a.kelas_id) {
+                        categorySelect.value = 'Kelas';
+                        groupClassSelect.style.display = 'block';
+                        classSelect.value = a.kelas_id;
+                        classSelect.setAttribute('required', 'true');
+                    } else if (a.judul.includes('[PENTING]')) {
+                        categorySelect.value = 'Penting';
+                        groupClassSelect.style.display = 'none';
+                        classSelect.value = '';
+                        classSelect.removeAttribute('required');
+                    } else {
+                        categorySelect.value = 'Umum';
+                        groupClassSelect.style.display = 'none';
+                        classSelect.value = '';
+                        classSelect.removeAttribute('required');
+                    }
+
+                    if (modalTitle) modalTitle.textContent = 'Edit Pengumuman';
+                    if (submitBtn) submitBtn.textContent = 'Simpan Perubahan';
+                    modal.style.display = 'flex';
+                }
+            } catch (err) {
+                console.error(err);
             }
         } else {
             document.getElementById('announcement-id').value = '';
             form.reset();
+            if (groupClassSelect) groupClassSelect.style.display = 'none';
+            if (classSelect) {
+                classSelect.removeAttribute('required');
+                classSelect.value = '';
+            }
             if (modalTitle) modalTitle.textContent = 'Buat Pengumuman Baru';
             if (submitBtn) submitBtn.textContent = 'Publikasikan';
             modal.style.display = 'flex';
@@ -51,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeModal = () => {
         modal.style.display = 'none';
         form.reset();
+        if (groupClassSelect) groupClassSelect.style.display = 'none';
     };
 
     if (openModalBtn) openModalBtn.addEventListener('click', () => openModal('create'));
@@ -59,64 +119,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form submit
     if (form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const id = document.getElementById('announcement-id').value;
-            const title = document.getElementById('announcement-title').value;
-            const category = document.getElementById('announcement-category').value;
-            const body = document.getElementById('announcement-body').value;
+            let title = document.getElementById('announcement-title').value.trim();
+            const category = categorySelect.value;
+            const body = document.getElementById('announcement-body').value.trim();
+            const kelasId = classSelect.value;
 
-            const categoryClassMap = {
-                'Penting': 'penting',
-                'Kelas': 'kelas',
-                'Umum': 'umum'
-            };
+            // Determine if category maps to a kelas_id or is general (null)
+            let targetKelasId = (category === 'Kelas' && kelasId) ? parseInt(kelasId) : null;
 
-            const now = new Date();
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            const formattedDate = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-            const formattedTime = `${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')}`;
-            const timeString = `${formattedDate}\n${formattedTime}`;
-
-            if (id) {
-                // Edit mode
-                const updatedObj = {
-                    title: title,
-                    category: category,
-                    categoryClass: categoryClassMap[category] || 'umum',
-                    body: body
-                };
-                storage.updateAnnouncement(id, updatedObj);
-
-                storage.addActivity({
-                    title: `Mengubah pengumuman: "${title}"`,
-                    time: 'Baru saja',
-                    type: 'message',
-                    classCode: 'general'
-                });
-            } else {
-                // Create mode
-                const newAnnouncement = {
-                    id: Date.now(),
-                    title: title,
-                    category: category,
-                    categoryClass: categoryClassMap[category] || 'umum',
-                    time: timeString,
-                    body: body
-                };
-                storage.addAnnouncement(newAnnouncement);
-
-                storage.addActivity({
-                    title: `Membuat pengumuman baru: "${title}"`,
-                    time: 'Baru saja',
-                    type: 'message',
-                    classCode: 'general'
-                });
+            // If category is Penting, prepend tag to title
+            if (category === 'Penting' && !title.includes('[PENTING]')) {
+                title = `[PENTING] ${title}`;
             }
 
-            closeModal();
-            loadAndRenderAnnouncements();
+            try {
+                if (id) {
+                    // Edit mode
+                    await apiClient.put(`/pengumuman/${id}`, {
+                        judul: title,
+                        isi: body,
+                        kelas_id: targetKelasId
+                    });
+                    alert('Pengumuman berhasil diperbarui!');
+                } else {
+                    // Create mode
+                    await apiClient.post('/pengumuman', {
+                        judul: title,
+                        isi: body,
+                        kelas_id: targetKelasId
+                    });
+                    alert('Pengumuman berhasil dipublikasikan!');
+                }
+
+                closeModal();
+                loadAndRenderAnnouncements();
+            } catch (err) {
+                console.error(err);
+                let msg = err.message;
+                if (err.errors) {
+                    msg = Object.values(err.errors).flat().join('\n');
+                }
+                alert(`Gagal menyimpan pengumuman:\n${msg}`);
+            }
         });
     }
 
@@ -134,10 +182,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper function to bind actions in parent container
     window.openEditModal = (id) => openModal('edit', id);
-    window.confirmDeleteAnnouncement = (id) => {
+    window.confirmDeleteAnnouncement = async (id) => {
         if (confirm('Apakah Anda yakin ingin menghapus pengumuman ini?')) {
-            storage.deleteAnnouncement(id);
-            loadAndRenderAnnouncements();
+            try {
+                await apiClient.delete(`/pengumuman/${id}`);
+                alert('Pengumuman berhasil dihapus!');
+                loadAndRenderAnnouncements();
+            } catch (err) {
+                console.error(err);
+                alert(`Gagal menghapus pengumuman: ${err.message}`);
+            }
         }
     };
 });
@@ -180,43 +234,61 @@ function getAnnouncementIcon(categoryClass) {
     }
 }
 
-function loadAndRenderAnnouncements() {
-    const announcements = storage.getAnnouncements();
+async function loadAndRenderAnnouncements() {
     const container = document.getElementById('announcements-feed');
-
     if (!container) return;
 
-    // Filter announcements by search query
-    let filtered = announcements;
-    if (searchQuery) {
-        filtered = filtered.filter(a => 
-            a.title.toLowerCase().includes(searchQuery) ||
-            a.body.toLowerCase().includes(searchQuery)
-        );
-    }
+    try {
+        const response = await apiClient.get('/pengumuman');
+        const announcements = response.data || [];
 
-    if (filtered.length === 0) {
-        container.innerHTML = '<div class="empty-state">Tidak ada pengumuman yang ditemukan.</div>';
-        return;
-    }
+        // Filter announcements by search query
+        let filtered = announcements;
+        if (searchQuery) {
+            filtered = filtered.filter(a => 
+                (a.judul && a.judul.toLowerCase().includes(searchQuery)) ||
+                (a.isi && a.isi.toLowerCase().includes(searchQuery))
+            );
+        }
 
-    container.innerHTML = filtered.map(a => {
-        const iconHtml = getAnnouncementIcon(a.categoryClass);
-        return `
-            <div class="announcement-card" style="animation: fadeIn 0.3s ease;">
-                ${iconHtml}
-                <div class="announcement-details">
-                    <span class="announcement-category ${a.categoryClass}">${a.category}</span>
-                    <h3 class="announcement-title">${a.title}</h3>
-                    <p class="announcement-body-text">${a.body}</p>
-                    <div class="announcement-actions">
-                        <span class="action-btn-link edit" onclick="window.openEditModal(${a.id})">Edit</span>
-                        <span class="action-btn-divider">|</span>
-                        <span class="action-btn-link delete" onclick="window.confirmDeleteAnnouncement(${a.id})">Hapus</span>
+        if (filtered.length === 0) {
+            container.innerHTML = '<div class="empty-state">Tidak ada pengumuman yang ditemukan.</div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(a => {
+            const hasKelas = a.kelas !== null && a.kelas !== undefined;
+            const categoryLabel = hasKelas ? `Kelas ${a.kelas.nama_kelas}` : (a.judul.includes('[PENTING]') ? 'Penting' : 'Umum');
+            const categoryClass = a.judul.includes('[PENTING]') ? 'penting' : (hasKelas ? 'kelas' : 'umum');
+
+            const iconHtml = getAnnouncementIcon(categoryClass);
+
+            const formattedTime = a.created_at ? new Date(a.created_at).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit'
+            }) : 'Baru saja';
+
+            return `
+                <div class="announcement-card" style="animation: fadeIn 0.3s ease;">
+                    ${iconHtml}
+                    <div class="announcement-details">
+                        <span class="announcement-category ${categoryClass}">${categoryLabel}</span>
+                        <h3 class="announcement-title">${a.judul}</h3>
+                        <p class="announcement-body-text">${a.isi}</p>
+                        <div class="announcement-actions">
+                            <span class="action-btn-link edit" onclick="window.openEditModal(${a.id})">Edit</span>
+                            <span class="action-btn-divider">|</span>
+                            <span class="action-btn-link delete" onclick="window.confirmDeleteAnnouncement(${a.id})">Hapus</span>
+                        </div>
                     </div>
+                    <div class="announcement-date-box">${formattedTime}</div>
                 </div>
-                <div class="announcement-date-box">${a.time}</div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+    } catch (err) {
+        console.error('Gagal mengambil pengumuman:', err);
+        container.innerHTML = '<div class="empty-state">Gagal memuat pengumuman dari server.</div>';
+    }
 }

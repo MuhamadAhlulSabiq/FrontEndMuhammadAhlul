@@ -1,29 +1,31 @@
 import { storage } from '../../utils/storage.js';
-import { authApi } from '../../api/auth.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
+import { CONFIG } from '../../config.js';
 
 let activeTab = 'semua';
 let selectedThread = null;
 let replyingToCommentId = null;
+let currentUser = null;
+let globalThreads = [];
+let globalSubjects = [];
+let globalClasses = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Sidebar
     initSidebar();
 
-    // Initialize mock database
-    storage.initDb();
-
     // Initialize teacher profile display
-    const user = storage.getUser();
-    if (user) {
-        let displayName = user.name || 'Bu Nina';
+    currentUser = storage.getUser();
+    if (currentUser) {
+        let displayName = currentUser.name || 'Bu Nina';
         let cleanName = displayName.replace(/^Bu\s+/, '');
         const dispName = document.getElementById('user-display-name');
         if (dispName) dispName.textContent = cleanName;
     }
 
-    // Render list
-    renderForumList();
+    // Load initial data (mapel, kelas, threads)
+    await loadInitialData();
 
     // Tab filtering
     const tabs = document.querySelectorAll('.tab-btn');
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) {
         backBtn.addEventListener('click', () => {
             setReplyMode(null);
-            renderForumList();
+            loadAndRefreshFeed();
             showPanel('list');
         });
     }
@@ -79,93 +81,158 @@ document.addEventListener('DOMContentLoaded', () => {
     // Create Thread submit handler
     const createForm = document.getElementById('create-discussion-form');
     if (createForm) {
-        createForm.addEventListener('submit', (e) => {
+        createForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const title = document.getElementById('discussion-title').value;
-            const subjCode = document.getElementById('discussion-subject').value;
-            const classLevel = document.getElementById('discussion-class').value;
-            const body = document.getElementById('discussion-body').value;
+            const title = document.getElementById('discussion-title').value.trim();
+            const mapelId = parseInt(document.getElementById('discussion-subject').value);
+            const body = document.getElementById('discussion-body').value.trim();
 
-            const subjectLabel = subjCode === 'mtk' ? 'Matematika' : 'Bahasa Inggris';
-            const teacherName = user ? user.name : 'Bu Nina';
-            const teacherId = user ? user.id : 'nina';
+            try {
+                const response = await apiClient.post('/forum', {
+                    judul: title,
+                    konten: body,
+                    mapel_id: mapelId
+                });
 
-            const newThread = {
-                id: Date.now(),
-                title: title,
-                subject: `${subjectLabel} - Kelas ${classLevel}`,
-                classCode: subjCode,
-                author: teacherName,
-                role: 'Guru',
-                authorAvatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=guru_${teacherId}`,
-                time: 'Baru saja',
-                body: body,
-                views: 0,
-                commentCount: 0,
-                isMine: true
-            };
-
-            storage.addThread(newThread);
-
-            // Add activity log
-            storage.addActivity({
-                title: `Membuat diskusi baru: "${title}"`,
-                time: 'Baru saja',
-                type: 'message',
-                classCode: subjCode
-            });
-
-            createForm.reset();
-            renderForumList();
-            showPanel('list');
+                if (response.success) {
+                    alert('Topik diskusi baru berhasil dipublikasikan!');
+                    createForm.reset();
+                    await loadAndRefreshFeed();
+                    showPanel('list');
+                } else {
+                    alert('Gagal mempublikasikan diskusi: ' + (response.message || 'Error tidak diketahui'));
+                }
+            } catch (err) {
+                console.error(err);
+                if (err.errors) {
+                    const errMsg = Object.values(err.errors).flat().join('\n');
+                    alert(`Gagal mempublikasikan diskusi:\n${errMsg}`);
+                } else {
+                    alert('Gagal menghubungi server untuk mempublikasikan diskusi.');
+                }
+            }
         });
     }
 
     // Post comment submit handler
     const commentForm = document.getElementById('comment-post-form');
-    const commentText = document.getElementById('comment-text-input');
+    const commentTextInput = document.getElementById('comment-text-input');
 
     if (commentForm) {
-        commentForm.addEventListener('submit', (e) => {
+        commentForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const val = commentText.value.trim();
+            const val = commentTextInput.value.trim();
             if (val && selectedThread) {
-                const teacherName = user ? user.name : 'Bu Nina';
-                const teacherId = user ? user.id : 'nina';
+                try {
+                    const response = await apiClient.post(`/forum/${selectedThread.id}/komentar`, {
+                        konten: val,
+                        parent_id: replyingToCommentId ? parseInt(replyingToCommentId) : null
+                    });
 
-                const newComment = {
-                    id: Date.now(),
-                    author: teacherName,
-                    avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=guru_${teacherId}`,
-                    text: val,
-                    time: 'Baru saja'
-                };
-
-                if (replyingToCommentId) {
-                    newComment.parentId = Number(replyingToCommentId);
+                    if (response.success) {
+                        commentTextInput.value = '';
+                        setReplyMode(null);
+                        
+                        // Fetch fresh comments list
+                        await loadThreadDetails(selectedThread.id);
+                    } else {
+                        alert('Gagal mengirim tanggapan: ' + (response.message || 'Error tidak diketahui'));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Gagal mengirim tanggapan ke server.');
                 }
-
-                storage.addComment(selectedThread.id, newComment);
-
-                // Add activity log
-                storage.addActivity({
-                    title: `Membalas diskusi "${selectedThread.title}"`,
-                    time: 'Baru saja',
-                    type: 'message',
-                    classCode: selectedThread.classCode
-                });
-
-                commentText.value = '';
-                setReplyMode(null);
-                renderCommentsList(selectedThread.id);
             }
         });
     }
 });
 
+async function loadInitialData() {
+    try {
+        // Fetch mapel, kelas, and threads in parallel
+        const [mapelRes, classesRes] = await Promise.all([
+            apiClient.get('/mapel'),
+            apiClient.get('/kelas')
+        ]);
+
+        if (mapelRes.success) globalSubjects = mapelRes.data || [];
+        if (classesRes.success) globalClasses = classesRes.data || [];
+
+        populateFormDropdowns();
+        await loadAndRefreshFeed();
+
+    } catch (err) {
+        console.error('Error loading initial data:', err);
+    }
+}
+
+function populateFormDropdowns() {
+    const subjectSelect = document.getElementById('discussion-subject');
+    const classSelect = document.getElementById('discussion-class');
+
+    // Populate Subjects
+    if (subjectSelect && globalSubjects.length > 0) {
+        subjectSelect.innerHTML = '<option value="" disabled selected>-- Pilih Pelajaran --</option>' +
+            globalSubjects.map(s => `<option value="${s.id}">${s.nama_mapel}</option>`).join('');
+    }
+
+    // Populate Classes
+    if (classSelect && globalClasses.length > 0) {
+        classSelect.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>' +
+            globalClasses.map(c => `<option value="${c.id}">${c.nama_kelas}</option>`).join('');
+    }
+}
+
+async function loadAndRefreshFeed() {
+    const container = document.getElementById('forum-feed');
+    if (!container) return;
+
+    try {
+        const response = await apiClient.get('/forum');
+        if (response.success && response.data) {
+            globalThreads = response.data;
+            renderForumList();
+        } else {
+            container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Gagal mengambil data diskusi.</div>';
+        }
+    } catch (err) {
+        console.error('Error fetching forum feed:', err);
+        container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Gagal memuat feed diskusi. Pastikan server backend menyala.</div>';
+    }
+}
+
+function formatTimeAgo(dateString) {
+    if (!dateString) return 'Baru saja';
+    const dateObj = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - dateObj;
+    
+    if (isNaN(dateObj.getTime()) || diffMs < 0) return 'Baru saja';
+
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 1) return 'Baru saja';
+    if (diffMins < 60) return `${diffMins} menit yang lalu`;
+
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours} jam yang lalu`;
+
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays === 1) return 'Kemarin';
+    if (diffDays < 7) return `${diffDays} hari yang lalu`;
+
+    const months = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    return `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+}
+
 function getThreadIcon(t) {
-    if (t.title.includes('Tugas') || t.title.includes('Pecahan')) {
+    const title = t.judul.toLowerCase();
+    const code = t.mapel && t.mapel.nama_mapel ? t.mapel.nama_mapel.toLowerCase() : '';
+
+    if (title.includes('tugas') || title.includes('pecahan')) {
         return `
             <div class="item-icon-box notebook-icon-theme">
                 <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;">
@@ -173,17 +240,16 @@ function getThreadIcon(t) {
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="16" y1="13" x2="8" y2="13"></line>
                     <line x1="16" y1="17" x2="8" y2="17"></line>
-                    <polyline points="10 9 9 9 8 9"></polyline>
                 </svg>
             </div>
         `;
-    } else if (t.classCode === 'mtk') {
+    } else if (code.includes('matematika') || code.includes('mtk')) {
         return `
             <div class="item-icon-box math-icon-theme">
                 √x
             </div>
         `;
-    } else if (t.classCode === 'ing') {
+    } else if (code.includes('inggris') || code.includes('english')) {
         return `
             <div class="item-icon-box english-icon-theme">
                 En
@@ -202,10 +268,13 @@ function renderForumList() {
     const container = document.getElementById('forum-feed');
     if (!container) return;
 
-    const threads = storage.getThreads();
-    const filtered = threads.filter(t => {
+    const filtered = globalThreads.filter(t => {
         if (activeTab === 'semua') return true;
-        return t.isMine === true || t.author === 'Bu Nina';
+        
+        // Tab "Saya" checks if current teacher is the creator of the thread
+        const creatorId = t.pembuat ? t.pembuat.id : null;
+        const myId = currentUser ? currentUser.id : null;
+        return creatorId === myId;
     });
 
     if (filtered.length === 0) {
@@ -213,78 +282,96 @@ function renderForumList() {
         return;
     }
 
-    container.innerHTML = filtered.map(t => `
-        <div class="list-item" data-id="${t.id}" style="animation: fadeIn 0.3s ease;">
-            <div class="item-left">
-                ${getThreadIcon(t)}
-                <div class="item-details">
-                    <h4 style="font-weight: 800; color: #111827; margin: 0 0 6px 0;">${t.title}</h4>
-                    <div style="display: flex; align-items: center; gap: 16px; font-size: 0.88rem; color: #888888; font-weight: 600;">
-                        <span>${t.subject}</span>
-                        <span style="display: inline-flex; align-items: center; gap: 4px;">
-                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="16" y1="13" x2="8" y2="13"></line>
-                                <line x1="16" y1="17" x2="8" y2="17"></line>
-                            </svg>
-                            ${t.views}
-                        </span>
-                        <span style="display: inline-flex; align-items: center; gap: 4px;">
-                            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                            </svg>
-                            ${t.commentCount}
-                        </span>
+    container.innerHTML = filtered.map(t => {
+        const title = t.judul;
+        const subjectLabel = t.mapel ? t.mapel.nama_mapel : 'Materi Umum';
+        const viewsCount = t.jumlah_dilihat || 0;
+        const commentCount = t.jumlah_komentar || 0;
+        const timeAgo = formatTimeAgo(t.created_at);
+
+        return `
+            <div class="list-item" data-id="${t.id}" style="animation: fadeIn 0.3s ease;">
+                <div class="item-left">
+                    ${getThreadIcon(t)}
+                    <div class="item-details">
+                        <h4 style="font-weight: 800; color: #111827; margin: 0 0 6px 0;">${title}</h4>
+                        <div style="display: flex; align-items: center; gap: 16px; font-size: 0.88rem; color: #888888; font-weight: 600;">
+                            <span>${subjectLabel}</span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;">
+                                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                                ${viewsCount}
+                            </span>
+                            <span style="display: inline-flex; align-items: center; gap: 4px;">
+                                <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                ${commentCount}
+                            </span>
+                        </div>
                     </div>
                 </div>
+                <div class="item-right">
+                    <span class="item-date">${timeAgo}</span>
+                </div>
             </div>
-            <div class="item-right">
-                <span class="item-date">${t.time}</span>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
-    // Attach click events
+    // Attach click events to feed items
     container.querySelectorAll('.list-item').forEach(item => {
-        item.addEventListener('click', () => {
+        item.addEventListener('click', async () => {
             const id = parseInt(item.dataset.id);
-            const t = threads.find(thread => thread.id === id);
-            if (t) {
-                selectedThread = t;
-                t.views += 1;
-                loadThreadDetails(t);
-            }
+            await loadThreadDetails(id);
         });
     });
 }
 
-function loadThreadDetails(t) {
-    const titleEl = document.getElementById('detail-post-title');
-    const subjectEl = document.getElementById('detail-post-subject');
-    const bodyEl = document.getElementById('detail-post-body');
-    const timeEl = document.getElementById('detail-post-time');
-    const authorDisplayEl = document.getElementById('detail-author-display');
-    const avatarContainer = document.getElementById('detail-author-avatar-container');
+async function loadThreadDetails(id) {
+    try {
+        const response = await apiClient.get(`/forum/${id}`);
+        if (response.success && response.data) {
+            selectedThread = response.data;
+            
+            const titleEl = document.getElementById('detail-post-title');
+            const subjectEl = document.getElementById('detail-post-subject');
+            const bodyEl = document.getElementById('detail-post-body');
+            const timeEl = document.getElementById('detail-post-time');
+            const authorDisplayEl = document.getElementById('detail-author-display');
+            const avatarContainer = document.getElementById('detail-author-avatar-container');
 
-    if (titleEl) titleEl.textContent = t.title;
-    if (subjectEl) subjectEl.textContent = t.subject;
-    if (bodyEl) bodyEl.textContent = t.body;
-    if (timeEl) timeEl.textContent = `Dibuat ${t.time}`;
-    if (authorDisplayEl) authorDisplayEl.textContent = `${t.author} (${t.role})`;
+            const authorName = selectedThread.pembuat ? selectedThread.pembuat.nama : 'User';
+            const authorRole = selectedThread.pembuat ? selectedThread.pembuat.role : 'User';
+            const subjectLabel = selectedThread.mapel ? selectedThread.mapel.nama_mapel : 'Materi Umum';
+            const timeAgo = formatTimeAgo(selectedThread.created_at);
 
-    // Custom avatar initial circle
-    if (avatarContainer) {
-        avatarContainer.innerHTML = `
-            <div class="student-avatar-circle" style="width: 44px; height: 44px; border-radius: 50%; background-color: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; border: 1.5px solid #2563eb;">
-                ${t.author.charAt(0)}
-            </div>
-        `;
+            if (titleEl) titleEl.textContent = selectedThread.judul;
+            if (subjectEl) subjectEl.textContent = subjectLabel;
+            if (bodyEl) bodyEl.textContent = selectedThread.konten;
+            if (timeEl) timeEl.textContent = `Dibuat ${timeAgo}`;
+            if (authorDisplayEl) authorDisplayEl.textContent = `${authorName} (${authorRole})`;
+
+            // Custom avatar initial circle
+            if (avatarContainer) {
+                avatarContainer.innerHTML = `
+                    <div class="student-avatar-circle" style="width: 44px; height: 44px; border-radius: 50%; background-color: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 800; border: 1.5px solid #2563eb;">
+                        ${authorName.charAt(0).toUpperCase()}
+                    </div>
+                `;
+            }
+
+            setReplyMode(null);
+            renderCommentsList(selectedThread.komentar || []);
+            showPanel('detail');
+        }
+    } catch (err) {
+        console.error('Error fetching thread details:', err);
+        alert('Gagal mengambil detail diskusi dari server.');
     }
-
-    setReplyMode(null);
-    renderCommentsList(t.id);
-    showPanel('detail');
 }
 
 function setReplyMode(commentId, commentAuthor) {
@@ -309,13 +396,14 @@ function setReplyMode(commentId, commentAuthor) {
     }
 }
 
-function renderCommentsList(threadId) {
-    const commentsList = storage.getComments(threadId);
+function renderCommentsList(commentsList) {
     const container = document.getElementById('comments-list-box');
     const commentsHeader = document.getElementById('comments-count-header');
 
+    if (!commentsList) commentsList = [];
+
     // Total count including nested replies
-    const totalComments = commentsList.reduce((acc, c) => acc + 1 + (c.replies ? c.replies.length : 0), 0);
+    const totalComments = commentsList.reduce((acc, c) => acc + 1 + (c.balasan ? c.balasan.length : 0), 0);
 
     if (commentsHeader) {
         commentsHeader.textContent = `${totalComments} Komentar`;
@@ -330,49 +418,54 @@ function renderCommentsList(threadId) {
 
     let html = '';
     commentsList.forEach(c => {
-        // Parent Comment HTML
-        const useImgAvatar = c.avatar && (c.avatar.startsWith('http') || c.avatar.startsWith('/'));
-        const avatarHtml = useImgAvatar
-            ? `<img class="comment-avatar-img" src="${c.avatar}" alt="Avatar">`
-            : `<div class="comment-avatar-circle" style="width: 38px; height: 38px; border-radius: 50%; background-color: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 800;">${c.author.charAt(0)}</div>`;
+        const parentAuthor = c.penulis ? c.penulis.nama : 'User';
+        const parentTime = formatTimeAgo(c.created_at);
+        const isParentDeletable = currentUser && c.penulis && (c.penulis.id === currentUser.id || currentUser.role === 'admin');
+
+        const parentAvatarHtml = `<div class="comment-avatar-circle" style="width: 38px; height: 38px; border-radius: 50%; background-color: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem;">${parentAuthor.charAt(0).toUpperCase()}</div>`;
 
         html += `
             <div class="comment-item-custom" style="animation: fadeIn 0.3s ease;">
-                ${avatarHtml}
+                ${parentAvatarHtml}
                 <div class="comment-details-box">
                     <div class="comment-author-row">
-                        <span class="comment-author-name" style="font-weight: 800; color: #111827;">${c.author}</span>
-                        <span class="comment-post-time" style="font-size: 0.88rem; color: #888888; font-weight: 500;">${c.time}</span>
+                        <span class="comment-author-name" style="font-weight: 800; color: #111827;">${parentAuthor}</span>
+                        <span class="comment-post-time" style="font-size: 0.88rem; color: #888888; font-weight: 500;">${parentTime}</span>
                     </div>
-                    <p class="comment-text-content" style="font-size: 0.95rem; color: #4b5563; font-weight: 500; line-height: 1.5; margin: 0 0 10px 0;">${c.text}</p>
+                    <p class="comment-text-content" style="font-size: 0.95rem; color: #4b5563; font-weight: 500; line-height: 1.5; margin: 0 0 10px 0;">${c.konten}</p>
                     <div class="comment-actions-bar" style="display: flex; gap: 8px; align-items: center;">
-                        <span class="comment-action-reply" data-id="${c.id}" data-author="${c.author}" style="color: #0d52cd; font-weight: 700; font-size: 0.88rem; cursor: pointer;">Balas</span>
-                        <span class="comment-action-divider" style="color: #cbd5e1; font-size: 0.88rem;">&bull;</span>
-                        <span class="comment-action-delete" data-id="${c.id}" style="color: #ef4444; font-weight: 700; font-size: 0.88rem; cursor: pointer;">Hapus</span>
+                        <span class="comment-action-reply" data-id="${c.id}" data-author="${parentAuthor}" style="color: #0d52cd; font-weight: 700; font-size: 0.88rem; cursor: pointer;">Balas</span>
+                        ${isParentDeletable ? `
+                            <span class="comment-action-divider" style="color: #cbd5e1; font-size: 0.88rem;">&bull;</span>
+                            <span class="comment-action-delete" data-id="${c.id}" style="color: #ef4444; font-weight: 700; font-size: 0.88rem; cursor: pointer;">Hapus</span>
+                        ` : ''}
                     </div>
                 </div>
             </div>
         `;
 
-        // Nested Replies HTML
-        if (c.replies && c.replies.length > 0) {
-            c.replies.forEach(r => {
-                const replyUseImgAvatar = r.avatar && (r.avatar.startsWith('http') || r.avatar.startsWith('/'));
-                const replyAvatarHtml = replyUseImgAvatar
-                    ? `<img class="comment-avatar-img" src="${r.avatar}" alt="Avatar">`
-                    : `<div class="comment-avatar-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;">${r.author.charAt(0)}</div>`;
+        // Nested Replies
+        if (c.balasan && c.balasan.length > 0) {
+            c.balasan.forEach(r => {
+                const replyAuthor = r.penulis ? r.penulis.nama : 'User';
+                const replyTime = formatTimeAgo(r.created_at);
+                const isReplyDeletable = currentUser && r.penulis && (r.penulis.id === currentUser.id || currentUser.role === 'admin');
+
+                const replyAvatarHtml = `<div class="comment-avatar-circle" style="width: 30px; height: 30px; border-radius: 50%; background-color: #dbeafe; color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem;">${replyAuthor.charAt(0).toUpperCase()}</div>`;
 
                 html += `
                     <div class="comment-reply-nested" style="animation: fadeIn 0.3s ease;">
                         ${replyAvatarHtml}
                         <div class="comment-details-box">
                             <div class="comment-author-row">
-                                <span class="comment-author-name" style="font-weight: 800; color: #111827;">${r.author}</span>
-                                <span class="comment-post-time" style="font-size: 0.88rem; color: #888888; font-weight: 500;">${r.time}</span>
+                                <span class="comment-author-name" style="font-weight: 800; color: #111827;">${replyAuthor}</span>
+                                <span class="comment-post-time" style="font-size: 0.88rem; color: #888888; font-weight: 500;">${replyTime}</span>
                             </div>
-                            <p class="comment-text-content" style="font-size: 0.95rem; color: #4b5563; font-weight: 500; line-height: 1.5; margin: 0 0 10px 0;">${r.text}</p>
+                            <p class="comment-text-content" style="font-size: 0.95rem; color: #4b5563; font-weight: 500; line-height: 1.5; margin: 0 0 10px 0;">${r.konten}</p>
                             <div class="comment-actions-bar" style="display: flex; gap: 8px; align-items: center;">
-                                <span class="comment-action-delete" data-parent-id="${c.id}" data-reply-id="${r.id}" style="color: #ef4444; font-weight: 700; font-size: 0.88rem; cursor: pointer;">Hapus</span>
+                                ${isReplyDeletable ? `
+                                    <span class="comment-action-delete" data-id="${r.id}" style="color: #ef4444; font-weight: 700; font-size: 0.88rem; cursor: pointer;">Hapus</span>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
@@ -383,7 +476,7 @@ function renderCommentsList(threadId) {
 
     container.innerHTML = html;
 
-    // Bind Balas clicks
+    // Bind Balas click event
     container.querySelectorAll('.comment-action-reply').forEach(btn => {
         btn.addEventListener('click', () => {
             const commentId = btn.dataset.id;
@@ -392,21 +485,24 @@ function renderCommentsList(threadId) {
         });
     });
 
-    // Bind Hapus clicks
+    // Bind Hapus click event
     container.querySelectorAll('.comment-action-delete').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const parentId = btn.dataset.parentId;
-            const replyId = btn.dataset.replyId;
-            const commentId = btn.dataset.id;
+        btn.addEventListener('click', async () => {
+            const commentId = parseInt(btn.dataset.id);
 
-            if (confirm('Apakah Anda yakin ingin menghapus komentar ini?')) {
-                if (replyId) {
-                    storage.deleteComment(threadId, parentId, replyId);
-                } else {
-                    storage.deleteComment(threadId, commentId);
+            if (confirm('Apakah Anda yakin ingin menghapus tanggapan ini?')) {
+                try {
+                    const response = await apiClient.delete(`/komentar/${commentId}`);
+                    if (response.success) {
+                        // Refresh details
+                        await loadThreadDetails(selectedThread.id);
+                    } else {
+                        alert('Gagal menghapus komentar: ' + (response.message || 'Error tidak diketahui'));
+                    }
+                } catch (err) {
+                    console.error('Error deleting comment:', err);
+                    alert('Gagal menghubungi server untuk menghapus komentar.');
                 }
-                // Reload comments
-                renderCommentsList(threadId);
             }
         });
     });
@@ -446,7 +542,6 @@ function showPanel(panelName) {
         }
     } else if (panelName === 'detail') {
         if (detailPanel) detailPanel.style.display = 'block';
-        // Hide top bar title and subtitle to align back link correctly
         if (pageTitle) pageTitle.textContent = 'Detail Diskusi';
         if (pageSubtitle) pageSubtitle.style.display = 'none';
     }

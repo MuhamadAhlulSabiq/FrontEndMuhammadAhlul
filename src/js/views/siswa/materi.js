@@ -1,15 +1,14 @@
 import { storage } from '../../utils/storage.js';
 import { authApi } from '../../api/auth.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 let activeSubjectFilter = 'semua';
+let globalMaterials = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Sidebar
     initSidebar();
-
-    // Initialize mock database
-    storage.initDb();
 
     // 1. Initialize user info display
     const user = storage.getUser();
@@ -29,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Initial rendering (default is 'semua')
-    renderMaterials();
+    // 3. Load Materials from API
+    await loadMaterials();
 
     // 4. Tab filtering listener
     const tabs = document.querySelectorAll('.tab-btn');
@@ -49,17 +48,42 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+async function loadMaterials() {
+    const container = document.getElementById('materials-feed');
+    if (!container) return;
+
+    try {
+        const response = await apiClient.get('/materi');
+        if (response.success && response.data) {
+            globalMaterials = response.data;
+            renderMaterials();
+        } else {
+            container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Gagal memuat materi dari server.</div>';
+        }
+    } catch (err) {
+        console.error('Error fetching materials:', err);
+        container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Gagal menghubungkan ke server materi.</div>';
+    }
+}
+
+function getClassCode(subjectName) {
+    if (!subjectName) return 'pkn';
+    const name = subjectName.toLowerCase();
+    if (name.includes('ing') || name.includes('english')) return 'ing';
+    if (name.includes('mat') || name.includes('mtk') || name.includes('hitung')) return 'mtk';
+    if (name.includes('ipa') || name.includes('sains') || name.includes('fis') || name.includes('kim') || name.includes('bio')) return 'ipa';
+    return 'pkn';
+}
+
 function renderMaterials() {
     const container = document.getElementById('materials-feed');
     if (!container) return;
 
-    // Load from localStorage
-    const allMaterials = storage.getMaterials();
-
     // Filter list based on selected tab subject code
-    const filtered = allMaterials.filter(m => {
+    const filtered = globalMaterials.filter(m => {
         if (activeSubjectFilter === 'semua') return true;
-        return m.classCode === activeSubjectFilter;
+        const classCode = getClassCode(m.mapel ? m.mapel.nama_mapel : '');
+        return classCode === activeSubjectFilter;
     });
 
     if (filtered.length === 0) {
@@ -72,21 +96,32 @@ function renderMaterials() {
         return;
     }
 
-    container.innerHTML = filtered.map(m => `
-        <div class="list-item" style="animation: fadeIn 0.3s ease;">
-            <div class="item-left">
-                <div class="item-icon-box ${m.classCode}">
-                    ${m.classCode === 'mtk' ? '✕' : 'En'}
+    container.innerHTML = filtered.map(m => {
+        const subjectTitle = m.mapel ? m.mapel.nama_mapel : 'Materi';
+        const classCode = getClassCode(subjectTitle);
+        const docType = m.tipe === 'gambar' ? 'Gambar' : 'PDF';
+
+        // Format Date
+        const dateObj = new Date(m.created_at);
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        const timeStr = isNaN(dateObj.getTime()) ? '-' : `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+
+        return `
+            <div class="list-item" onclick="window.open('${m.file_url || '#'}', '_blank')" style="cursor: pointer; animation: fadeIn 0.3s ease;">
+                <div class="item-left">
+                    <div class="item-icon-box ${classCode}" style="display: flex; align-items: center; justify-content: center; font-weight: 800;">
+                        ${classCode === 'mtk' ? '✕' : (classCode === 'ing' ? 'En' : (classCode === 'ipa' ? 'Sci' : 'Pkn'))}
+                    </div>
+                    <div class="item-details">
+                        <h4 style="font-weight: 700; color: #111827;">${m.judul}</h4>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-top: 2px;">${subjectTitle}</p>
+                    </div>
                 </div>
-                <div class="item-details">
-                    <h4>${m.title}</h4>
-                    <p>${m.subject}</p>
+                <div class="item-right">
+                    <span class="badge-doc ${docType.toLowerCase()}">${docType}</span>
+                    <span class="item-date" style="font-size: 0.85rem; color: #888888;">${timeStr}</span>
                 </div>
             </div>
-            <div class="item-right">
-                <span class="badge-doc ${m.docType.toLowerCase()}">${m.docType}</span>
-                <span class="item-date">${m.time}</span>
-            </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }

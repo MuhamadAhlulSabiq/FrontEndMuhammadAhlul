@@ -34,7 +34,7 @@
                     </button>
                     <img id="user-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=siswa" alt="Avatar" class="avatar">
                     <div class="user-info">
-                        <span id="user-display-name">Rohmat</span>
+                        <span id="user-display-name">-</span>
                         <p id="user-display-role">Siswa</p>
                     </div>
                 </div>
@@ -75,9 +75,7 @@
                         <label class="form-label">Pilih Mata Pelajaran</label>
                         <div class="form-select-arrow">
                             <select id="discussion-subject" class="form-select" required>
-                                <option value="">-- Pilih Pelajaran --</option>
-                                <option value="mtk">Matematika</option>
-                                <option value="ing">Bahasa Inggris</option>
+                                <option value="" disabled selected>-- Pilih Pelajaran --</option>
                             </select>
                         </div>
                     </div>
@@ -86,9 +84,7 @@
                         <label class="form-label">Pilih Kelas</label>
                         <div class="form-select-arrow">
                             <select id="discussion-class" class="form-select" required>
-                                <option value="">-- Pilih Kelas --</option>
-                                <option value="5">Kelas 5</option>
-                                <option value="2">Kelas 2</option>
+                                <option value="" disabled selected>-- Pilih Kelas --</option>
                             </select>
                         </div>
                     </div>
@@ -113,28 +109,28 @@
 
                 <div class="detail-header" style="margin-bottom: 20px;">
                     <div>
-                        <h2 id="detail-forum-title" class="section-title" style="margin-bottom: 4px;">Pengertian Persamaan Kuadrat</h2>
-                        <p id="detail-forum-subject" class="detail-body-text" style="color: #64748b; font-weight: 600;">Matematika - Kelas 5</p>
+                        <h2 id="detail-forum-title" class="section-title" style="margin-bottom: 4px;">-</h2>
+                        <p id="detail-forum-subject" class="detail-body-text" style="color: #64748b; font-weight: 600;">-</p>
                     </div>
                 </div>
 
                 <!-- Original post author & content -->
                 <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 24px; margin-bottom: 24px;">
                     <div class="teacher-info-box">
-                        <img id="detail-forum-author-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=guru_nina" alt="Guru" class="teacher-avatar">
+                        <img id="detail-forum-author-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=siswa" alt="Guru" class="teacher-avatar">
                         <div>
-                            <span id="detail-forum-author-name" class="teacher-name">Bu Nina</span>
-                            <p id="detail-forum-author-role" class="teacher-subject">Guru Matematika</p>
+                            <span id="detail-forum-author-name" class="teacher-name">-</span>
+                            <p id="detail-forum-author-role" class="teacher-subject">-</p>
                         </div>
-                        <span id="detail-forum-time" class="comment-time" style="margin-left: 20px; font-size: 0.85rem; color: #888888;">2 jam yang lalu</span>
+                        <span id="detail-forum-time" class="comment-time" style="margin-left: 20px; font-size: 0.85rem; color: #888888;">-</span>
                     </div>
                     <p id="detail-forum-body" class="detail-body-text" style="color: #1f2937; margin-top: 16px;">
-                        Halo semuanya, pada pertemuan ini kita membahas tentang pengertian persamaan kuadrat. Silahkan bertanya jika ada yang belum dipahami.
+                        Memuat isi diskusi...
                     </p>
                 </div>
 
                 <!-- Comments Thread -->
-                <h3 id="comments-count-title" class="detail-section-title">5 Komentar</h3>
+                <h3 id="comments-count-title" class="detail-section-title">- Komentar</h3>
                 
                 <div class="comments-container" id="comments-list-feed">
                     <!-- Loaded dynamically -->

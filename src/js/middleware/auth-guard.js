@@ -28,7 +28,7 @@
         if (path.includes('/pages/siswa/') || path.includes('/pages/guru/') || path.includes('/pages/admin/')) {
             window.location.href = '../../login.html';
         } else {
-            window.location.href = '/login.html';
+            window.location.href = 'login.html';
         }
     }
 })();

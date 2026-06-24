@@ -1,13 +1,11 @@
 import { storage } from '../../utils/storage.js';
 import { authApi } from '../../api/auth.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Sidebar
     initSidebar();
-
-    // Initialize mock database
-    storage.initDb();
 
     // Load and render profile data
     renderProfile();
@@ -34,15 +32,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const editForm = document.getElementById('edit-profile-form');
 
     if (editBtn && modal) {
-        editBtn.addEventListener('click', () => {
-            const user = storage.getUser();
-            if (user) {
+        editBtn.addEventListener('click', async () => {
+            try {
+                // Fetch fresh profile from API
+                const response = await apiClient.get('/profile');
+                const user = response.data || {};
+                
                 // Pre-fill inputs
-                document.getElementById('edit-name').value = user.name || 'Bu Nina';
-                document.getElementById('edit-username').value = user.username || 'nina';
-                document.getElementById('edit-email').value = user.email || 'nina@guru.com';
+                document.getElementById('edit-name').value = user.nama || user.name || '';
+                document.getElementById('edit-username').value = user.username || '';
+                document.getElementById('edit-email').value = user.email || '';
+                document.getElementById('edit-password').value = ''; // clear password input
+                
+                modal.style.display = 'flex';
+            } catch (err) {
+                console.error(err);
+                alert('Gagal mengambil data profil terbaru.');
             }
-            modal.style.display = 'flex';
         });
     }
 
@@ -53,36 +59,76 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (editForm && modal) {
-        editForm.addEventListener('submit', (e) => {
+        editForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const name = document.getElementById('edit-name').value.trim();
             const username = document.getElementById('edit-username').value.trim();
             const email = document.getElementById('edit-email').value.trim();
+            const password = document.getElementById('edit-password').value.trim();
 
-            const user = storage.getUser() || {};
-            const updatedUser = {
-                ...user,
-                name,
+            const payload = {
+                nama: name,
                 username,
                 email
             };
 
-            // Save to localStorage
-            storage.setUser(updatedUser);
+            if (password) {
+                payload.password = password;
+            }
 
-            // Re-render display
-            renderProfile();
-            
-            // Hide modal
-            modal.style.display = 'none';
+            try {
+                const response = await apiClient.put('/profile', payload);
+
+                if (response.success && response.data) {
+                    const updatedUser = response.data;
+                    
+                    // Update LocalStorage user details
+                    storage.setUser({
+                        id: updatedUser.id,
+                        name: updatedUser.nama,
+                        username: updatedUser.username,
+                        email: updatedUser.email,
+                        role: updatedUser.role
+                    });
+
+                    alert('Profil berhasil diperbarui!');
+                    renderProfile();
+                    modal.style.display = 'none';
+                }
+            } catch (err) {
+                console.error(err);
+                let msg = err.message;
+                if (err.errors) {
+                    msg = Object.values(err.errors).flat().join('\n');
+                }
+                alert(`Gagal memperbarui profil:\n${msg}`);
+            }
         });
     }
 });
 
-function renderProfile() {
-    const user = storage.getUser();
-    if (!user) return;
+async function renderProfile() {
+    // Attempt to load fresh data from API
+    let user = storage.getUser() || {};
+    try {
+        const response = await apiClient.get('/profile');
+        if (response.success && response.data) {
+            user = {
+                id: response.data.id,
+                name: response.data.nama,
+                username: response.data.username,
+                email: response.data.email,
+                role: response.data.role
+            };
+            // Keep local storage in sync
+            storage.setUser(user);
+        }
+    } catch (e) {
+        console.warn('Gagal memuat profil fresh dari server, fallback ke local storage:', e);
+    }
+
+    if (!user.name) return;
 
     // Populate DOM elements
     const profileName = document.getElementById('profile-name');

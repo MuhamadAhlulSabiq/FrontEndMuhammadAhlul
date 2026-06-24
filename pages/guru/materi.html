@@ -127,6 +127,40 @@
         </div>
     </div>
 
+    <!-- Modal Detail Materi -->
+    <div id="modal-detail-materi" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>Detail Materi</h3>
+                <button id="modal-detail-materi-close" class="modal-close">&times;</button>
+            </div>
+            <div style="padding: 16px 0; display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">Judul Materi</label>
+                    <p id="detail-materi-title" style="font-size: 1.05rem; font-weight: 700; color: #000; margin-top: 4px;"></p>
+                </div>
+                <div>
+                    <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">Mata Pelajaran</label>
+                    <p id="detail-materi-subject" style="font-size: 1rem; font-weight: 600; color: #4b5563; margin-top: 4px;"></p>
+                </div>
+                <div>
+                    <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">Deskripsi</label>
+                    <p id="detail-materi-desc" style="font-size: 0.95rem; color: #4b5563; margin-top: 4px; white-space: pre-line; line-height: 1.5;"></p>
+                </div>
+                <div>
+                    <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">File Lampiran</label>
+                    <div id="detail-materi-file-container" style="margin-top: 8px; padding: 12px; background: #f3f4f6; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="detail-materi-filename" style="font-weight: 600; font-size: 0.9rem; color: #374151;">-</span>
+                        <a id="detail-materi-download-btn" href="#" target="_blank" class="btn-action-primary" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; text-decoration: none; background-color: #0d52cd; color: white;">Buka / Unduh</a>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                <button type="button" id="btn-close-detail" class="btn-batal">Tutup</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JS Separated Controller -->
     <script type="module" src="../../src/js/views/guru/materi.js"></script>
 </body>

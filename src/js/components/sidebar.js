@@ -187,6 +187,11 @@ export function initSidebar() {
     }).join('');
 
     if (role === 'admin') {
+        const user = JSON.parse(localStorage.getItem('elearning_user') || '{}');
+        const nama = user.name || 'Admin Utama';
+        const email = user.email || 'admin@sekolahkita.id';
+        const initials = nama.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'AD';
+
         container.innerHTML = `
             <div class="sidebar-header admin-header">
                 <div class="logo-badge-container">
@@ -203,12 +208,20 @@ export function initSidebar() {
             <nav class="sidebar-menu">
                 ${menuHtml}
             </nav>
-            <div class="sidebar-footer admin-footer" id="admin-profile-footer" style="cursor: pointer;">
-                <div class="admin-avatar-initials">JD</div>
-                <div class="admin-profile-details">
-                    <span class="admin-profile-name">Admin Utama</span>
-                    <span class="admin-profile-email">admin@sekolahkita.id</span>
+            <div class="sidebar-footer" style="display: flex; flex-direction: column; gap: 14px;">
+                <div class="admin-footer" id="admin-profile-footer" style="border-top: none; padding-top: 0;">
+                    <div class="admin-avatar-initials">${initials}</div>
+                    <div class="admin-profile-details">
+                        <span class="admin-profile-name">${nama}</span>
+                        <span class="admin-profile-email">${email}</span>
+                    </div>
                 </div>
+                <button id="btn-logout" class="btn-logout">
+                    <svg style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; margin-right: 8px;" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                    </svg>
+                    <span>Keluar</span>
+                </button>
             </div>
         `;
     } else {
@@ -239,14 +252,6 @@ export function initSidebar() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            await authApi.logout();
-        });
-    }
-
-    // Bind admin profile footer click for logout
-    const adminFooter = container.querySelector('#admin-profile-footer');
-    if (adminFooter) {
-        adminFooter.addEventListener('click', async (e) => {
             if (confirm('Apakah Anda yakin ingin keluar dari sistem?')) {
                 await authApi.logout();
             }

@@ -1,5 +1,6 @@
 import { storage } from '../../utils/storage.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Sidebar
@@ -10,15 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabItems = document.querySelectorAll('.tab-nav-item');
     const mainContent = document.querySelector('.main-content');
     
-    // Logo Upload Elements
-    const logoUploadTrigger = document.getElementById('logo-upload-trigger');
-    const fileLogoInput = document.getElementById('settings-school-logo');
-    const logoPreviewWrapper = document.getElementById('logo-preview-wrapper');
-    
     // Form Inputs
-    const inputSchoolName = document.getElementById('settings-school-name');
-    const inputSchoolAddress = document.getElementById('settings-school-address');
-    const inputSchoolEmail = document.getElementById('settings-school-email');
     const inputUsername = document.getElementById('settings-username');
     const selectLanguage = document.getElementById('settings-language');
     const checkEmailNotif = document.getElementById('settings-email-notif');
@@ -36,10 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnBackupNow = document.getElementById('btn-backup-now');
     const btn2faToggle = document.getElementById('btn-2fa-toggle');
     const btnCancelSettings = document.getElementById('btn-cancel-settings');
-    const btnEditProfil = document.getElementById('btn-edit-profil');
 
     // Local Variables
-    let selectedLogoBase64 = null;
     let is2faEnabled = false;
 
     // 1. Load Username from Active Session
@@ -54,31 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadSettings = () => {
         const settings = storage.getSettings();
         
-        inputSchoolName.value = settings.schoolName || 'SMA Negeri 1 Kita Bersama';
-        inputSchoolAddress.value = settings.schoolAddress || 'Jl. Pendidikan No. 45, Kebayoran Baru, Jakarta Selatan, 12110';
-        inputSchoolEmail.value = settings.schoolEmail || 'info@sman1kita.sch.id';
         selectLanguage.value = settings.language || 'id';
-        
-        checkEmailNotif.checked = settings.emailNotifications !== false; // default to true
-        checkPushNotif.checked = settings.pushNotifications === true; // default to false
-        
-        is2faEnabled = settings.twoFactorAuth === true;
-        update2faBtnUI();
-
-        if (settings.logoUrl) {
-            selectedLogoBase64 = settings.logoUrl;
-            logoPreviewWrapper.innerHTML = `<img src="${settings.logoUrl}" alt="Logo Sekolah" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
-        } else {
-            selectedLogoBase64 = null;
-            logoPreviewWrapper.innerHTML = `
-                <div class="logo-fallback-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
-                        <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-                    </svg>
-                </div>
-            `;
-        }
 
         if (settings.passwordLastChanged) {
             textPasswordLastChanged.textContent = settings.passwordLastChanged;
@@ -117,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (mainContent) {
         mainContent.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('.settings-section-card');
-            let currentActiveSectionId = 'section-profil';
+            let currentActiveSectionId = 'section-preferensi';
             
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
@@ -136,34 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. Handle School Logo Upload Preview
-    if (logoUploadTrigger && fileLogoInput) {
-        logoUploadTrigger.addEventListener('click', () => {
-            fileLogoInput.click();
-        });
-    }
-
-    if (fileLogoInput) {
-        fileLogoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                // Validate file size (max 2MB)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Ukuran file maksimal 2MB!');
-                    fileLogoInput.value = '';
-                    return;
-                }
-
-                // Read and preview image
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    selectedLogoBase64 = event.target.result;
-                    logoPreviewWrapper.innerHTML = `<img src="${selectedLogoBase64}" alt="Logo Sekolah" style="width:100%; height:100%; object-fit:cover; border-radius:12px;">`;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
+    // Password Modal Handlers
 
     // 5. Change Password Modal Handlers
     if (btnChangePassword && modalPassword) {
@@ -188,10 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (formChangePassword) {
-        formChangePassword.addEventListener('submit', (e) => {
+        formChangePassword.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const oldPass = document.getElementById('password-old').value;
             const newPass = document.getElementById('password-new').value;
             const confirmPass = document.getElementById('password-confirm').value;
 
@@ -205,23 +144,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Save state of change password
-            const settings = storage.getSettings();
-            const dateStr = 'Terakhir diubah baru saja';
-            settings.passwordLastChanged = dateStr;
-            storage.updateSettings(settings);
-            
-            // Log in activity
-            storage.addActivity({
-                title: 'Mengubah password keamanan akun admin',
-                time: 'Baru saja',
-                type: 'system',
-                classCode: 'general'
-            });
+            const activeUser = storage.getUser();
+            if (!activeUser || !activeUser.id) {
+                alert('Sesi admin tidak ditemukan. Silakan login kembali.');
+                return;
+            }
 
-            alert('Password berhasil diperbarui!');
-            textPasswordLastChanged.textContent = dateStr;
-            closeModal();
+            try {
+                // Perbarui password admin via API update user di backend
+                await apiClient.put(`/admin/${activeUser.id}`, {
+                    password: newPass
+                });
+                
+                alert('Password admin berhasil diperbarui!');
+                
+                const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                const dateStr = `Terakhir diubah pada ${today}`;
+                
+                // Save state of change password
+                const settings = storage.getSettings();
+                settings.passwordLastChanged = dateStr;
+                storage.updateSettings(settings);
+                
+                textPasswordLastChanged.textContent = dateStr;
+                closeModal();
+            } catch (err) {
+                console.error(err);
+                if (err.status === 422 && err.errors) {
+                    const errorMessages = Object.values(err.errors).flat().join('\n');
+                    alert(`Gagal mengubah password:\n${errorMessages}`);
+                } else {
+                    alert(`Gagal mengubah password: ${err.message}`);
+                }
+            }
         });
     }
 
@@ -276,12 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 8. Edit Profile Pencil Quick Scroll
-    if (btnEditProfil) {
-        btnEditProfil.addEventListener('click', () => {
-            inputSchoolName.focus();
-        });
-    }
+    // 8. Edit Profile - Removed
 
     // 9. Cancel Settings Changes
     if (btnCancelSettings) {
@@ -295,28 +245,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 10. Submit Settings form
     if (formSettings) {
-        formSettings.addEventListener('submit', (e) => {
+        formSettings.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const schoolName = inputSchoolName.value.trim();
-            const schoolAddress = inputSchoolAddress.value.trim();
-            const schoolEmail = inputSchoolEmail.value.trim();
+            const username = inputUsername.value.trim();
             const language = selectLanguage.value;
             const emailNotifications = checkEmailNotif.checked;
             const pushNotifications = checkPushNotif.checked;
+
+            // Perbarui username admin di backend terlebih dahulu
+            const activeUser = storage.getUser();
+            if (activeUser && activeUser.id) {
+                try {
+                    await apiClient.put(`/admin/${activeUser.id}`, {
+                        username: username
+                    });
+                    // Perbarui sesi local
+                    activeUser.username = username;
+                    storage.setUser(activeUser);
+                } catch (err) {
+                    console.error(err);
+                    if (err.status === 422 && err.errors) {
+                        const errorMessages = Object.values(err.errors).flat().join('\n');
+                        alert(`Gagal memperbarui username admin:\n${errorMessages}`);
+                        return;
+                    } else {
+                        alert(`Gagal memperbarui username admin: ${err.message}`);
+                        return;
+                    }
+                }
+            }
 
             const existingSettings = storage.getSettings();
 
             const updatedSettings = {
                 ...existingSettings,
-                schoolName,
-                schoolAddress,
-                schoolEmail,
                 language,
                 emailNotifications,
                 pushNotifications,
-                twoFactorAuth: is2faEnabled,
-                logoUrl: selectedLogoBase64
+                twoFactorAuth: is2faEnabled
             };
 
             // Update local storage
@@ -324,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Log activity in system
             storage.addActivity({
-                title: 'Memperbarui pengaturan platform & profil sekolah',
+                title: 'Memperbarui pengaturan platform & preferensi akun',
                 time: 'Baru saja',
                 type: 'system',
                 classCode: 'general'

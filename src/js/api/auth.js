@@ -42,8 +42,9 @@ export const authApi = {
         storage.clearUser();
 
         // Redirect to login page
+        const path = window.location.pathname;
         if (path.includes('/pages/siswa/') || path.includes('/pages/guru/') || path.includes('/pages/admin/')) {
-            window.location.href = 'login.html';
+            window.location.href = '../../login.html';
         } else {
             window.location.href = 'login.html';
         }
