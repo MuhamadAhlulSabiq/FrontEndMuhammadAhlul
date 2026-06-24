@@ -6,6 +6,9 @@ import { CONFIG } from '../../config.js';
 let activeClassFilter = 'semua';
 let globalClasses = [];
 let globalSubjects = [];
+let globalMaterials = [];
+let editMode = false;
+let editingMaterialId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Sidebar
@@ -30,9 +33,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fileInput = document.getElementById('materi-file');
     const fileUploadText = document.getElementById('file-upload-text');
 
-    // Open Modal
+    // Open Modal (Add Mode)
     if (openModalBtn) {
         openModalBtn.addEventListener('click', () => {
+            editMode = false;
+            editingMaterialId = null;
+
+            // Reset modal title and button
+            const modalTitle = document.getElementById('modal-title');
+            if (modalTitle) modalTitle.textContent = 'Buat Materi Baru';
+            
+            const submitBtn = document.getElementById('btn-submit-materi');
+            if (submitBtn) submitBtn.textContent = 'Simpan Materi';
+
+            form.reset();
+            if (fileUploadText) {
+                fileUploadText.textContent = 'Klik disini untuk mengupload materi';
+            }
+
             modal.style.display = 'flex';
         });
     }
@@ -40,6 +58,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Close Modal helper
     const closeModal = () => {
         modal.style.display = 'none';
+        editMode = false;
+        editingMaterialId = null;
+        
+        const modalTitle = document.getElementById('modal-title');
+        if (modalTitle) modalTitle.textContent = 'Buat Materi Baru';
+        
+        const submitBtn = document.getElementById('btn-submit-materi');
+        if (submitBtn) submitBtn.textContent = 'Simpan Materi';
+
         form.reset();
         if (fileUploadText) {
             fileUploadText.textContent = 'Klik disini untuk mengupload materi';
@@ -68,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (file) {
                 fileUploadText.textContent = `File terpilih: ${file.name}`;
             } else {
-                fileUploadText.textContent = 'Klik disini untuk mengupload materi';
+                fileUploadText.textContent = editMode ? 'Kosongkan jika tidak ingin mengubah file' : 'Klik disini untuk mengupload materi';
             }
         });
     }
@@ -89,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load filter dropdowns, subjects, and materials
     await loadInitialData();
 
-    // Form Submit
+    // Form Submit (Create & Update)
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -98,21 +125,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             const title = document.getElementById('materi-title').value.trim();
             const desc = document.getElementById('materi-desc').value.trim();
 
-            if (!fileInput.files || !fileInput.files[0]) {
+            const hasFile = fileInput.files && fileInput.files[0];
+
+            if (!hasFile && !editMode) {
                 alert('Pilih file materi terlebih dahulu.');
                 return;
             }
 
-            const file = fileInput.files[0];
-            const fileName = file.name.toLowerCase();
+            let file = null;
             let tipe = 'pdf';
-            if (fileName.endsWith('.pdf')) {
-                tipe = 'pdf';
-            } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') || fileName.endsWith('.png') || fileName.endsWith('.webp')) {
-                tipe = 'gambar';
-            } else {
-                alert('Format file tidak valid. Diizinkan: PDF, JPG, JPEG, PNG, WebP.');
-                return;
+
+            if (hasFile) {
+                file = fileInput.files[0];
+                const fileName = file.name.toLowerCase();
+                if (fileName.endsWith('.pdf')) {
+                    tipe = 'pdf';
+                } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg') || fileName.endsWith('.png') || fileName.endsWith('.webp')) {
+                    tipe = 'gambar';
+                } else {
+                    alert('Format file tidak valid. Diizinkan: PDF, JPG, JPEG, PNG, WebP.');
+                    return;
+                }
             }
 
             // Find subject matching selected class's jurusan
@@ -135,12 +168,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             const formData = new FormData();
             formData.append('judul', title);
             formData.append('deskripsi', desc);
-            formData.append('tipe', tipe);
             formData.append('mapel_id', mapelId);
-            formData.append('file', file);
+
+            if (hasFile) {
+                formData.append('tipe', tipe);
+                formData.append('file', file);
+            }
+
+            let url = `${CONFIG.API_BASE_URL}/materi`;
+            if (editMode) {
+                // Laravel multipart file update requires POST method with _method = PUT
+                url = `${CONFIG.API_BASE_URL}/materi/${editingMaterialId}`;
+                formData.append('_method', 'PUT');
+            }
 
             try {
-                const response = await fetch(`${CONFIG.API_BASE_URL}/materi`, {
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${storage.getToken()}`,
@@ -152,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    alert('Materi berhasil diunggah!');
+                    alert(editMode ? 'Materi berhasil diperbarui!' : 'Materi berhasil diunggah!');
                     closeModal();
                     await loadAndRenderMaterials();
                 } else {
@@ -162,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             } catch (err) {
                 console.error(err);
-                alert('Gagal menghubungi server untuk mengunggah materi.');
+                alert('Gagal menghubungkan ke server untuk menyimpan materi.');
             }
         });
     }
@@ -227,6 +270,7 @@ async function loadAndRenderMaterials() {
         const response = await apiClient.get('/materi');
         if (response.success && response.data) {
             let materials = response.data;
+            globalMaterials = materials; // Store globally for edit mapping
 
             // Filter materials by selected class's subject code (jurusan)
             if (activeClassFilter !== 'semua') {
@@ -242,7 +286,7 @@ async function loadAndRenderMaterials() {
             }
 
             if (materials.length === 0) {
-                container.innerHTML = '<tr><td colspan="4" class="empty-state">Tidak ada materi yang ditemukan.</td></tr>';
+                container.innerHTML = '<tr><td colspan="5" class="empty-state">Tidak ada materi yang ditemukan.</td></tr>';
                 return;
             }
 
@@ -276,16 +320,86 @@ async function loadAndRenderMaterials() {
                         </td>
                         <td>${gradeDisplay}</td>
                         <td style="color: #4b5563; font-weight: 600;">${formattedDate}</td>
+                        <td style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                            <button class="btn-edit-materi" data-id="${m.id}" style="background: #eab308; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Edit</button>
+                            <button class="btn-hapus-materi" data-id="${m.id}" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Hapus</button>
+                        </td>
                     </tr>
                 `;
             }).join('');
 
+            // Attach event listeners for Edit buttons
+            container.querySelectorAll('.btn-edit-materi').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseInt(btn.dataset.id);
+                    const matObj = globalMaterials.find(m => m.id === id);
+                    if (matObj) {
+                        editMode = true;
+                        editingMaterialId = id;
+
+                        // Change Modal Title and button label
+                        const modalTitle = document.getElementById('modal-title');
+                        if (modalTitle) modalTitle.textContent = 'Edit Materi';
+                        
+                        const submitBtn = document.getElementById('btn-submit-materi');
+                        if (submitBtn) submitBtn.textContent = 'Simpan';
+
+                        // Pre-fill form inputs
+                        document.getElementById('materi-title').value = matObj.judul || '';
+                        document.getElementById('materi-desc').value = matObj.deskripsi || '';
+
+                        const fileUploadTextEl = document.getElementById('file-upload-text');
+                        if (fileUploadTextEl) {
+                            fileUploadTextEl.textContent = matObj.file_original_name || 'Kosongkan jika tidak ingin mengubah file';
+                        }
+
+                        // Pre-select Class based on subject mapping
+                        const matchedClass = globalClasses.find(c => 
+                            c.jurusan && matObj.mapel && (
+                                c.jurusan.toLowerCase() === matObj.mapel.kode_mapel.toLowerCase() ||
+                                c.jurusan.toLowerCase() === matObj.mapel.nama_mapel.toLowerCase()
+                            )
+                        );
+                        if (matchedClass) {
+                            document.getElementById('materi-class').value = matchedClass.id;
+                        } else {
+                            document.getElementById('materi-class').value = '';
+                        }
+
+                        // Open modal
+                        const modal = document.getElementById('modal-materi');
+                        if (modal) modal.style.display = 'flex';
+                    }
+                });
+            });
+
+            // Attach event listeners for Delete buttons
+            container.querySelectorAll('.btn-hapus-materi').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = parseInt(btn.dataset.id);
+                    if (confirm('Apakah Anda yakin ingin menghapus materi ini?')) {
+                        try {
+                            const response = await apiClient.delete(`/materi/${id}`);
+                            if (response.success) {
+                                alert('Materi berhasil dihapus!');
+                                await loadAndRenderMaterials();
+                            } else {
+                                alert('Gagal menghapus materi: ' + (response.message || 'Error tidak diketahui'));
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            alert('Gagal menghubungkan ke server untuk menghapus materi.');
+                        }
+                    }
+                });
+            });
+
         } else {
-            container.innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Gagal mengambil data materi.</td></tr>';
+            container.innerHTML = '<tr><td colspan="5" class="empty-state" style="color: #ef4444;">Gagal mengambil data materi.</td></tr>';
         }
     } catch (err) {
         console.error('Error fetching materials:', err);
-        container.innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Gagal memuat daftar materi. Pastikan server backend menyala.</td></tr>';
+        container.innerHTML = '<tr><td colspan="5" class="empty-state" style="color: #ef4444;">Gagal memuat daftar materi. Pastikan server backend menyala.</td></tr>';
     }
 }
 
