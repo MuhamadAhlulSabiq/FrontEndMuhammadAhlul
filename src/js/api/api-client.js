@@ -17,18 +17,17 @@ export const apiClient = {
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP Error: ${response.status}`);
+                const errorData = await response.json().catch(() => ({}));
+                const errorMessage = errorData.message || `HTTP Error: ${response.status}`;
+                const err = new Error(errorMessage);
+                err.status = response.status;
+                err.errors = errorData.errors;
+                throw err;
             }
 
             return await response.json();
         } catch (error) {
-            console.warn(`Fetch to ${endpoint} failed. Simulating local fallback...`, error);
-            
-            // Local simulation fallback
-            if (endpoint === '/register' || endpoint === '/login' || endpoint === '/forgot-password') {
-                return { success: true, message: 'Simulated registration/login/forgot-password success.' };
-            }
-            
+            console.error(`API Request to ${endpoint} failed:`, error);
             throw error;
         }
     }
