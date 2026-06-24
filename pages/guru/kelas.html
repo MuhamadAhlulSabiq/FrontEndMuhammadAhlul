@@ -69,11 +69,12 @@
                                 <th>Kelas</th>
                                 <th>Kode Kelas</th>
                                 <th>Jumlah Siswa</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody id="classes-table-body">
                             <tr>
-                                <td colspan="4" class="loading-state">Memuat daftar kelas...</td>
+                                <td colspan="5" class="loading-state">Memuat daftar kelas...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -86,7 +87,7 @@
     <div id="modal-kelas" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Buat Kelas Baru</h3>
+                <h3 id="modal-title">Buat Kelas Baru</h3>
                 <button id="modal-kelas-close" class="modal-close">&times;</button>
             </div>
             <form id="form-tambah-kelas">
@@ -132,7 +133,7 @@
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
                     <button type="button" id="btn-cancel-kelas" class="btn-outline">Batal</button>
-                    <button type="submit" class="btn-guru">Buat Kelas</button>
+                    <button type="submit" id="btn-submit-kelas" class="btn-guru">Buat Kelas</button>
                 </div>
             </form>
         </div>

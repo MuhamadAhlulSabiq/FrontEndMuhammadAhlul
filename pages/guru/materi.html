@@ -68,11 +68,12 @@
                             <th>Judul Materi</th>
                             <th>Kelas</th>
                             <th>Tanggal</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="materi-table-body">
                         <tr>
-                            <td colspan="4" class="loading-state">Memuat daftar materi...</td>
+                            <td colspan="5" class="loading-state">Memuat daftar materi...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -84,7 +85,7 @@
     <div id="modal-materi" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Buat Materi Baru</h3>
+                <h3 id="modal-title">Buat Materi Baru</h3>
                 <button id="modal-materi-close" class="modal-close">&times;</button>
             </div>
             <form id="form-tambah-materi">
@@ -121,7 +122,7 @@
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
                     <button type="button" id="btn-cancel-materi" class="btn-batal">Batal</button>
-                    <button type="submit" class="btn-simpan">Simpan Materi</button>
+                    <button type="submit" id="btn-submit-materi" class="btn-simpan">Simpan Materi</button>
                 </div>
             </form>
         </div>
