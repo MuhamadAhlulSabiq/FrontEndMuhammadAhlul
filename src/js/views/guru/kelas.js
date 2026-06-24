@@ -1,5 +1,6 @@
 import { storage } from '../../utils/storage.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize Sidebar
@@ -35,79 +36,58 @@ document.addEventListener('DOMContentLoaded', () => {
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
 
-    // Helper to generate a random 8-character class code: 4 letters + 4 numbers (e.g. ABCD1234)
-    function generateClassCode() {
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const numbers = '0123456789';
-        let code = '';
-        for (let i = 0; i < 4; i++) {
-            code += letters.charAt(Math.floor(Math.random() * letters.length));
-        }
-        for (let i = 0; i < 4; i++) {
-            code += numbers.charAt(Math.floor(Math.random() * numbers.length));
-        }
-        return code;
-    }
-
-    // Helper to extract grade number from className or dateClass input text (defaults to Kelas 5)
+    // Helper to extract grade number/label from inputs (e.g. "Matematika Kelas 5" -> "5")
     function extractGrade(className, dateClass) {
-        const match = (className + ' ' + dateClass).match(/(?:kelas|grade|kls)?\s*([1-6])/i);
-        return match ? 'Kelas ' + match[1] : 'Kelas 5';
+        const match = (className + ' ' + dateClass).match(/(?:kelas|grade|kls)?\s*([0-9XIIV]+)/i);
+        return match ? match[1].toUpperCase() : '5';
     }
 
     // Form submit
     if (form) {
-        form.addEventListener('submit', (e) => {
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const className = document.getElementById('kelas-name').value.trim();
-            const desc = document.getElementById('kelas-desc').value.trim();
             const subject = document.getElementById('kelas-subject').value.trim();
             const dateClass = document.getElementById('kelas-date').value.trim();
             const academicYear = document.getElementById('kelas-academic-year').value.trim();
 
-            // Automatically generate random code (e.g., "ABCD1234")
-            const generatedCode = generateClassCode();
+            // Extract grade level (e.g., "5" or "X")
+            const tingkat = extractGrade(className, dateClass);
 
-            // Extract grade level (e.g., "Kelas 5")
-            const grade = extractGrade(className, dateClass);
+            // Parse year to 4-digit integer (e.g., "2025/2026" -> 2025)
+            const yearMatch = academicYear.match(/\d{4}/);
+            const tahun_ajaran = yearMatch ? parseInt(yearMatch[0]) : new Date().getFullYear();
 
-            // Generate a random student count (20 to 30) for mock data realism
-            const studentsCount = Math.floor(Math.random() * 11) + 20;
+            // Get logged in teacher's ID
+            const currentUser = storage.getUser();
+            const guru_id = currentUser ? currentUser.id : null;
 
-            // Generate internal slug code
-            const code = subject.toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/(^-|-$)/g, '') || 'kls-' + Date.now().toString().slice(-4);
+            try {
+                const response = await apiClient.post('/kelas', {
+                    nama_kelas: className,
+                    tingkat: tingkat,
+                    jurusan: subject, // Map Mata Pelajaran to 'jurusan'
+                    tahun_ajaran: tahun_ajaran,
+                    guru_id: guru_id
+                });
 
-            const newClass = {
-                id: Date.now(),
-                title: subject, // Mata Pelajaran (first column)
-                className: className, // Nama Kelas
-                desc: desc,
-                grade: grade, // e.g. "Kelas 5"
-                code: code,
-                displayCode: generatedCode, // e.g. "ABCD1234"
-                academicYear: academicYear,
-                dateClass: dateClass,
-                teacher: user ? user.name : 'Bu Nina',
-                subject: 'Guru ' + subject,
-                illustration: 'desk',
-                studentsCount: studentsCount
-            };
-
-            storage.addClass(newClass);
-
-            // Add activity log
-            storage.addActivity({
-                title: `Membuat kelas baru: ${className}`,
-                time: 'Baru saja',
-                type: 'materi',
-                classCode: code
-            });
-
-            closeModal();
-            loadAndRenderClasses();
+                if (response.success) {
+                    alert('Kelas baru berhasil dibuat!');
+                    closeModal();
+                    await loadAndRenderClasses();
+                } else {
+                    alert('Gagal membuat kelas: ' + (response.message || 'Error tidak diketahui'));
+                }
+            } catch (err) {
+                console.error(err);
+                if (err.errors) {
+                    const errMsg = Object.values(err.errors).flat().join('\n');
+                    alert(`Gagal membuat kelas:\n${errMsg}`);
+                } else {
+                    alert('Gagal menghubungkan ke server untuk membuat kelas.');
+                }
+            }
         });
     }
 
@@ -115,29 +95,45 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAndRenderClasses();
 });
 
-function loadAndRenderClasses() {
-    const classes = storage.getClasses();
+async function loadAndRenderClasses() {
     const container = document.getElementById('classes-table-body');
-
     if (!container) return;
 
-    if (!classes || classes.length === 0) {
-        container.innerHTML = '<tr><td colspan="4" class="empty-state">Belum ada kelas yang diampu.</td></tr>';
-        return;
+    try {
+        const response = await apiClient.get('/kelas');
+        
+        if (response.success && response.data) {
+            const classes = response.data;
+
+            if (classes.length === 0) {
+                container.innerHTML = '<tr><td colspan="4" class="empty-state">Belum ada kelas yang diampu.</td></tr>';
+                return;
+            }
+
+            container.innerHTML = classes.map(c => {
+                // Mata Pelajaran -> c.jurusan (or fallback if empty)
+                const subject = c.jurusan || 'Umum';
+                // Kelas -> c.tingkat
+                const grade = c.tingkat || '-';
+                // Kode Kelas -> c.id (using ID as unique join code)
+                const classCode = c.id;
+                // Jumlah Siswa -> c.jumlah_siswa
+                const studentCount = c.jumlah_siswa || 0;
+
+                return `
+                    <tr>
+                        <td style="font-weight: 700; text-align: center;">${subject}</td>
+                        <td>${grade}</td>
+                        <td style="font-family: monospace; font-weight: 700; color: #4b5563;">${classCode}</td>
+                        <td>${studentCount}</td>
+                    </tr>
+                `;
+            }).join('');
+        } else {
+            container.innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Gagal mengambil data kelas.</td></tr>';
+        }
+    } catch (err) {
+        console.error('Error fetching classes:', err);
+        container.innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Gagal memuat daftar kelas. Pastikan server backend menyala.</td></tr>';
     }
-
-    container.innerHTML = classes.map(c => {
-        // Clean grade format: extract digits (e.g. "Kelas 2" -> "2")
-        const gradeNumber = c.grade ? c.grade.replace(/\D/g, '') : '';
-        const roomCode = c.displayCode || c.code.toUpperCase();
-
-        return `
-            <tr>
-                <td style="font-weight: 700; text-align: center;">${c.title}</td>
-                <td>${gradeNumber}</td>
-                <td style="font-family: monospace; font-weight: 700; color: #4b5563;">${roomCode}</td>
-                <td>${c.studentsCount || 0}</td>
-            </tr>
-        `;
-    }).join('');
 }

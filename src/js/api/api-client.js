@@ -28,6 +28,23 @@ async function request(endpoint, method, data = null) {
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
             const errorMessage = errorData.message || `HTTP Error: ${response.status}`;
+            
+            if (response.status === 401) {
+                // Clear invalid session token & role to prevent auth loops
+                storage.clearToken();
+                storage.clearRole();
+                storage.clearUser();
+                
+                alert('Sesi Anda tidak valid atau telah berakhir. Silakan login kembali.');
+                
+                const path = window.location.pathname;
+                if (path.includes('/pages/siswa/') || path.includes('/pages/guru/') || path.includes('/pages/admin/')) {
+                    window.location.href = '../../login.html';
+                } else {
+                    window.location.href = 'login.html';
+                }
+            }
+
             const err = new Error(errorMessage);
             err.status = response.status;
             err.errors = errorData.errors;
