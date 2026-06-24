@@ -49,6 +49,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
 
+    // Detail Modal elements
+    const detailModal = document.getElementById('modal-detail-materi');
+    const closeDetailBtn = document.getElementById('modal-detail-materi-close');
+    const closeDetailBtn2 = document.getElementById('btn-close-detail');
+
+    const closeDetailModal = () => {
+        if (detailModal) detailModal.style.display = 'none';
+    };
+
+    if (closeDetailBtn) closeDetailBtn.addEventListener('click', closeDetailModal);
+    if (closeDetailBtn2) closeDetailBtn2.addEventListener('click', closeDetailModal);
+
     // Bind file input change to display selected filename
     if (fileInput && fileUploadText) {
         fileInput.addEventListener('change', (e) => {
@@ -57,6 +69,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fileUploadText.textContent = `File terpilih: ${file.name}`;
             } else {
                 fileUploadText.textContent = 'Klik disini untuk mengupload materi';
+            }
+        });
+    }
+
+    // Event delegation for detail-link clicks in table
+    const tableBody = document.getElementById('materi-table-body');
+    if (tableBody) {
+        tableBody.addEventListener('click', (e) => {
+            const link = e.target.closest('.detail-link');
+            if (link) {
+                e.preventDefault();
+                const matId = parseInt(link.dataset.id);
+                showMaterialDetail(matId);
             }
         });
     }
@@ -94,7 +119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const selectedClass = globalClasses.find(c => c.id === classId);
             let mapelId = null;
             if (selectedClass && selectedClass.jurusan) {
-                const mapel = globalSubjects.find(s => s.kode_mapel.toLowerCase() === selectedClass.jurusan.toLowerCase());
+                const mapel = globalSubjects.find(s => 
+                    s.kode_mapel.toLowerCase() === selectedClass.jurusan.toLowerCase() ||
+                    s.nama_mapel.toLowerCase() === selectedClass.jurusan.toLowerCase()
+                );
                 if (mapel) mapelId = mapel.id;
             }
             
@@ -205,7 +233,10 @@ async function loadAndRenderMaterials() {
                 const selectedClass = globalClasses.find(c => c.id === parseInt(activeClassFilter));
                 if (selectedClass && selectedClass.jurusan) {
                     materials = materials.filter(m => 
-                        m.mapel && m.mapel.kode_mapel.toLowerCase() === selectedClass.jurusan.toLowerCase()
+                        m.mapel && (
+                            m.mapel.kode_mapel.toLowerCase() === selectedClass.jurusan.toLowerCase() ||
+                            m.mapel.nama_mapel.toLowerCase() === selectedClass.jurusan.toLowerCase()
+                        )
                     );
                 }
             }
@@ -227,14 +258,19 @@ async function loadAndRenderMaterials() {
                 const formattedDate = isNaN(dateObj.getTime()) ? '-' : `${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
 
                 // Find which class matches this subject to show under "Kelas" column
-                const matchedClass = globalClasses.find(c => c.jurusan && m.mapel && c.jurusan.toLowerCase() === m.mapel.kode_mapel.toLowerCase());
+                const matchedClass = globalClasses.find(c => 
+                    c.jurusan && m.mapel && (
+                        c.jurusan.toLowerCase() === m.mapel.kode_mapel.toLowerCase() ||
+                        c.jurusan.toLowerCase() === m.mapel.nama_mapel.toLowerCase()
+                    )
+                );
                 const gradeDisplay = matchedClass ? matchedClass.tingkat : '-';
 
                 return `
                     <tr>
                         <td style="font-weight: 700;">${subjectTitle}</td>
                         <td style="text-align: center;">
-                            <a href="${m.file_url || '#'}" target="_blank" style="color: #0d52cd; text-decoration: underline; font-weight: 600;">
+                            <a href="#" class="detail-link" data-id="${m.id}" style="color: #0d52cd; text-decoration: underline; font-weight: 600;">
                                 ${m.judul}
                             </a>
                         </td>
@@ -243,11 +279,44 @@ async function loadAndRenderMaterials() {
                     </tr>
                 `;
             }).join('');
+
         } else {
             container.innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Gagal mengambil data materi.</td></tr>';
         }
     } catch (err) {
         console.error('Error fetching materials:', err);
         container.innerHTML = '<tr><td colspan="4" class="empty-state" style="color: #ef4444;">Gagal memuat daftar materi. Pastikan server backend menyala.</td></tr>';
+    }
+}
+
+async function showMaterialDetail(id) {
+    const detailModal = document.getElementById('modal-detail-materi');
+    if (!detailModal) return;
+
+    try {
+        const response = await apiClient.get(`/materi/${id}`);
+        if (response.success && response.data) {
+            const m = response.data;
+            const subjectTitle = m.mapel ? m.mapel.nama_mapel : 'Materi';
+
+            document.getElementById('detail-materi-title').textContent = m.judul || '-';
+            document.getElementById('detail-materi-subject').textContent = subjectTitle;
+            document.getElementById('detail-materi-desc').textContent = m.deskripsi || 'Tidak ada deskripsi.';
+            
+            const filenameEl = document.getElementById('detail-materi-filename');
+            const downloadBtn = document.getElementById('detail-materi-download-btn');
+            
+            if (filenameEl) filenameEl.textContent = m.file_original_name || 'Lihat File';
+            if (downloadBtn) {
+                downloadBtn.href = m.file_url || '#';
+            }
+
+            detailModal.style.display = 'flex';
+        } else {
+            alert('Gagal memuat detail materi.');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Gagal mengambil detail materi dari server.');
     }
 }

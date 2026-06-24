@@ -1,17 +1,17 @@
 import { storage } from '../../utils/storage.js';
 import { authApi } from '../../api/auth.js';
 import { initSidebar } from '../../components/sidebar.js';
+import { apiClient } from '../../api/api-client.js';
+import { CONFIG } from '../../config.js';
 
 let selectedTask = null;
 let currentFilter = 'semua';
-let uploadedFileMock = null;
+let uploadedFileReal = null;
+let globalTasks = [];
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Sidebar
     initSidebar();
-
-    // Initialize mock database
-    storage.initDb();
 
     // 1. Initialize user info display
     const user = storage.getUser();
@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Render List
-    renderTugasList();
+    // 3. Load tasks from API
+    await loadAssignments();
 
     // 4. Tab filtering
     const tabs = document.querySelectorAll('.tab-btn');
@@ -46,23 +46,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 5. Back to List button
-    document.getElementById('btn-back-to-list').addEventListener('click', () => {
-        showPanel('list');
-    });
+    const backBtn = document.getElementById('btn-back-to-list');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            showPanel('list');
+            loadAssignments(); // reload list on back
+        });
+    }
 
     // 6. Success panel buttons
-    document.getElementById('btn-success-view-task').addEventListener('click', () => {
-        if (selectedTask) {
-            // Re-load details as "sudah diserahkan"
-            loadTaskDetails(selectedTask.id);
-            showPanel('detail');
-        }
-    });
+    const viewTaskBtn = document.getElementById('btn-success-view-task');
+    if (viewTaskBtn) {
+        viewTaskBtn.addEventListener('click', async () => {
+            if (selectedTask) {
+                // Re-fetch and show details as "sudah diserahkan"
+                await loadAssignments();
+                const refreshed = globalTasks.find(item => item.id === selectedTask.id);
+                if (refreshed) {
+                    loadTaskDetails(refreshed);
+                    showPanel('detail');
+                }
+            }
+        });
+    }
 
-    document.getElementById('btn-success-back-to-list').addEventListener('click', () => {
-        renderTugasList();
-        showPanel('list');
-    });
+    const backListBtn = document.getElementById('btn-success-back-to-list');
+    if (backListBtn) {
+        backListBtn.addEventListener('click', () => {
+            loadAssignments();
+            showPanel('list');
+        });
+    }
 
     // 7. File upload trigger & Drag-and-Drop Dropzone
     const dropzone = document.getElementById('dropzone-area');
@@ -111,73 +125,123 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleSelectedFile(file) {
-        uploadedFileMock = {
-            name: file.name,
-            size: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
-        };
-        dropzoneText.textContent = `Berkas terpilih: ${file.name} (${uploadedFileMock.size})`;
-        dropzone.style.borderColor = '#10b981'; // Green success border
+        uploadedFileReal = file;
+        const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        if (dropzoneText) {
+            dropzoneText.textContent = `Berkas terpilih: ${file.name} (${fileSizeMB} MB)`;
+        }
+        if (dropzone) {
+            dropzone.style.borderColor = '#10b981';
+        }
     }
 
-    // 8. Submit Form
+    // 8. Submit Form (Real upload to API)
     const uploadForm = document.getElementById('assignment-upload-form');
     if (uploadForm) {
-        uploadForm.addEventListener('submit', (e) => {
+        uploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!uploadedFileMock) {
+            if (!uploadedFileReal) {
                 alert('Silakan pilih berkas jawaban Anda terlebih dahulu!');
                 return;
             }
 
             if (selectedTask) {
-                // Format current date/time for success screen
-                const now = new Date();
-                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')}`;
-                
-                // Update assignment in localStorage
-                storage.updateAssignment(selectedTask.id, {
-                    status: 'sudah',
-                    submittedFile: uploadedFileMock.name,
-                    submittedTime: timeStr
-                });
+                const formData = new FormData();
+                formData.append('file_jawaban', uploadedFileReal);
 
-                // Add activity log
-                storage.addActivity({
-                    title: `Berhasil mengumpulkan ${selectedTask.title}`,
-                    time: 'Baru saja',
-                    type: 'check',
-                    classCode: selectedTask.classCode
-                });
+                try {
+                    const response = await fetch(`${CONFIG.API_BASE_URL}/tugas/${selectedTask.id}/kumpul`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${storage.getToken()}`,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    });
 
-                // Render success details
-                document.getElementById('success-assignment-name').textContent = selectedTask.title;
-                document.getElementById('success-upload-time').textContent = timeStr;
+                    const result = await response.json();
 
-                // Reset upload form state
-                uploadForm.reset();
-                uploadedFileMock = null;
-                dropzoneText.textContent = 'Klik atau drag file untuk upload (Maks. 10MB)';
-                dropzone.style.borderColor = '#cbd5e1';
+                    if (response.ok && result.success) {
+                        // Format current date/time for success screen
+                        const now = new Date();
+                        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                        const timeStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} ${String(now.getHours()).padStart(2, '0')}.${String(now.getMinutes()).padStart(2, '0')}`;
+                        
+                        document.getElementById('success-assignment-name').textContent = selectedTask.judul;
+                        document.getElementById('success-upload-time').textContent = timeStr;
 
-                showPanel('success');
+                        // Reset upload form state
+                        uploadForm.reset();
+                        uploadedFileReal = null;
+                        if (dropzoneText) dropzoneText.textContent = 'Klik atau drag file untuk upload (Maks. 10MB)';
+                        if (dropzone) dropzone.style.borderColor = '#cbd5e1';
+
+                        showPanel('success');
+                    } else {
+                        alert('Gagal mengumpulkan tugas: ' + (result.message || 'Error tidak diketahui'));
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert('Gagal menghubungi server untuk mengumpulkan tugas.');
+                }
             }
         });
     }
+
+    // 9. If query param ?id=X exists, open details panel directly
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryId = urlParams.get('id');
+    if (queryId) {
+        const taskId = parseInt(queryId);
+        // Wait until loadAssignments completes
+        await loadAssignments();
+        const t = globalTasks.find(item => item.id === taskId);
+        if (t) {
+            loadTaskDetails(t);
+            showPanel('detail');
+        }
+    }
 });
+
+async function loadAssignments() {
+    const container = document.getElementById('tugas-feed');
+    if (!container) return;
+
+    try {
+        const response = await apiClient.get('/tugas');
+        if (response.success && response.data) {
+            globalTasks = response.data;
+            renderTugasList();
+        } else {
+            container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Gagal memuat tugas dari server.</div>';
+        }
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div class="empty-state" style="color: #ef4444;">Gagal memuat daftar tugas. Pastikan server backend menyala.</div>';
+    }
+}
+
+function getClassCode(subjectName) {
+    if (!subjectName) return 'pkn';
+    const name = subjectName.toLowerCase();
+    if (name.includes('ing') || name.includes('english')) return 'ing';
+    if (name.includes('mat') || name.includes('mtk') || name.includes('hitung')) return 'mtk';
+    if (name.includes('ipa') || name.includes('sains') || name.includes('fis') || name.includes('kim') || name.includes('bio')) return 'ipa';
+    return 'pkn';
+}
 
 function renderTugasList() {
     const container = document.getElementById('tugas-feed');
     if (!container) return;
     
-    // Load assignments from localStorage
-    const assignments = storage.getAssignments();
-
     // Filter database
-    const filtered = assignments.filter(t => {
+    const filtered = globalTasks.filter(t => {
+        const hasSubmitted = t.pengumpulan && t.pengumpulan.length > 0;
+        const status = hasSubmitted ? 'sudah' : 'belum';
+        
         if (currentFilter === 'semua') return true;
-        return t.status === currentFilter;
+        return status === currentFilter;
     });
 
     if (filtered.length === 0) {
@@ -191,22 +255,31 @@ function renderTugasList() {
     }
 
     container.innerHTML = filtered.map(t => {
-        const badgeClass = t.status === 'belum' ? 'belum' : 'sudah';
-        const badgeLabel = t.status === 'belum' ? 'Belum Diserahkan' : 'Sudah Diserahkan';
+        const hasSubmitted = t.pengumpulan && t.pengumpulan.length > 0;
+        const statusClass = hasSubmitted ? 'sudah' : 'belum';
+        const badgeLabel = hasSubmitted ? 'Sudah Diserahkan' : 'Belum Diserahkan';
+        const className = t.kelas ? t.kelas.nama_kelas : 'Tugas';
+        const classCode = getClassCode(className);
         
+        const deadlineDate = t.deadline ? new Date(t.deadline) : null;
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const deadlineStr = deadlineDate && !isNaN(deadlineDate.getTime())
+            ? `${deadlineDate.getDate()} ${months[deadlineDate.getMonth()]} ${deadlineDate.getFullYear()}`
+            : '-';
+
         return `
             <div class="list-item" data-id="${t.id}" style="animation: fadeIn 0.3s ease;">
                 <div class="item-left">
-                    <div class="item-icon-box ${t.classCode}">
-                        ${t.classCode === 'mtk' ? '✕' : 'En'}
+                    <div class="item-icon-box ${classCode}" style="display: flex; align-items: center; justify-content: center; font-weight: 800;">
+                        ${classCode === 'mtk' ? '✕' : (classCode === 'ing' ? 'En' : (classCode === 'ipa' ? 'Sci' : 'Pkn'))}
                     </div>
                     <div class="item-details">
-                        <h4>${t.title}</h4>
-                        <p>Deadline: ${t.deadline}</p>
+                        <h4 style="font-weight: 700; color: #111827;">${t.judul}</h4>
+                        <p style="color: #64748b; font-size: 0.85rem; margin-top: 2px;">Deadline: ${deadlineStr} - ${className}</p>
                     </div>
                 </div>
                 <div class="item-right">
-                    <span class="badge-status ${badgeClass}">${badgeLabel}</span>
+                    <span class="badge-status ${statusClass}">${badgeLabel}</span>
                 </div>
             </div>
         `;
@@ -216,40 +289,72 @@ function renderTugasList() {
     container.querySelectorAll('.list-item').forEach(item => {
         item.addEventListener('click', () => {
             const id = parseInt(item.dataset.id);
-            loadTaskDetails(id);
-            showPanel('detail');
+            const tObj = globalTasks.find(item => item.id === id);
+            if (tObj) {
+                loadTaskDetails(tObj);
+                showPanel('detail');
+            }
         });
     });
 }
 
-function loadTaskDetails(taskId) {
-    const assignments = storage.getAssignments();
-    const t = assignments.find(item => item.id === taskId);
-    if (!t) return;
-
+function loadTaskDetails(t) {
     selectedTask = t;
 
-    document.getElementById('detail-tugas-title').textContent = t.title;
-    document.getElementById('detail-tugas-deadline').textContent = `Deadline: ${t.deadline}`;
-    document.getElementById('detail-tugas-desc').textContent = t.desc;
-    document.getElementById('detail-attachment-name').textContent = t.attachmentName;
-    document.getElementById('detail-attachment-size').textContent = t.attachmentSize;
+    document.getElementById('detail-tugas-title').textContent = t.judul;
+    
+    const deadlineDate = t.deadline ? new Date(t.deadline) : null;
+    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+    const deadlineStr = deadlineDate && !isNaN(deadlineDate.getTime())
+        ? `${deadlineDate.getDate()} ${months[deadlineDate.getMonth()]} ${deadlineDate.getFullYear()}, ${String(deadlineDate.getHours()).padStart(2, '0')}.${String(deadlineDate.getMinutes()).padStart(2, '0')}`
+        : '-';
+
+    document.getElementById('detail-tugas-deadline').textContent = `Deadline: ${deadlineStr}`;
+    document.getElementById('detail-tugas-desc').textContent = t.deskripsi || 'Tidak ada deskripsi tambahan.';
+
+    // Task attachment download link (if uploaded by teacher)
+    const attachmentBox = document.getElementById('detail-attachment-name');
+    const attachmentSize = document.getElementById('detail-attachment-size');
+    const attachmentCard = document.querySelector('.lampiran-card');
+
+    if (t.attachment_path) {
+        if (attachmentCard) {
+            attachmentCard.style.display = 'flex';
+            attachmentCard.style.cursor = 'pointer';
+            attachmentCard.onclick = () => {
+                window.open(`${CONFIG.API_BASE_URL.replace('/api', '')}/storage/${t.attachment_path}`, '_blank');
+            };
+        }
+        if (attachmentBox) attachmentBox.textContent = t.attachment_name || 'Berkas Lampiran Tugas.pdf';
+        if (attachmentSize) attachmentSize.textContent = 'Buka/Unduh Lampiran';
+    } else {
+        if (attachmentCard) attachmentCard.style.display = 'none';
+    }
 
     // Teacher details
+    const teacherName = t.guru ? t.guru.nama : 'Guru Pengampu';
     const teacherImg = document.querySelector('.teacher-avatar');
-    if (teacherImg) teacherImg.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${t.teacher.replace(/\s+/g, '_')}`;
+    if (teacherImg) {
+        teacherImg.src = `https://api.dicebear.com/7.x/adventurer/svg?seed=guru_${t.guru_id || 'seed'}`;
+    }
     
-    const teacherName = document.querySelector('.teacher-name');
-    if (teacherName) teacherName.textContent = t.teacher;
+    const teacherNameEl = document.querySelector('.teacher-name');
+    if (teacherNameEl) teacherNameEl.textContent = teacherName;
     
-    const teacherSubject = document.querySelector('.teacher-subject');
-    if (teacherSubject) teacherSubject.textContent = t.subject;
+    const teacherSubjectEl = document.querySelector('.teacher-subject');
+    if (teacherSubjectEl) {
+        teacherSubjectEl.textContent = t.kelas ? t.kelas.jurusan || 'Mata Pelajaran' : 'Umum';
+    }
+
+    // Check submission status
+    const hasSubmitted = t.pengumpulan && t.pengumpulan.length > 0;
+    const submission = hasSubmitted ? t.pengumpulan[0] : null;
 
     // Status badge
     const badge = document.getElementById('detail-tugas-badge');
     if (badge) {
-        badge.className = `badge-status ${t.status}`;
-        badge.textContent = t.status === 'belum' ? 'Belum Diserahkan' : 'Sudah Diserahkan';
+        badge.className = `badge-status ${hasSubmitted ? 'sudah' : 'belum'}`;
+        badge.textContent = hasSubmitted ? 'Sudah Diserahkan' : 'Belum Diserahkan';
     }
 
     // Show/hide submit form based on status
@@ -274,19 +379,26 @@ function loadTaskDetails(taskId) {
         }
     }
 
-    if (t.status === 'sudah') {
+    if (hasSubmitted && submission) {
         if (uploadForm) uploadForm.style.display = 'none';
         if (uploadTitle) uploadTitle.style.display = 'none';
         
+        // Format Submission Date
+        let submitTimeStr = '-';
+        if (submission.dikumpul_pada) {
+            const submitDate = new Date(submission.dikumpul_pada);
+            submitTimeStr = isNaN(submitDate.getTime()) ? '-' : `${submitDate.getDate()} ${months[submitDate.getMonth()]} ${submitDate.getFullYear()}, ${String(submitDate.getHours()).padStart(2, '0')}.${String(submitDate.getMinutes()).padStart(2, '0')}`;
+        }
+
         infoContainer.style.display = 'block';
         infoContainer.innerHTML = `
             <h4 style="margin: 0 0 8px 0; font-weight: 800; font-size: 1.05rem;">✓ Berkas Jawaban Telah Terkirim</h4>
-            <p style="margin: 0 0 4px 0; font-size: 0.95rem;"><strong>File:</strong> ${t.submittedFile || 'jawaban.pdf'}</p>
-            <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: #047857;"><strong>Dikumpulkan pada:</strong> ${t.submittedTime || 'Tepat Waktu'}</p>
-            ${t.nilai !== undefined ? `
+            <p style="margin: 0 0 4px 0; font-size: 0.95rem;"><strong>File:</strong> ${submission.file_name || 'jawaban.pdf'}</p>
+            <p style="margin: 0 0 8px 0; font-size: 0.9rem; color: #047857;"><strong>Dikumpulkan pada:</strong> ${submitTimeStr}</p>
+            ${submission.nilai !== null && submission.nilai !== undefined ? `
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #a7f3d0;">
-                    <p style="margin: 0 0 4px 0; font-size: 1.1rem; color: #065f46;"><strong>Nilai Anda: <span style="font-size: 1.3rem; font-weight: 800; color: #059669;">${t.nilai}</span> / 100</strong></p>
-                    <p style="margin: 0; font-size: 0.9rem; font-style: italic; color: #047857;"><strong>Catatan Guru:</strong> ${t.feedback || '-'}</p>
+                    <p style="margin: 0 0 4px 0; font-size: 1.1rem; color: #065f46;"><strong>Nilai Anda: <span style="font-size: 1.3rem; font-weight: 800; color: #059669;">${submission.nilai}</span> / 100</strong></p>
+                    <p style="margin: 0; font-size: 0.9rem; font-style: italic; color: #047857;"><strong>Catatan Guru:</strong> ${submission.catatan_guru || '-'}</p>
                 </div>
             ` : `
                 <div style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #a7f3d0; color: #047857; font-size: 0.9rem; font-style: italic;">
