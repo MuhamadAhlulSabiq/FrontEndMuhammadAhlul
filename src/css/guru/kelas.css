@@ -37,7 +37,8 @@
 
 /* Table Responsive Wrapper & Table Style */
 .guru-theme .table-responsive-wrapper {
-    background-color: #eaf2ff; /* Pastel blue container bg */
+    background-color: #eaf2ff;
+    /* Pastel blue container bg */
     border: 1px solid #cce0ff;
     border-radius: 16px;
     overflow: hidden;
@@ -53,7 +54,8 @@
 }
 
 .guru-theme .classes-table th {
-    background-color: #dae9ff; /* Slightly darker pastel blue for header */
+    background-color: #dae9ff;
+    /* Slightly darker pastel blue for header */
     color: #000000;
     font-weight: 800;
     font-size: 0.92rem;
@@ -77,7 +79,8 @@
 }
 
 .guru-theme .classes-table tbody tr:hover td {
-    background-color: #dbeafe; /* Smooth hover highlight */
+    background-color: #dbeafe;
+    /* Smooth hover highlight */
 }
 
 /* Loading and Empty State */
@@ -110,25 +113,30 @@
     margin-bottom: 8px;
 }
 
-.form-input, .form-select {
+.form-input,
+.form-select {
     border: none;
     border-radius: 10px;
     padding: 14px 18px;
     font-size: 0.95rem;
     font-weight: 500;
     color: #111827;
-    background-color: #e8f1ff; /* soft blue fill matching image */
+    background-color: #e8f1ff;
+    /* soft blue fill matching image */
     transition: all 0.2s ease;
     box-sizing: border-box;
 }
 
 .form-input::placeholder {
-    color: #7c8ba1; /* slightly darker slate blue placeholder */
+    color: #7c8ba1;
+    /* slightly darker slate blue placeholder */
 }
 
-.form-input:focus, .form-select:focus {
+.form-input:focus,
+.form-select:focus {
     outline: none;
     box-shadow: 0 0 0 2.5px rgba(13, 82, 205, 0.25);
+    color: #fff;
 }
 
 .form-input:disabled {
@@ -180,7 +188,8 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: #dbeafe; /* Soft blue circle background */
+    background-color: #dbeafe;
+    /* Soft blue circle background */
     color: #2563eb;
     display: flex;
     align-items: center;
@@ -204,7 +213,8 @@
 
 /* Responsive Table Breakdown */
 @media (max-width: 768px) {
-    .guru-theme .classes-table th, 
+
+    .guru-theme .classes-table th,
     .guru-theme .classes-table td {
         padding: 14px 16px;
         font-size: 0.85rem;
