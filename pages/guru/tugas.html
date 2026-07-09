@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tugas Guru - E-Learning Platform</title>
     <!-- Role Protection Guard -->
     <script src="../../src/js/middleware/auth-guard.js"></script>
-    
+
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="../../src/css/global.css">
     <link rel="stylesheet" href="../../src/css/components.css">
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="../../src/css/guru/guru-common.css">
     <link rel="stylesheet" href="../../src/css/guru/tugas.css">
 </head>
+
 <body class="guru-theme">
     <div class="app-layout">
         <!-- Sidebar Navigation -->
@@ -28,13 +30,15 @@
                 </div>
                 <div class="user-profile">
                     <button class="bell-icon-btn" title="Notifikasi">
-                        <svg class="bell-icon-svg" viewBox="0 0 24 24" style="width: 24px; height: 24px; color: #8e92bc; fill: none; stroke: currentColor; stroke-width: 2;">
+                        <svg class="bell-icon-svg" viewBox="0 0 24 24"
+                            style="width: 24px; height: 24px; color: #8e92bc; fill: none; stroke: currentColor; stroke-width: 2;">
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" />
                         </svg>
                     </button>
                     <!-- Silhouette user circle matching mockup -->
                     <div class="user-avatar-circle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 22px; height: 22px;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width: 22px; height: 22px;">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
                         </svg>
@@ -50,7 +54,8 @@
                  PANEL 1: DAFTAR TUGAS
                  ========================================== -->
             <div id="tugas-list-panel">
-                <div class="controls-row-tugas" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; margin-top: 8px;">
+                <div class="controls-row-tugas"
+                    style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; margin-top: 8px;">
                     <div class="filter-group-kelas" style="display: flex; flex-direction: column; gap: 8px;">
                         <span style="font-weight: 800; font-size: 1.1rem; color: #111827;">Kelas</span>
                         <div class="form-select-arrow" style="width: 250px;">
@@ -90,7 +95,8 @@
                  ========================================== -->
             <div id="tugas-detail-panel" class="detail-container" style="display: none;">
                 <span id="btn-back-to-list" class="back-link">
-                    <svg style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5;" viewBox="0 0 24 24">
+                    <svg style="width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5;"
+                        viewBox="0 0 24 24">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
@@ -124,7 +130,8 @@
                     <div>
                         <h4 class="detail-section-title">Panel Penilaian</h4>
                         <div id="grading-form-container">
-                            <div class="empty-state" style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 16px; padding: 32px;">
+                            <div class="empty-state"
+                                style="background-color: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 16px; padding: 32px;">
                                 Pilih siswa di sebelah kiri untuk mulai menilai.
                             </div>
                         </div>
@@ -144,53 +151,68 @@
             <form id="form-tambah-tugas">
                 <div class="form-group">
                     <label class="form-label" for="tugas-class">Kelas</label>
-                    <select class="form-select" id="tugas-class" required style="background-color: #eff6ff; border: none; font-weight: 500;">
+                    <select class="form-input form-select" id="tugas-class" required>
                         <option value="">Pilih Kelas</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="tugas-title">Judul Tugas</label>
-                    <input class="form-input" type="text" id="tugas-title" placeholder="Contoh: Sistem Persamaan Kuadrat" required style="background-color: #eff6ff; border: none;">
+                    <input class="form-input" type="text" id="tugas-title"
+                        placeholder="Contoh: Sistem Persamaan Kuadrat" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="tugas-desc">Deskripsi Tugas</label>
-                    <textarea class="form-textarea" id="tugas-desc" placeholder="Jelaskan instruksi tugas untuk siswa" required style="background-color: #eff6ff; border: none; height: 100px;"></textarea>
+                    <textarea class="form-textarea form-input form-select" id="tugas-desc"
+                        placeholder="Jelaskan instruksi tugas untuk siswa" required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="tugas-deadline">Deadline</label>
-                    <input class="form-input" type="date" id="tugas-deadline" required style="background-color: #eff6ff; border: none; max-width: 250px;">
+                    <input class="form-input form-select" type="date" id="tugas-deadline" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Unggah File</label>
-                    <div class="file-upload-area" onclick="document.getElementById('tugas-file').click();" style="border: 2px dashed rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; background-color: #eff6ff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-                        <svg viewBox="0 0 24 24" style="width: 32px; height: 32px; fill: #1e3a8a; stroke: #1e3a8a; stroke-width: 1;" class="upload-icon">
-                            <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M12 2v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            <path d="M9 5l3-3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M20.38 10.38A7 7 0 0 0 6.62 10.38a7 7 0 0 0-1.62 10.62h14A7 7 0 0 0 20.38 10.38z" fill="currentColor" opacity="0.1"/>
-                            <path d="M4 16.5a6 6 0 0 1 11.75-1.5M20 16.5A6 6 0 0 0 8.25 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <div class="file-upload-area" onclick="document.getElementById('tugas-file').click();"
+                        style="border: 2px dashed rgba(59, 130, 246, 0.3); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; background-color: #eff6ff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
+                        <svg viewBox="0 0 24 24"
+                            style="width: 32px; height: 32px; fill: #1e3a8a; stroke: #1e3a8a; stroke-width: 1;"
+                            class="upload-icon">
+                            <path d="M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="none" stroke="currentColor"
+                                stroke-width="2" />
+                            <path d="M12 2v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                            <path d="M9 5l3-3 3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M20.38 10.38A7 7 0 0 0 6.62 10.38a7 7 0 0 0-1.62 10.62h14A7 7 0 0 0 20.38 10.38z"
+                                fill="currentColor" opacity="0.1" />
+                            <path d="M4 16.5a6 6 0 0 1 11.75-1.5M20 16.5A6 6 0 0 0 8.25 15" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" />
                         </svg>
                         <!-- Cloud upload icon styled to look like the blue one in the mockup -->
-                        <div style="background-color: #2563eb; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
-                            <svg viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;">
+                        <div
+                            style="background-color: #2563eb; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <svg viewBox="0 0 24 24"
+                                style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;">
                                 <polyline points="16 16 12 12 8 16"></polyline>
                                 <line x1="12" y1="12" x2="12" y2="21"></line>
                                 <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
                                 <polyline points="16 16 12 12 8 16"></polyline>
                             </svg>
                         </div>
-                        <span style="color: #4b5563; font-size: 0.95rem; font-weight: 500;" id="upload-label">Klik disini untuk mengupload materi</span>
+                        <span style="color: #4b5563; font-size: 0.95rem; font-weight: 500;" id="upload-label">Klik
+                            disini untuk mengupload materi</span>
                         <input type="file" id="tugas-file" style="display: none;">
                     </div>
                 </div>
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 28px;">
-                    <button type="button" id="btn-cancel-tugas" class="btn-outline" style="background-color: #e5e7eb; border: none; color: #4b5563; padding: 10px 24px; border-radius: 6px; font-weight: 700;">Batal</button>
-                    <button type="submit" class="btn-guru" style="background-color: #0b57d0; color: white; padding: 10px 24px; border-radius: 6px; font-weight: 700; border: none;">Simpan Tugas</button>
+                    <button type="button" id="btn-cancel-tugas" class="btn-outline"
+                        style="background-color: #e5e7eb; border: none; color: #4b5563; padding: 10px 24px; border-radius: 6px; font-weight: 700;">Batal</button>
+                    <button type="submit" class="btn-guru"
+                        style="background-color: #0b57d0; color: white; padding: 10px 24px; border-radius: 6px; font-weight: 700; border: none;">Simpan
+                        Tugas</button>
                 </div>
             </form>
         </div>
@@ -199,4 +221,5 @@
     <!-- JS Separated Controller -->
     <script type="module" src="../../src/js/views/guru/tugas.js"></script>
 </body>
+
 </html>

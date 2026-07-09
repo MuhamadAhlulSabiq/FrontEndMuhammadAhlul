@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Materi Guru - E-Learning Platform</title>
     <!-- Role Protection Guard -->
     <script src="../../src/js/middleware/auth-guard.js"></script>
-    
+
     <!-- CSS Dependencies -->
     <link rel="stylesheet" href="../../src/css/global.css">
     <link rel="stylesheet" href="../../src/css/components.css">
@@ -14,6 +15,7 @@
     <link rel="stylesheet" href="../../src/css/guru/guru-common.css">
     <link rel="stylesheet" href="../../src/css/guru/materi.css">
 </head>
+
 <body class="guru-theme">
     <div class="app-layout">
         <!-- Sidebar Navigation -->
@@ -23,8 +25,11 @@
         <main class="main-content">
             <header class="top-bar">
                 <div class="welcome-text">
-                    <h1 id="page-main-title" style="font-size: 1.65rem; font-weight: 800; color: #111827; margin: 0;">Daftar Materi</h1>
-                    <p id="page-main-subtitle" style="font-size: 0.95rem; color: #6b7280; font-weight: 500; margin: 4px 0 0 0;">Semua materi pada kelas yang Anda pilih</p>
+                    <h1 id="page-main-title" style="font-size: 1.65rem; font-weight: 800; color: #111827; margin: 0;">
+                        Daftar Materi</h1>
+                    <p id="page-main-subtitle"
+                        style="font-size: 0.95rem; color: #6b7280; font-weight: 500; margin: 4px 0 0 0;">Semua materi
+                        pada kelas yang Anda pilih</p>
                 </div>
                 <div class="user-profile">
                     <button class="bell-icon-btn" title="Notifikasi">
@@ -91,7 +96,7 @@
             <form id="form-tambah-materi">
                 <div class="form-group">
                     <label class="form-label" for="materi-class">Kelas</label>
-                    <select class="form-select" id="materi-class" required>
+                    <select class="form-input form-select" id="materi-class" required>
                         <option value="" disabled selected>Pilih Kelas</option>
                         <!-- Loaded dynamically via JS -->
                     </select>
@@ -99,18 +104,21 @@
 
                 <div class="form-group">
                     <label class="form-label" for="materi-title">Judul Materi</label>
-                    <input class="form-input" type="text" id="materi-title" placeholder="Contoh: Sistem Persamaan Kuadrat" required>
+                    <input class="form-input" type="text" id="materi-title"
+                        placeholder="Contoh: Sistem Persamaan Kuadrat" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="materi-desc">Deskripsi</label>
-                    <textarea class="form-textarea" id="materi-desc" placeholder="Jelaskan materi secara singkat" style="height: 100px; resize: none;"></textarea>
+                    <textarea class="form-textarea form-input form-select" id="materi-desc"
+                        placeholder="Jelaskan materi secara singkat" style="height: 100px; resize: none;"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Unggah File</label>
                     <label for="materi-file" class="file-upload-area">
-                        <svg class="upload-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#0d52cd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="upload-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#0d52cd" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                             <polyline points="17 8 12 3 7 8" />
                             <line x1="12" y1="3" x2="12" y2="15" />
@@ -138,21 +146,29 @@
             <div style="padding: 16px 0; display: flex; flex-direction: column; gap: 16px;">
                 <div>
                     <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">Judul Materi</label>
-                    <p id="detail-materi-title" style="font-size: 1.05rem; font-weight: 700; color: #000; margin-top: 4px;"></p>
+                    <p id="detail-materi-title"
+                        style="font-size: 1.05rem; font-weight: 700; color: #000; margin-top: 4px;"></p>
                 </div>
                 <div>
                     <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">Mata Pelajaran</label>
-                    <p id="detail-materi-subject" style="font-size: 1rem; font-weight: 600; color: #4b5563; margin-top: 4px;"></p>
+                    <p id="detail-materi-subject"
+                        style="font-size: 1rem; font-weight: 600; color: #4b5563; margin-top: 4px;"></p>
                 </div>
                 <div>
                     <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">Deskripsi</label>
-                    <p id="detail-materi-desc" style="font-size: 0.95rem; color: #4b5563; margin-top: 4px; white-space: pre-line; line-height: 1.5;"></p>
+                    <p id="detail-materi-desc"
+                        style="font-size: 0.95rem; color: #4b5563; margin-top: 4px; white-space: pre-line; line-height: 1.5;">
+                    </p>
                 </div>
                 <div>
                     <label style="font-weight: 800; color: #111827; font-size: 0.9rem;">File Lampiran</label>
-                    <div id="detail-materi-file-container" style="margin-top: 8px; padding: 12px; background: #f3f4f6; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                        <span id="detail-materi-filename" style="font-weight: 600; font-size: 0.9rem; color: #374151;">-</span>
-                        <a id="detail-materi-download-btn" href="#" target="_blank" class="btn-action-primary" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; text-decoration: none; background-color: #0d52cd; color: white;">Buka / Unduh</a>
+                    <div id="detail-materi-file-container"
+                        style="margin-top: 8px; padding: 12px; background: #f3f4f6; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                        <span id="detail-materi-filename"
+                            style="font-weight: 600; font-size: 0.9rem; color: #374151;">-</span>
+                        <a id="detail-materi-download-btn" href="#" target="_blank" class="btn-action-primary"
+                            style="padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; text-decoration: none; background-color: #0d52cd; color: white;">Buka
+                            / Unduh</a>
                     </div>
                 </div>
             </div>
@@ -165,4 +181,5 @@
     <!-- JS Separated Controller -->
     <script type="module" src="../../src/js/views/guru/materi.js"></script>
 </body>
+
 </html>

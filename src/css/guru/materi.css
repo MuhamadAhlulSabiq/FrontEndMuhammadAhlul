@@ -170,6 +170,7 @@
 .form-select:focus {
     outline: none;
     box-shadow: 0 0 0 2.5px rgba(13, 82, 205, 0.25);
+    color: #fff;
 }
 
 .form-textarea {
