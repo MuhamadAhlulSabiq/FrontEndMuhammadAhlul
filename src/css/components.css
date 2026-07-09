@@ -77,19 +77,26 @@
     color: #cbd5e1;
 }
 
-.form-input {
-    padding: 12px 16px;
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid var(--bg-dark-border);
-    border-radius: 12px;
-    color: white;
-    font-size: 1rem;
+.form-input,
+.form-select {
+    border: none;
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #111827;
+    background-color: #e8f1ff;
+    /* soft blue fill matching image */
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
-.form-input:focus {
+.form-input:focus,
+.form-select:focus {
     outline: none;
-    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 0 2.5px rgba(13, 82, 205, 0.25);
+    color: #fff;
+    background: rgba(15, 23, 42, 0.6);
 }
 
 /* Buttons */
